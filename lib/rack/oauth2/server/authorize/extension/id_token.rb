@@ -2,11 +2,11 @@ module Rack
   module OAuth2
     module Server
       class Authorize
-        module Extensions
-          class IdTokenAndToken < Abstract::Handler
+        module Extension
+          class IdToken < Abstract::Handler
             class << self
               def response_type_for?(response_type)
-                response_type.split.sort == ['id_token', 'token']
+                response_type == 'id_token'
               end
             end
 
@@ -19,7 +19,7 @@ module Rack
             class Request < Authorize::Token::Request
               def initialize(env)
                 super
-                @response_type = [:id_token, :token]
+                @response_type = :id_token
                 attr_missing!
               end
             end

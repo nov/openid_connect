@@ -1,7 +1,7 @@
+require 'attr_required'
+require 'attr_optional'
 require 'rack/oauth2'
-require 'rack/oauth2/server/authorize/extensions/id_token'
-require 'rack/oauth2/server/authorize/extensions/id_token_and_token'
+require 'rack/oauth2/server/authorize/extension/id_token'
+require 'rack/oauth2/server/authorize/extension/id_token_and_token'
 
-module OpenIDConnect
-  # Your code goes here...
-end
+require 'openid_connect/response_object'
