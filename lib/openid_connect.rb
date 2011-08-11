@@ -1,0 +1,3 @@
+module OpenIDConnect
+  # Your code goes here...
+end
