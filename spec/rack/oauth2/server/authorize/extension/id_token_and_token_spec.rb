@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rack::OAuth2::Server::Authorize::Extensions::IdTokenAndToken do
+describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
   let(:request)      { Rack::MockRequest.new app }
   let(:redirect_uri) { 'http://client.example.com/callback' }
   let(:access_token) { 'access_token' }

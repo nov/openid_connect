@@ -43,4 +43,13 @@ describe OpenIDConnect::ResponseObject do
       end
     end
   end
+
+  describe '#as_json' do
+    let :attributes do
+      {:required => 'Required', :optional => 'Optional'}
+    end
+    its(:as_json) do
+      should == {:required => 'Required', :optional => 'Optional'}
+    end
+  end
 end

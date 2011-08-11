@@ -27,7 +27,7 @@ module OpenIDConnect
       errors.add :base, 'At least one attribute is required' if all_blank
     end
 
-    def as_json
+    def as_json(options = {})
       all_attriutes.inject({}) do |hash, _attr_|
         hash.merge! _attr_ => self.send(_attr_)
       end.delete_if do |key, value|

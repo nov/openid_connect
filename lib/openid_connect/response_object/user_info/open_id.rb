@@ -21,11 +21,13 @@ module OpenIDConnect
         validates :email, :email => true, :allow_nil => true
 
         attr_optional :address
-        validates_each :address do |record|
-          record.errors.add :address, 'cannot be blank' unless record.address.blank? || record.address.valid?
-        end
+        validate :validate_address
 
         validate :require_at_least_one_attributes
+
+        def validate_address
+          errors.add :address, 'cannot be blank' unless address.blank? || address.valid?
+        end
 
         def address=(hash_or_address)
           @address = case hash_or_address

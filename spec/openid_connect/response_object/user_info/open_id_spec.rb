@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
   let(:klass) { OpenIDConnect::ResponseObject::UserInfo::OpenID }
+  let(:instance) { klass.new attributes }
+  subject { instance }
 
   describe 'attributes' do
     subject { klass }
@@ -21,9 +23,9 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
 
   describe 'validations' do
     subject do
-      instance = klass.new attributes
-      instance.valid?
-      instance
+      _instance_ = instance
+      _instance_.valid?
+      _instance_
     end
 
     context 'when all attributes are blank' do
@@ -34,7 +36,7 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
       its(:errors) { should include :base }
     end
 
-    [:verified, :gender, :zoneinfo, :locale].each do |one_of_list|
+    [:verified, :gender, :zoneinfo].each do |one_of_list|
       context "when #{one_of_list} is invalid" do
         let :attributes do
           {one_of_list => 'Out of List'}
@@ -42,6 +44,10 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
         its(:valid?) { should be_false }
         its(:errors) { should include one_of_list }
       end
+    end
+
+    context "when locale is invalid" do
+      it :TODO
     end
 
     [:profile, :picture, :website].each do |url|
@@ -60,6 +66,36 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
       end
       its(:valid?) { should be_false }
       its(:errors) { should include :address }
+    end
+  end
+
+  describe '#address=' do
+    context 'when Hash is given' do
+      let :attributes do
+        {:address => {}}
+      end
+      its(:address) { should be_a OpenIDConnect::ResponseObject::UserInfo::OpenID::Address }
+    end
+
+    context 'when Address is given' do
+      let :attributes do
+        {:address => OpenIDConnect::ResponseObject::UserInfo::OpenID::Address.new}
+      end
+      its(:address) { should be_a OpenIDConnect::ResponseObject::UserInfo::OpenID::Address }
+    end
+  end
+
+  describe '#to_json' do
+    let :attributes do
+      {
+        :id => 'http://example.com/nov.matake#12345',
+        :address => {
+          :formatted => 'Tokyo, Japan'
+        }
+      }
+    end
+    its(:to_json) do
+      should == attributes.to_json
     end
   end
 end
