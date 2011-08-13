@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "validate_url"
   s.add_runtime_dependency "validate_email"
   s.add_runtime_dependency "tzinfo"
+  s.add_runtime_dependency "jwt"
   s.add_runtime_dependency "attr_required"
   s.add_runtime_dependency "rack-oauth2", ">= 0.9.0"
   s.add_development_dependency "rake", ">= 0.8"
