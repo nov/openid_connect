@@ -25,6 +25,11 @@ module Rack
             end
 
             class Response < Authorize::Token::Response
+              attr_required :id_token
+
+              def protocol_params
+                super.merge :id_token => id_token.to_jwt
+              end
             end
           end
         end
