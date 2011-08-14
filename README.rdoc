@@ -13,11 +13,8 @@ OpenID Connect Server & Client Library
 
 == Examples
 
-Running on Heroku
-https://openid-connect.herokuapp.com
-
-Source on GitHub
-https://github.com/nov/openid_connect_sample
+* Running on Heroku (https://openid-connect.herokuapp.com)
+* Source on GitHub (https://github.com/nov/openid_connect_sample)
 
 == Note on Patches/Pull Requests
  
