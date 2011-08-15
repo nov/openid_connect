@@ -5,7 +5,7 @@ module OpenIDConnect
     def user_info!(scheme = :openid)
       klass = case scheme
       when :openid
-        UserInfo::OpenID
+        ResponseObject::UserInfo::OpenID
       else
         raise "Unknown Scheme: #{scheme}"
       end
@@ -15,7 +15,7 @@ module OpenIDConnect
     end
 
     def id_token!
-      IdToken.new resource_request do
+      ResponseObject::IdToken.new resource_request do
         get absolute_uri_for(introspection_endpoint)
       end
     end
