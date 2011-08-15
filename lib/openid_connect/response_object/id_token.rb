@@ -3,15 +3,11 @@ require 'jwt'
 module OpenIDConnect
   class ResponseObject
     class IdToken < ResponseObject
-      attr_required :iss, :user_id, :aud, :exp, :secret
-      attr_optional :iso29115, :nonce, :issued_to
+      attr_required :iss, :user_id, :aud, :exp
+      attr_optional :iso29115, :nonce, :issued_to, :secret
 
-      def as_json
-        (required_attributes + optional_attributes - [:secret]).inject({}) do |hash, key|
-          hash.merge! key => self.send(key)
-        end.delete_if do |key, value|
-          value.nil?
-        end
+      def hidden_attributes
+        :secret
       end
 
       def to_jwt

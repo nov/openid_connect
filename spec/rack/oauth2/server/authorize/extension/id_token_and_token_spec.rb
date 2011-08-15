@@ -7,6 +7,15 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
   let(:response) do
     request.get("/?response_type=id_token%20token&client_id=client&redirect_uri=#{redirect_uri}")
   end
+  let(:id_token) do
+    OpenIDConnect::ResponseObject::IdToken.new(
+      :iss => 'iss',
+      :user_id => 'user_id',
+      :aud => 'aud',
+      :exp => 10.minutes.from_now,
+      :secret => 'secret'
+    )
+  end
 
   context "when approved" do
     subject { response }
@@ -15,11 +24,12 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri
         response.access_token = bearer_token
+        response.id_token = id_token
         response.approve!
       end
     end
     its(:status)   { should == 302 }
-    its(:location) { should == "#{redirect_uri}#access_token=#{access_token}&token_type=bearer" }
+    its(:location) { should == "#{redirect_uri}#access_token=#{access_token}&id_token=#{id_token.to_jwt}&token_type=bearer" }
 
     context 'when refresh_token is given' do
       let :bearer_token do
@@ -28,7 +38,7 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
           :refresh_token => 'refresh'
         )
       end
-      its(:location) { should == "#{redirect_uri}#access_token=#{access_token}&token_type=bearer" }
+      its(:location) { should == "#{redirect_uri}#access_token=#{access_token}&id_token=#{id_token.to_jwt}&token_type=bearer" }
     end
   end
 

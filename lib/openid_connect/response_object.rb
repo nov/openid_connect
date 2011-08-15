@@ -20,6 +20,10 @@ module OpenIDConnect
       required_attributes + optional_attributes
     end
 
+    def hidden_attributes
+      nil
+    end
+
     def require_at_least_one_attributes
       all_blank = all_attriutes.all? do |key|
         self.send(key).blank?
@@ -28,7 +32,7 @@ module OpenIDConnect
     end
 
     def as_json(options = {})
-      all_attriutes.inject({}) do |hash, _attr_|
+      (all_attriutes - Array(hidden_attributes)).inject({}) do |hash, _attr_|
         hash.merge! _attr_ => self.send(_attr_)
       end.delete_if do |key, value|
         value.nil?

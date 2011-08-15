@@ -6,6 +6,6 @@ describe OpenIDConnect::ResponseObject::IdToken do
   describe 'attributes' do
     subject { klass }
     its(:required_attributes) { should == [:iss, :user_id, :aud, :exp] }
-    its(:optional_attributes) { should == [:iso29115, :nonce, :issued_to] }
+    its(:optional_attributes) { should == [:iso29115, :nonce, :issued_to, :secret] }
   end
 end

@@ -3,33 +3,31 @@ require 'spec_helper'
 describe Rack::OAuth2::Server::Authorize::Extension::IdToken do
   let(:request)      { Rack::MockRequest.new app }
   let(:redirect_uri) { 'http://client.example.com/callback' }
-  let(:access_token) { 'access_token' }
   let(:response) do
     request.get("/?response_type=id_token&client_id=client&redirect_uri=#{redirect_uri}")
+  end
+  let(:id_token) do
+    OpenIDConnect::ResponseObject::IdToken.new(
+      :iss => 'iss',
+      :user_id => 'user_id',
+      :aud => 'aud',
+      :exp => 10.minutes.from_now,
+      :secret => 'secret'
+    )
   end
 
   context "when approved" do
     subject { response }
-    let(:bearer_token) { Rack::OAuth2::AccessToken::Bearer.new(:access_token => access_token) }
+    
     let :app do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri
-        response.access_token = bearer_token
+        response.id_token = id_token
         response.approve!
       end
     end
     its(:status)   { should == 302 }
-    its(:location) { should == "#{redirect_uri}#access_token=#{access_token}&token_type=bearer" }
-
-    context 'when refresh_token is given' do
-      let :bearer_token do
-        Rack::OAuth2::AccessToken::Bearer.new(
-          :access_token => access_token,
-          :refresh_token => 'refresh'
-        )
-      end
-      its(:location) { should == "#{redirect_uri}#access_token=#{access_token}&token_type=bearer" }
-    end
+    its(:location) { should == "#{redirect_uri}#id_token=#{id_token.to_jwt}" }
   end
 
   context 'when denied' do

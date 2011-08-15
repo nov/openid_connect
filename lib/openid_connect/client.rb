@@ -22,6 +22,14 @@ module OpenIDConnect
       AccessToken.new token.token_response.merge(:client => self)
     end
 
+    def introspection_uri
+      absolute_uri_for introspection_endpoint
+    end
+
+    def user_info_uri
+      absolute_uri_for user_info_endpoint
+    end
+
     private
 
     def setup_required_scope(scopes)

@@ -9,21 +9,22 @@ module OpenIDConnect
       else
         raise "Unknown Scheme: #{scheme}"
       end
-      klass.new resource_request do
-        get absolute_uri_for(user_info_endpoint)
+      hash = resource_request do
+        get client.user_info_uri
       end
+      klass.new hash
     end
 
     def id_token!
-      ResponseObject::IdToken.new resource_request do
-        get absolute_uri_for(introspection_endpoint)
+      hash = resource_request do
+        get client.introspection_uri
       end
+      ResponseObject::IdToken.new hash
     end
 
     private
 
     def resource_request
-      access_token_requied!
       res = yield
       case res.status
       when 200
