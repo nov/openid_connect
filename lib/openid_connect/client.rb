@@ -1,6 +1,6 @@
 module OpenIDConnect
   class Client < Rack::OAuth2::Client
-    attr_optional :introspection_endpoint, :user_info_endpoint, :access_token
+    attr_optional :introspection_endpoint, :user_info_endpoint
 
     def initialize(attributes = {})
       super
@@ -18,25 +18,8 @@ module OpenIDConnect
     end
 
     def access_token!
-      @access_token = super
-    end
-
-    def user_info!(scheme = :openid)
-      klass = case scheme
-      when :openid
-        UserInfo::OpenID
-      else
-        raise "Unknown Scheme: #{scheme}"
-      end
-      klass.new resource_request do
-        access_token.get absolute_uri_for(user_info_endpoint)
-      end
-    end
-
-    def id_token!
-      IdToken.new resource_request do
-        access_token.get absolute_uri_for(introspection_endpoint)
-      end
+      token = super
+      AccessToken.new token.token_response.merge(:client => self)
     end
 
     private
@@ -48,23 +31,6 @@ module OpenIDConnect
       else
         (scopes << 'openid')
       end.join(' ')
-    end
-
-    def access_token_requied!
-      raise OpenIDConnect::Exception.new('Access Token Requied') unless access_token
-    end
-
-    def resource_request
-      access_token_requied!
-      res = yield
-      case res.status
-      when 200
-        JSON.parse(res.body).with_indifferent_access
-      when 401
-        raise OpenIDConnect::Unauthorized.new('Access Token Invalid or Expired')
-      else
-        raise OpenIDConnect::BadRequest.new('API Access Faild')
-      end
     end
   end
 end
