@@ -20,10 +20,6 @@ module OpenIDConnect
       required_attributes + optional_attributes
     end
 
-    def hidden_attributes
-      nil
-    end
-
     def require_at_least_one_attributes
       all_blank = all_attriutes.all? do |key|
         self.send(key).blank?
@@ -37,6 +33,12 @@ module OpenIDConnect
       end.delete_if do |key, value|
         value.nil?
       end
+    end
+
+    private
+
+    def hidden_attributes
+      nil
     end
   end
 end

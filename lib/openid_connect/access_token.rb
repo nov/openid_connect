@@ -7,7 +7,7 @@ module OpenIDConnect
       when :openid
         ResponseObject::UserInfo::OpenID
       else
-        raise "Unknown Scheme: #{scheme}"
+        raise Exception.new("Unknown Scheme: #{scheme}")
       end
       hash = resource_request do
         get client.user_info_uri
