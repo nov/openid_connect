@@ -65,4 +65,7 @@ describe OpenIDConnect::Client do
     end
   end
 
+  describe '#access_token!' do
+    it :TODO
+  end
 end
