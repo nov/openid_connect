@@ -29,7 +29,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
     context 'otherwise' do
       let(:attributes) { required_attributes }
       it do
-        expect { id_token.to_jwt }.should raise_error(OpenIDConnect::Exception, 'Secret Required')
+        expect { id_token.to_jwt }.should raise_error OpenIDConnect::Exception, 'Secret Required'
       end
     end
   end

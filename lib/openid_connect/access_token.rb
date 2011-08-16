@@ -2,17 +2,16 @@ module OpenIDConnect
   class AccessToken < Rack::OAuth2::AccessToken::Bearer
     attr_required :client
 
+    def initialize(attributes = {})
+      super
+      @token_type = :bearer
+    end
+
     def user_info!(scheme = :openid)
-      klass = case scheme
-      when :openid
-        ResponseObject::UserInfo::OpenID
-      else
-        raise Exception.new("Unknown Scheme: #{scheme}")
-      end
       hash = resource_request do
         get client.user_info_uri
       end
-      klass.new hash
+      ResponseObject::UserInfo::OpenID.new hash
     end
 
     def id_token!
@@ -29,10 +28,14 @@ module OpenIDConnect
       case res.status
       when 200
         JSON.parse(res.body).with_indifferent_access
+      when 400
+        raise BadRequest.new('API Access Faild')
       when 401
-        raise OpenIDConnect::Unauthorized.new('Access Token Invalid or Expired')
+        raise Unauthorized.new('Access Token Invalid or Expired')
+      when 403
+        raise Forbidden.new('Insufficient Scope')
       else
-        raise OpenIDConnect::BadRequest.new('API Access Faild')
+        raise HttpError.new(res.status, 'Unknown HttpError')
       end
     end
   end

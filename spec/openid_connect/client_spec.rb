@@ -3,6 +3,7 @@ require 'spec_helper'
 describe OpenIDConnect::Client do
   subject { client }
   let(:client) { OpenIDConnect::Client.new attributes }
+  let(:attributes) { required_attributes }
   let :required_attributes do
     {
       :identifier => 'client_id'
@@ -23,7 +24,6 @@ describe OpenIDConnect::Client do
     end
 
     context 'otherwise' do
-      let(:attributes) { required_attributes }
       [:authorization_uri, :introspection_uri, :user_info_uri].each do |endpoint|
         describe endpoint do
           it do
@@ -66,6 +66,37 @@ describe OpenIDConnect::Client do
   end
 
   describe '#access_token!' do
-    it :TODO
+    let :attributes do
+      required_attributes.merge(
+        :secret => 'client_secret',
+        :token_endpoint => 'http://server.example.com/access_tokens'
+      )
+    end
+    let :protocol_params do
+      {
+        :client_id => 'client_id',
+        :client_secret => 'client_secret',
+        :grant_type => 'authorization_code',
+        :code => 'code'
+      }
+    end
+
+    context 'when bearer token is returned' do
+      it 'should return OpenIDConnect::AccessToken' do
+        mock_json :post, client.token_endpoint, 'access_token/bearer', :params => protocol_params do
+          client.authorization_code = 'code'
+          client.access_token!.should be_a OpenIDConnect::AccessToken
+        end
+      end
+    end
+
+    context 'otherwise' do
+      it 'should raise Unexpected Token Type exception' do
+        mock_json :post, client.token_endpoint, 'access_token/mac', :params => protocol_params do
+          client.authorization_code = 'code'
+          expect { client.access_token! }.should raise_error OpenIDConnect::Exception, 'Unexpected Token Type: mac'
+        end
+      end
+    end
   end
 end

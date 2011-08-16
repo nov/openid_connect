@@ -19,6 +19,7 @@ module OpenIDConnect
 
     def access_token!
       token = super
+      raise Exception.new("Unexpected Token Type: #{token.token_type}") unless token.token_type == :bearer
       AccessToken.new token.token_response.merge(:client => self)
     end
 
