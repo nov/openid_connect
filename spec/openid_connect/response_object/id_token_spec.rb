@@ -3,6 +3,7 @@ require 'spec_helper'
 describe OpenIDConnect::ResponseObject::IdToken do
   let(:klass) { OpenIDConnect::ResponseObject::IdToken }
   let(:id_token) { klass.new attributes }
+  let(:attributes) { required_attributes }
   let :required_attributes do
     {
       :iss => 'https://server.example.com',
@@ -18,6 +19,18 @@ describe OpenIDConnect::ResponseObject::IdToken do
     its(:optional_attributes) { should == [:iso29115, :nonce, :issued_to, :secret] }
   end
 
+  describe '#verify!' do
+    context 'when valid client_id is given' do
+      it { id_token.verify!('client_id').should be_true }
+    end
+
+    context 'otherwise' do
+      it do
+        expect { id_token.verify! 'invalid_client' }.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+      end
+    end
+  end
+
   describe '#to_jwt' do
     subject { id_token.to_jwt }
 
@@ -27,7 +40,6 @@ describe OpenIDConnect::ResponseObject::IdToken do
     end
 
     context 'otherwise' do
-      let(:attributes) { required_attributes }
       it do
         expect { id_token.to_jwt }.should raise_error OpenIDConnect::Exception, 'Secret Required'
       end

@@ -18,7 +18,9 @@ module OpenIDConnect
       hash = resource_request do
         get client.introspection_uri
       end
-      ResponseObject::IdToken.new hash
+      id_token = ResponseObject::IdToken.new hash
+      id_token.verify! client.identifier
+      id_token
     end
 
     private
