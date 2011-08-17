@@ -1,25 +1,68 @@
 require 'spec_helper'
 
 describe OpenIDConnect::AccessToken do
-  subject { token }
+  subject { access_token }
   let :client do
     OpenIDConnect::Client.new(
       :identifier => 'client_id',
       :host => 'server.example.com'
     )
   end
-  let :token do
+  let :access_token do
     OpenIDConnect::AccessToken.new(
       :access_token => 'access_token',
       :client => client
     )
   end
+
   its(:token_type) { should == :bearer }
+  its(:optional_attributes) { should include :id_token }
+
+  context 'when id_token is given' do
+    subject { access_token }
+    let :access_token do
+      OpenIDConnect::AccessToken.new(
+        :access_token => 'access_token',
+        :id_token => id_token,
+        :client => client
+      )
+    end
+
+    context 'when IdToken object' do
+      let :id_token do
+        OpenIDConnect::ResponseObject::IdToken.new(
+          :iss => 'https://server.example.com',
+          :user_id => 'user_id',
+          :aud => 'client_id',
+          :exp => 1313424327,
+          :secret => 'secret'
+        )
+      end
+      its(:id_token) { should be_a OpenIDConnect::ResponseObject::IdToken }
+      describe '#token_response' do
+        let(:token_response) { access_token.token_response }
+        it 'should stringfy it' do
+          token_response[:id_token].should be_a String
+        end
+      end
+    end
+
+    context 'when JWT string' do
+      let(:id_token) { 'id_token' }
+      its(:id_token) { should == 'id_token' }
+      describe '#token_response' do
+        let(:token_response) { access_token.token_response }
+        it 'should keep it as is' do
+          token_response[:id_token].should == 'id_token'
+        end
+      end
+    end
+  end
 
   describe '#user_info!' do
     it 'should return OpenIDConnect::ResponseObject::UserInfo::OpenID' do
       mock_json :get, client.user_info_uri, 'user_info/openid', :HTTP_AUTHORIZATION => 'Bearer access_token' do
-        token.user_info!.should be_a OpenIDConnect::ResponseObject::UserInfo::OpenID
+        access_token.user_info!.should be_a OpenIDConnect::ResponseObject::UserInfo::OpenID
       end
     end
 
@@ -27,7 +70,7 @@ describe OpenIDConnect::AccessToken do
       context 'when bad_request' do
         it 'should raise OpenIDConnect::Forbidden' do
           mock_json :get, client.user_info_uri, 'errors/invalid_request', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 400 do
-            expect { token.user_info! }.should raise_error OpenIDConnect::BadRequest
+            expect { access_token.user_info! }.should raise_error OpenIDConnect::BadRequest
           end
         end
       end
@@ -35,7 +78,7 @@ describe OpenIDConnect::AccessToken do
       context 'when unauthorized' do
         it 'should raise OpenIDConnect::Unauthorized' do
           mock_json :get, client.user_info_uri, 'errors/invalid_access_token', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 401 do
-            expect { token.user_info! }.should raise_error OpenIDConnect::Unauthorized
+            expect { access_token.user_info! }.should raise_error OpenIDConnect::Unauthorized
           end
         end
       end
@@ -43,7 +86,7 @@ describe OpenIDConnect::AccessToken do
       context 'when forbidden' do
         it 'should raise OpenIDConnect::Forbidden' do
           mock_json :get, client.user_info_uri, 'errors/insufficient_scope', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 403 do
-            expect { token.user_info! }.should raise_error OpenIDConnect::Forbidden
+            expect { access_token.user_info! }.should raise_error OpenIDConnect::Forbidden
           end
         end
       end
@@ -51,7 +94,7 @@ describe OpenIDConnect::AccessToken do
       context 'when unknown' do
         it 'should raise OpenIDConnect::HttpError' do
           mock_json :get, client.user_info_uri, 'errors/unknown', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 500 do
-            expect { token.user_info! }.should raise_error OpenIDConnect::HttpError
+            expect { access_token.user_info! }.should raise_error OpenIDConnect::HttpError
           end
         end
       end
@@ -61,7 +104,7 @@ describe OpenIDConnect::AccessToken do
   describe '#id_token!' do
     it 'should return OpenIDConnect::ResponseObject::IdToken' do
       mock_json :get, client.introspection_uri, 'id_token', :HTTP_AUTHORIZATION => 'Bearer access_token' do
-        token.id_token!.should be_a OpenIDConnect::ResponseObject::IdToken
+        access_token.id_token!.should be_a OpenIDConnect::ResponseObject::IdToken
       end
     end
 
@@ -75,7 +118,7 @@ describe OpenIDConnect::AccessToken do
 
       it 'should raise OpenIDConnect::ResponseObject::IdToken::InvalidToken' do
         mock_json :get, client.introspection_uri, 'id_token', :HTTP_AUTHORIZATION => 'Bearer access_token' do
-          expect { token.id_token! }.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+          expect { access_token.id_token! }.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
         end
       end
     end

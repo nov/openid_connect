@@ -80,12 +80,23 @@ describe OpenIDConnect::Client do
         :code => 'code'
       }
     end
+    let :access_token do
+      client.authorization_code = 'code'
+      client.access_token!
+    end
 
     context 'when bearer token is returned' do
       it 'should return OpenIDConnect::AccessToken' do
         mock_json :post, client.token_endpoint, 'access_token/bearer', :params => protocol_params do
-          client.authorization_code = 'code'
-          client.access_token!.should be_a OpenIDConnect::AccessToken
+          access_token.should be_a OpenIDConnect::AccessToken
+        end
+      end
+
+      context 'when id_token is returned' do
+        it 'should include id_token' do
+          mock_json :post, client.token_endpoint, 'access_token/bearer_with_id_token', :params => protocol_params do
+            access_token.id_token.should == 'id_token'
+          end
         end
       end
     end
@@ -93,8 +104,7 @@ describe OpenIDConnect::Client do
     context 'otherwise' do
       it 'should raise Unexpected Token Type exception' do
         mock_json :post, client.token_endpoint, 'access_token/mac', :params => protocol_params do
-          client.authorization_code = 'code'
-          expect { client.access_token! }.should raise_error OpenIDConnect::Exception, 'Unexpected Token Type: mac'
+          expect { access_token }.should raise_error OpenIDConnect::Exception, 'Unexpected Token Type: mac'
         end
       end
     end

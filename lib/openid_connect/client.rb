@@ -1,3 +1,6 @@
+require 'rack/oauth2/client/error'
+require 'rack/oauth2/client/grant'
+
 module OpenIDConnect
   class Client < Rack::OAuth2::Client
     attr_optional :introspection_endpoint, :user_info_endpoint
