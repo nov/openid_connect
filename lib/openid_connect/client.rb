@@ -28,12 +28,9 @@ module OpenIDConnect
     private
 
     def setup_required_scope(scopes)
-      scopes = Array(scopes).join(' ').split(' ')
-      if scopes.include?('openid')
-        scopes
-      else
-        (scopes << 'openid')
-      end.join(' ')
+      _scopes_ = Array(scopes).join(' ').split(' ')
+      _scopes_ << 'openid' unless _scopes_.include?('openid')
+      _scopes_.join(' ')
     end
 
     def handle_success_response(response)

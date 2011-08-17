@@ -4,12 +4,13 @@ describe OpenIDConnect::ResponseObject::IdToken do
   let(:klass) { OpenIDConnect::ResponseObject::IdToken }
   let(:id_token) { klass.new attributes }
   let(:attributes) { required_attributes }
+  let(:ext) { 10.minutes.from_now }
   let :required_attributes do
     {
       :iss => 'https://server.example.com',
       :user_id => 'user_id',
       :aud => 'client_id',
-      :exp => 1313424327
+      :exp => ext
     }
   end
 
@@ -22,6 +23,13 @@ describe OpenIDConnect::ResponseObject::IdToken do
   describe '#verify!' do
     context 'when valid client_id is given' do
       it { id_token.verify!('client_id').should be_true }
+
+      context 'when expired' do
+        let(:ext) { 10.minutes.ago }
+        it do
+          expect { id_token.verify! 'client_id' }.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+        end
+      end
     end
 
     context 'otherwise' do
@@ -56,8 +64,9 @@ describe OpenIDConnect::ResponseObject::IdToken do
     subject { klass.from_jwt id_token.to_jwt, 'secret' }
     let(:attributes) { required_attributes.merge(:secret => 'secret') }
     it { should be_a klass }
-    [:iss, :user_id, :aud, :exp, :secret].each do |key|
+    [:iss, :user_id, :aud, :secret].each do |key|
       its(key) { should == attributes[key] }
     end
+    its(:exp) { should == attributes[:exp].to_i }
   end
 end

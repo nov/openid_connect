@@ -8,6 +8,11 @@ module OpenIDConnect
       attr_required :iss, :user_id, :aud, :exp
       attr_optional :iso29115, :nonce, :issued_to, :secret
 
+      def initialize(attributes = {})
+        super
+        @exp = @exp.to_i
+      end
+
       def verify!(client_id)
         exp.to_i >= Time.now.to_i && aud == client_id or
         raise InvalidToken.new('Invalid audience or expired')

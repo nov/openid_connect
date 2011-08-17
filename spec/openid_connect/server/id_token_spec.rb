@@ -31,7 +31,11 @@ describe OpenIDConnect::Server::IdToken do
     it 'should extract it' do
       status, header, response = app.call(env)
       status.should == 200
-      response.body.first.should == id_token.to_json
+      json = response.body.first
+      json.should include '"aud":"client_id"'
+      json.should include '"user_id":"user_id"'
+      json.should include '"exp":1313424327'
+      json.should include '"iss":"https://server.example.com"'
     end
   end
 
