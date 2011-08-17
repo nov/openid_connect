@@ -2,6 +2,7 @@ require 'spec_helper.rb'
 require 'rack/oauth2/server/authorize/extension/code_and_token'
 
 describe Rack::OAuth2::Server::Authorize::Extension::CodeAndToken do
+  subject { response }
   let(:request)      { Rack::MockRequest.new app }
   let(:response)     { request.get("/?response_type=code%20token&client_id=client") }
   let(:redirect_uri) { 'http://client.example.com/callback' }
@@ -17,7 +18,6 @@ describe Rack::OAuth2::Server::Authorize::Extension::CodeAndToken do
   end
 
   context "when id_token is given" do
-    subject { response }
     let :app do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri
@@ -32,7 +32,6 @@ describe Rack::OAuth2::Server::Authorize::Extension::CodeAndToken do
   end
 
   context "otherwise" do
-    subject { response }
     let :app do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri

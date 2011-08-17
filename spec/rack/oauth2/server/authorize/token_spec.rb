@@ -1,6 +1,7 @@
 require 'spec_helper.rb'
 
 describe Rack::OAuth2::Server::Authorize::Token do
+  subject { response }
   let(:request)      { Rack::MockRequest.new app }
   let(:response)     { request.get("/?response_type=token&client_id=client") }
   let(:redirect_uri) { 'http://client.example.com/callback' }
@@ -16,7 +17,6 @@ describe Rack::OAuth2::Server::Authorize::Token do
   end
 
   context "when id_token is given" do
-    subject { response }
     let :app do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri
@@ -30,7 +30,6 @@ describe Rack::OAuth2::Server::Authorize::Token do
   end
 
   context "otherwise" do
-    subject { response }
     let :app do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri
