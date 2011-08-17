@@ -1,11 +1,11 @@
 module OpenIDConnect
   class Client < Rack::OAuth2::Client
-    attr_optional :introspection_endpoint, :user_info_endpoint
+    attr_optional :check_session_endpoint, :user_info_endpoint
 
     def initialize(attributes = {})
       super
       @user_info_endpoint     ||= '/user_info'
-      @introspection_endpoint ||= '/id_token'
+      @check_session_endpoint ||= '/id_token'
     end
 
     def authorization_uri(params = {})
@@ -17,8 +17,8 @@ module OpenIDConnect
       )
     end
 
-    def introspection_uri
-      absolute_uri_for introspection_endpoint
+    def check_session_uri
+      absolute_uri_for check_session_endpoint
     end
 
     def user_info_uri
