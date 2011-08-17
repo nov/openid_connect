@@ -9,9 +9,8 @@ module OpenIDConnect
       attr_optional :iso29115, :nonce, :issued_to, :secret
 
       def verify!(client_id)
-        aud == client_id or
-        issued_to == client_id or
-        raise InvalidToken.new('Invalid audience or issued_to')
+        exp.to_i >= Time.now.to_i && aud == client_id or
+        raise InvalidToken.new('Invalid audience or expired')
       end
 
       def to_jwt
