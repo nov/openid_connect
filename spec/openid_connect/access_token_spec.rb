@@ -100,27 +100,4 @@ describe OpenIDConnect::AccessToken do
       end
     end
   end
-
-  describe '#id_token!' do
-    it 'should return OpenIDConnect::ResponseObject::IdToken' do
-      mock_json :get, client.introspection_uri, 'id_token', :HTTP_AUTHORIZATION => 'Bearer access_token' do
-        access_token.id_token!.should be_a OpenIDConnect::ResponseObject::IdToken
-      end
-    end
-
-    context 'when invalid client is given' do
-      let :client do
-        OpenIDConnect::Client.new(
-          :identifier => 'invalid_client',
-          :host => 'server.example.com'
-        )
-      end
-
-      it 'should raise OpenIDConnect::ResponseObject::IdToken::InvalidToken' do
-        mock_json :get, client.introspection_uri, 'id_token', :HTTP_AUTHORIZATION => 'Bearer access_token' do
-          expect { access_token.id_token! }.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
-        end
-      end
-    end
-  end
 end

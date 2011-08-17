@@ -14,15 +14,6 @@ module OpenIDConnect
       ResponseObject::UserInfo::OpenID.new hash
     end
 
-    def id_token!
-      hash = resource_request do
-        get client.introspection_uri
-      end
-      id_token = ResponseObject::IdToken.new hash
-      id_token.verify! client.identifier
-      id_token
-    end
-
     private
 
     def resource_request
