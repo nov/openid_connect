@@ -8,8 +8,9 @@ OpenID Connect Server & Client Library
 
 == Resources
 
-* View Source on GitHub (http://github.com/nov/openid_connect)
-* Report Issues on GitHub (http://github.com/nov/openid_connect/issues)
+* View Source on GitHub (https://github.com/nov/openid_connect)
+* Report Issues on GitHub (https://github.com/nov/openid_connect/issues)
+* Subscribe Update Info (https://www.facebook.com/pages/OpenID-Connect/134681459957370)
 
 == Examples
 
