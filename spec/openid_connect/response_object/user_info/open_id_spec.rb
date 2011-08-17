@@ -94,8 +94,7 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
         }
       }
     end
-    its(:to_json) do
-      should == attributes.to_json
-    end
+    its(:to_json) { should include '"id":"http://example.com/nov.matake#12345"'}
+    its(:to_json) { should include '"address":{"formatted":"Tokyo, Japan"}'}
   end
 end
