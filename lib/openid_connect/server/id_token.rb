@@ -12,9 +12,12 @@ module OpenIDConnect
       class Request < Rack::OAuth2::Server::Abstract::Request
         attr_required :id_token
 
+        # NOTE: client_id is required in Rack::OAuth2 and should not exist here.
+        undef_method :client_id, :client_id=
+        @required_attributes.delete :client_id
+
         def initialize(env)
           super
-          @client_id = 'fake' # required in Rack::OAuth2, but not needed here.
           @id_token  = params['id_token']
           attr_missing!
           @id_token = ResponseObject::IdToken.new JWT.decode(id_token, nil, false).with_indifferent_access
