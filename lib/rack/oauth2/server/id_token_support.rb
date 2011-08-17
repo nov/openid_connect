@@ -1,4 +1,4 @@
-module TokenWithIdToken
+module IdTokenSupport
   def self.included(klass)
     klass.send :attr_optional, :id_token
     klass.class_eval do
