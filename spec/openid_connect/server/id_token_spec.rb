@@ -47,21 +47,10 @@ describe OpenIDConnect::Server::IdToken do
       end
     end
 
-    context 'when invalid format' do
-      let :params do
-        {:id_token => 'invalid_id_token'}
-      end
-      it do
-        status, header, response = app.call(env)
-        status.should == 400
-        response.body.first.should include '"error":"invalid_id_token"'
-      end
-    end
-
     context 'when rejected by authenticator' do
       let :app do
         OpenIDConnect::Server::IdToken.new do |req, res|
-          req.invalid_id_token! 'Expired'
+          req.invalid_id_token! 'Expired or Invalid Format'
         end
       end
       it do

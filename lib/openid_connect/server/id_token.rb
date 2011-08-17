@@ -20,9 +20,6 @@ module OpenIDConnect
           super
           @id_token  = params['id_token']
           attr_missing!
-          @id_token = ResponseObject::IdToken.new JWT.decode(id_token, nil, false).with_indifferent_access
-        rescue JWT::DecodeError => e
-          invalid_id_token! e.message
         end
       end
 

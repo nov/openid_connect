@@ -1,5 +1,4 @@
 require 'json'
-require 'jwt'
 require 'rack/oauth2'
 require 'rack/oauth2/server/id_token_response'
 
