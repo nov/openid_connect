@@ -1,7 +1,6 @@
 require 'json'
 require 'rack/oauth2'
-require 'rack/oauth2/server/authorize/extension/id_token'
-require 'rack/oauth2/server/authorize/extension/id_token_and_token'
+require 'rack/oauth2/server/authorize/token_ext'
 
 require 'openid_connect/exception'
 require 'openid_connect/client'
