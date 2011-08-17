@@ -39,23 +39,13 @@ describe OpenIDConnect::AccessToken do
         )
       end
       its(:id_token) { should be_a OpenIDConnect::ResponseObject::IdToken }
-      describe '#token_response' do
-        let(:token_response) { access_token.token_response }
-        it 'should stringfy it' do
-          token_response[:id_token].should be_a String
-        end
-      end
+      its(:token_response) { should_not include :id_token }
     end
 
     context 'when JWT string' do
       let(:id_token) { 'id_token' }
       its(:id_token) { should == 'id_token' }
-      describe '#token_response' do
-        let(:token_response) { access_token.token_response }
-        it 'should keep it as is' do
-          token_response[:id_token].should == 'id_token'
-        end
-      end
+      its(:token_response) { should_not include :id_token }
     end
   end
 

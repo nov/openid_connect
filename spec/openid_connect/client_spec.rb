@@ -19,7 +19,7 @@ describe OpenIDConnect::Client do
       end
       its(:authorization_uri) { should include 'https://server.example.com/oauth2/authorize' }
       its(:authorization_uri) { should include 'scope=openid' }
-      its(:introspection_uri) { should == 'https://server.example.com/id_tokens' }
+      its(:introspection_uri) { should == 'https://server.example.com/id_token' }
       its(:user_info_uri)     { should == 'https://server.example.com/user_info' }
     end
 

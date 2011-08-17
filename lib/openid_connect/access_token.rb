@@ -1,6 +1,7 @@
 module OpenIDConnect
   class AccessToken < Rack::OAuth2::AccessToken::Bearer
     attr_required :client
+    attr_optional :id_token
 
     def initialize(attributes = {})
       super

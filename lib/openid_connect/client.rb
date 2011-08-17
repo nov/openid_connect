@@ -8,7 +8,7 @@ module OpenIDConnect
     def initialize(attributes = {})
       super
       @user_info_endpoint     ||= '/user_info'
-      @introspection_endpoint ||= '/id_tokens'
+      @introspection_endpoint ||= '/id_token'
     end
 
     def authorization_uri(params = {})
@@ -18,12 +18,6 @@ module OpenIDConnect
         :client_id => self.identifier,
         :redirect_uri => self.redirect_uri
       )
-    end
-
-    def access_token!
-      token = super
-      raise Exception.new("Unexpected Token Type: #{token.token_type}") unless token.token_type == :bearer
-      AccessToken.new token.token_response.merge(:client => self)
     end
 
     def introspection_uri
@@ -43,6 +37,18 @@ module OpenIDConnect
       else
         (scopes << 'openid')
       end.join(' ')
+    end
+
+    def handle_success_response(response)
+      token_hash = JSON.parse(response.body).with_indifferent_access
+      case token_type = token_hash[:token_type].try(:downcase)
+      when 'bearer'
+        AccessToken.new token_hash.merge(client: self)
+      else
+        raise Exception.new("Unexpected Token Type: #{token_type}")
+      end
+    rescue JSON::ParserError
+      raise Exception.new("Unknown Token Type")
     end
   end
 end
