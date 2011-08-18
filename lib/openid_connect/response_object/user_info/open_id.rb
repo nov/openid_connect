@@ -7,9 +7,9 @@ module OpenIDConnect
         attr_optional :phone_number
 
         attr_optional :verified, :gender, :zoneinfo, :locale
-        validates_inclusion_of :verified, :in => [true, false], :allow_nil => true
-        validates_inclusion_of :gender, :in => [:male, :female], :allow_nil => true
-        validates_inclusion_of :zoneinfo, :in => TZInfo::TimezoneProxy.all.collect(&:name), :allow_nil => true
+        validates :verified, :inclusion => {:in => [true, false]},                             :allow_nil => true
+        validates :gender,   :inclusion => {:in => ['male', 'female']},                        :allow_nil => true
+        validates :zoneinfo, :inclusion => {:in => TZInfo::TimezoneProxy.all.collect(&:name)}, :allow_nil => true
         # TODO: validate locale
 
         attr_optional :birthday, :updated_time
@@ -24,6 +24,13 @@ module OpenIDConnect
         validate :validate_address
 
         validate :require_at_least_one_attributes
+
+        def initialize(attributes = {})
+          super
+          (all_attributes - [:verified, :address]).each do |key|
+            self.send "#{key}=", self.send(key).try(:to_s)
+          end
+        end
 
         def validate_address
           errors.add :address, 'cannot be blank' unless address.blank? || address.valid?

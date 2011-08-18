@@ -9,6 +9,15 @@ module OpenIDConnect
   class ResponseObject
     include ActiveModel::Validations, AttrRequired, AttrOptional
 
+    class ValidationFailed < Exception
+      attr_reader :errors
+
+      def initialize(errors)
+        super errors.full_messages.to_sentence
+        @errors = errors
+      end
+    end
+
     def initialize(attributes = {})
       all_attriutes.each do |_attr_|
         self.send :"#{_attr_}=", attributes[_attr_]
@@ -28,11 +37,16 @@ module OpenIDConnect
     end
 
     def as_json(options = {})
+      validate!
       (all_attriutes - Array(hidden_attributes)).inject({}) do |hash, _attr_|
         hash.merge! _attr_ => self.send(_attr_)
       end.delete_if do |key, value|
         value.nil?
       end
+    end
+
+    def validate!
+      raise ValidationFailed.new(errors) unless valid?
     end
 
     private
