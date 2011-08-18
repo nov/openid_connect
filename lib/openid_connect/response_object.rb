@@ -46,7 +46,7 @@ module OpenIDConnect
     end
 
     def validate!
-      raise ValidationFailed.new(errors) unless valid?
+      valid? or raise ValidationFailed.new(errors)
     end
   end
 end

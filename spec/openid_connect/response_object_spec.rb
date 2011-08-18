@@ -7,8 +7,9 @@ describe OpenIDConnect::ResponseObject do
     validates :required, :inclusion => {:in => ['Required', 'required']}, :length => 1..10
   end
 
-  subject { klass.new attributes }
-  let(:klass) { OpenIDConnect::ResponseObject::SubClass }
+  subject        { instance }
+  let(:klass)    { OpenIDConnect::ResponseObject::SubClass }
+  let(:instance) { klass.new attributes }
   let :attributes do
     {:required => 'Required', :optional => 'Optional'}
   end
@@ -46,24 +47,45 @@ describe OpenIDConnect::ResponseObject do
   end
 
   describe '#as_json' do
-    its(:as_json) do
-      should == {:required => 'Required', :optional => 'Optional'}
+    context 'when valid' do
+      its(:as_json) do
+        should == attributes
+      end
+    end
+
+    context 'otherwise' do
+      let :attributes do
+        {:required => 'Out of List and Too Long'}
+      end
+
+      it 'should raise OpenIDConnect::ResponseObject::ValidationFailed with ActiveModel::Errors' do
+        expect { instance.as_json }.should raise_error(OpenIDConnect::ResponseObject::ValidationFailed) { |e|
+          e.message.should include 'Required is not included in the list'
+          e.message.should include 'Required is too long (maximum is 10 characters)'
+          e.errors.should be_a ActiveModel::Errors
+        }
+      end
     end
   end
 
   describe '#validate!' do
-    let(:invalid) do
-      instance = klass.new attributes
-      instance.required = 'Out of List and Too Long'
-      instance
+    context 'when valid' do
+      subject { instance.validate! }
+      it { should be_true }
     end
 
-    it 'should raise OpenIDConnect::ResponseObject::ValidationFailed with ActiveModel::Errors' do
-      expect { invalid.validate! }.should raise_error(OpenIDConnect::ResponseObject::ValidationFailed) { |e|
-        e.message.should include 'Required is not included in the list'
-        e.message.should include 'Required is too long (maximum is 10 characters)'
-        e.errors.should be_a ActiveModel::Errors
-      }
+    context 'otherwise' do
+      let :attributes do
+        {:required => 'Out of List and Too Long'}
+      end
+
+      it 'should raise OpenIDConnect::ResponseObject::ValidationFailed with ActiveModel::Errors' do
+        expect { instance.validate! }.should raise_error(OpenIDConnect::ResponseObject::ValidationFailed) { |e|
+          e.message.should include 'Required is not included in the list'
+          e.message.should include 'Required is too long (maximum is 10 characters)'
+          e.errors.should be_a ActiveModel::Errors
+        }
+      end
     end
   end
 end
