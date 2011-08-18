@@ -4,12 +4,11 @@ module Rack::OAuth2::Server
       klass.send :attr_optional, :id_token, :private_key
       klass.class_eval do
         def jwt_string
-          case id_token
-          when String
-            id_token
-          when OpenIDConnect::ResponseObject::IdToken
+          if id_token.is_a? OpenIDConnect::ResponseObject::IdToken
             raise AttrRequired::AttrMissing.new('private_key is required') unless private_key
             id_token.to_jwt private_key
+          else
+            id_token
           end
         end
 
