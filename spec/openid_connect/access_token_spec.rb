@@ -34,8 +34,7 @@ describe OpenIDConnect::AccessToken do
           :iss => 'https://server.example.com',
           :user_id => 'user_id',
           :aud => 'client_id',
-          :exp => 1313424327,
-          :secret => 'secret'
+          :exp => 1313424327
         )
       end
       its(:id_token) { should be_a OpenIDConnect::ResponseObject::IdToken }

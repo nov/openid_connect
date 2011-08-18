@@ -11,8 +11,7 @@ describe Rack::OAuth2::Server::Authorize::Token do
       :iss => 'https://server.example.com',
       :user_id => 'user_id',
       :aud => 'client_id',
-      :exp => 1313424327,
-      :secret => 'secret'
+      :exp => 1313424327
     )
   end
 

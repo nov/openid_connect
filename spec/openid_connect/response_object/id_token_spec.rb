@@ -47,7 +47,11 @@ describe OpenIDConnect::ResponseObject::IdToken do
   describe '#as_json' do
     subject { id_token.as_json }
     let(:attributes) { required_attributes }
-    it { should_not include :secret }
+    it do
+      hash = required_attributes
+      hash[:exp] = required_attributes[:exp].to_i
+      should == hash
+    end
   end
 
   describe '.from_jwt' do
