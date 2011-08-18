@@ -60,7 +60,8 @@ describe OpenIDConnect::ResponseObject do
 
     it 'should raise OpenIDConnect::ResponseObject::ValidationFailed with ActiveModel::Errors' do
       expect { invalid.validate! }.should raise_error(OpenIDConnect::ResponseObject::ValidationFailed) { |e|
-        e.message.should == 'Required is not included in the list and Required is too long (maximum is 10 characters)'
+        e.message.should include 'Required is not included in the list'
+        e.message.should include 'Required is too long (maximum is 10 characters)'
         e.errors.should be_a ActiveModel::Errors
       }
     end

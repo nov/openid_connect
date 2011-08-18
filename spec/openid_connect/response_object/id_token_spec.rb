@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe OpenIDConnect::ResponseObject::IdToken do
-  let(:klass) { OpenIDConnect::ResponseObject::IdToken }
-  let(:id_token) { klass.new attributes }
-  let(:attributes) { required_attributes }
-  let(:ext) { 10.minutes.from_now }
+  let(:klass)       { OpenIDConnect::ResponseObject::IdToken }
+  let(:id_token)    { klass.new attributes }
+  let(:attributes)  { required_attributes }
+  let(:ext)         { 10.minutes.from_now }
   let :required_attributes do
     {
       :iss => 'https://server.example.com',
@@ -17,7 +17,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
   describe 'attributes' do
     subject { klass }
     its(:required_attributes) { should == [:iss, :user_id, :aud, :exp] }
-    its(:optional_attributes) { should == [:iso29115, :nonce, :issued_to, :secret] }
+    its(:optional_attributes) { should == [:iso29115, :nonce, :issued_to] }
   end
 
   describe '#verify!' do
@@ -40,31 +40,21 @@ describe OpenIDConnect::ResponseObject::IdToken do
   end
 
   describe '#to_jwt' do
-    subject { id_token.to_jwt }
-
-    context 'when secret is given' do
-      let(:attributes) { required_attributes.merge(:secret => 'secret') }
-      it { should be_a String }
-    end
-
-    context 'otherwise' do
-      it do
-        expect { id_token.to_jwt }.should raise_error OpenIDConnect::Exception, 'Secret Required'
-      end
-    end
+    subject { id_token.to_jwt private_key }
+    it { should be_a String }
   end
 
   describe '#as_json' do
     subject { id_token.as_json }
-    let(:attributes) { required_attributes.merge(:secret => 'secret') }
+    let(:attributes) { required_attributes }
     it { should_not include :secret }
   end
 
   describe '.from_jwt' do
-    subject { klass.from_jwt id_token.to_jwt, 'secret' }
-    let(:attributes) { required_attributes.merge(:secret => 'secret') }
+    subject { klass.from_jwt id_token.to_jwt(private_key), public_key }
+    let(:attributes) { required_attributes }
     it { should be_a klass }
-    [:iss, :user_id, :aud, :secret].each do |key|
+    [:iss, :user_id, :aud].each do |key|
       its(key) { should == attributes[key] }
     end
     its(:exp) { should == attributes[:exp].to_i }

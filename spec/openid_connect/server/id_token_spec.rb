@@ -1,7 +1,7 @@
 require 'spec_helper.rb'
 
 describe OpenIDConnect::Server::IdToken do
-  let(:request) { Rack::MockRequest.new app }
+  let(:request)     { Rack::MockRequest.new app }
   let :app do
     OpenIDConnect::Server::IdToken.new do |req, res|
       res.id_token = id_token
@@ -14,7 +14,7 @@ describe OpenIDConnect::Server::IdToken do
     )
   end
   let :params do
-    {:id_token => id_token.to_jwt}
+    {:id_token => id_token.to_jwt(private_key) }
   end
   let :id_token do
     OpenIDConnect::ResponseObject::IdToken.new(

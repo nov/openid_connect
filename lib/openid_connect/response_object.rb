@@ -19,18 +19,18 @@ module OpenIDConnect
     end
 
     def initialize(attributes = {})
-      all_attriutes.each do |_attr_|
+      all_attributes.each do |_attr_|
         self.send :"#{_attr_}=", attributes[_attr_]
       end
       attr_missing!
     end
 
-    def all_attriutes
+    def all_attributes
       required_attributes + optional_attributes
     end
 
     def require_at_least_one_attributes
-      all_blank = all_attriutes.all? do |key|
+      all_blank = all_attributes.all? do |key|
         self.send(key).blank?
       end
       errors.add :base, 'At least one attribute is required' if all_blank
@@ -38,7 +38,7 @@ module OpenIDConnect
 
     def as_json(options = {})
       validate!
-      (all_attriutes - Array(hidden_attributes)).inject({}) do |hash, _attr_|
+      all_attributes.inject({}) do |hash, _attr_|
         hash.merge! _attr_ => self.send(_attr_)
       end.delete_if do |key, value|
         value.nil?
@@ -47,12 +47,6 @@ module OpenIDConnect
 
     def validate!
       raise ValidationFailed.new(errors) unless valid?
-    end
-
-    private
-
-    def hidden_attributes
-      nil
     end
   end
 end

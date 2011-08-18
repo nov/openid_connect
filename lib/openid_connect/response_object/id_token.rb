@@ -6,10 +6,13 @@ module OpenIDConnect
       class InvalidToken < Exception; end
 
       attr_required :iss, :user_id, :aud, :exp
-      attr_optional :iso29115, :nonce, :issued_to, :secret
+      attr_optional :iso29115, :nonce, :issued_to
 
       def initialize(attributes = {})
         super
+        (all_attributes - [:exp]).each do |key|
+          self.send "#{key}=", self.send(key).try(:to_s)
+        end
         @exp = @exp.to_i
       end
 
@@ -18,19 +21,12 @@ module OpenIDConnect
         raise InvalidToken.new('Invalid audience or expired')
       end
 
-      def to_jwt
-        raise Exception.new('Secret Required') unless secret
-        JWT.encode as_json, secret
+      def to_jwt(key, algorithm = 'RS256')
+        JWT.encode as_json, key, algorithm
       end
 
-      def self.from_jwt(jwt, secret)
-        new JWT.decode(jwt, secret).with_indifferent_access.merge(:secret => secret)
-      end
-
-      private
-
-      def hidden_attributes
-        :secret
+      def self.from_jwt(jwt_string, key)
+        new JWT.decode(jwt_string, key).with_indifferent_access
       end
     end
   end
