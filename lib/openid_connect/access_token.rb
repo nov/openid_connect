@@ -23,13 +23,13 @@ module OpenIDConnect
       when 200
         JSON.parse(res.body).with_indifferent_access
       when 400
-        raise BadRequest.new('API Access Faild')
+        raise BadRequest.new('API Access Faild', res)
       when 401
-        raise Unauthorized.new('Access Token Invalid or Expired')
+        raise Unauthorized.new('Access Token Invalid or Expired', res)
       when 403
-        raise Forbidden.new('Insufficient Scope')
+        raise Forbidden.new('Insufficient Scope', res)
       else
-        raise HttpError.new(res.status, 'Unknown HttpError')
+        raise HttpError.new(res.status, 'Unknown HttpError', res)
       end
     end
   end

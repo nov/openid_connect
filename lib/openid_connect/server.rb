@@ -1,0 +1,1 @@
+require 'openid_connect/server/id_token'

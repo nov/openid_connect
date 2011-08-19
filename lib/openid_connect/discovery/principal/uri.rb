@@ -7,10 +7,6 @@ module OpenIDConnect
           @host = @identifier.host
         end
 
-        def discover!
-          
-        end
-
         private
 
         def normalize(identifier)

@@ -6,15 +6,30 @@ module OpenIDConnect
 
       def initialize(identifier)
         raise InvalidIdentifier if identifier.blank?
-        @identifier = case identifier
+        identifier_type = case identifier
         when /^(=|@|!)/
-          XRI.new(identifier)
+          XRI
         when /@/
-          Email.new(identifier)
+          Email
         else
-          URI.new(identifier)
+          URI
         end
+        @identifier = identifier_type.new identifier
+      end
+
+      def discover!
+        SWD.discover!(
+          :principal => identifier,
+          :service => 'http://openid.net/specs/connect/1.0/issuer',
+          :host => host
+        )
+      rescue SWD::Exception => e
+        raise DiscoveryFailed.new(e.message)
       end
     end
   end
 end
+
+require 'openid_connect/discovery/principal/email'
+require 'openid_connect/discovery/principal/uri'
+require 'openid_connect/discovery/principal/xri'

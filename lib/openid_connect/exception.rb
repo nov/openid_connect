@@ -3,7 +3,7 @@ module OpenIDConnect
 
   class HttpError < Exception
     attr_accessor :status, :response
-    def initialize(status, message, response = nil)
+    def initialize(status, message = nil, response = nil)
       super message
       @status = status
       @response = response

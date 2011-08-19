@@ -5,10 +5,6 @@ module OpenIDConnect
         def initialize(identifier)
           @identifier = identifier
         end
-
-        def discover!
-          
-        end
       end
     end
   end

@@ -3,18 +3,13 @@ module OpenIDConnect
     class InvalidIdentifier < Exception; end
     class DiscoveryFailed < Exception; end
 
-    module Service
-      class << self
-        def issuer
-          'http://openid.net/specs/connect/1.0/issuer'
-        end
-      end
-    end
-
     class << self
-      def discover(identifier)
+      def discover!(identifier)
         Principal.new(identifier).discover!
       end
     end
   end
 end
+
+require 'openid_connect/discovery/principal'
+require 'openid_connect/discovery/config'

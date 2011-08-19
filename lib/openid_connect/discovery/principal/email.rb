@@ -6,10 +6,6 @@ module OpenIDConnect
           @identifier = identifier
           @host = identifier.split('@').last
         end
-
-        def discover!
-          
-        end
       end
     end
   end
