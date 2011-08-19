@@ -4,7 +4,6 @@ module OpenIDConnect
   module Discovery
     class Principal
       attr_reader :identifier, :host
-      delegate :discover!, :to => :identifier
 
       def initialize(identifier)
         raise InvalidIdentifier if identifier.blank?
