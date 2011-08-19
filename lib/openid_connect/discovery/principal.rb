@@ -5,8 +5,8 @@ module OpenIDConnect
     class Principal
       attr_reader :identifier, :host
 
-      def initialize(identifier)
-        raise InvalidIdentifier if identifier.blank?
+      def self.parse(identifier)
+        raise InvalidIdentifier.new('Identifier Required') if identifier.blank?
         type = case identifier
         when /^(=|@|!)/
           XRI
@@ -15,15 +15,13 @@ module OpenIDConnect
         else
           URI
         end
-        principal = type.new identifier
-        @identifier = principal.identifier
-        @host = principal.host
+        type.new identifier
       end
 
       def discover!
         SWD.discover!(
           :principal => identifier,
-          :service => 'http://openid.net/specs/connect/1.0/issuer',
+          :service => Provider::SERVICE_URI,
           :host => host
         )
       rescue SWD::Exception => e

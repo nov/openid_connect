@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openid_connect (0.0.12)
+    openid_connect (0.0.13)
       activemodel (>= 3)
       attr_required (>= 0.0.3)
       json (>= 1.4.3)
@@ -70,7 +70,7 @@ GEM
     validate_url (0.2.0)
       activemodel (>= 3.0.0)
     webmock (1.7.4)
-      addressable (~> 2.2, > 2.2.5)
+      addressable (> 2.2.5, ~> 2.2)
       crack (>= 0.1.7)
 
 PLATFORMS

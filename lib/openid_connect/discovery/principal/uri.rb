@@ -11,13 +11,12 @@ module OpenIDConnect
         private
 
         def normalize(identifier)
+          identifier = "https://#{identifier}" unless identifier.include?('://')
           uri = ::URI.parse(identifier)
-          if uri.host.blank?
-            uri.host, uri.path = uri.path.split('/', 2)
-            uri.path = File.join('/', uri.path)
-          end
-          uri.scheme ||= 'https'
+          uri.fragment = nil
           uri
+        rescue ::URI::Error => e
+          raise InvalidIdentifier.new('Invalid URI')
         end
       end
     end
