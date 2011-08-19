@@ -1,3 +1,5 @@
+require 'swd'
+
 module OpenIDConnect
   module Discovery
     class Principal
@@ -6,7 +8,7 @@ module OpenIDConnect
 
       def initialize(identifier)
         raise InvalidIdentifier if identifier.blank?
-        identifier_type = case identifier
+        type = case identifier
         when /^(=|@|!)/
           XRI
         when /@/
@@ -14,7 +16,9 @@ module OpenIDConnect
         else
           URI
         end
-        @identifier = identifier_type.new identifier
+        principal = type.new identifier
+        @identifier = principal.identifier
+        @host = principal.host
       end
 
       def discover!

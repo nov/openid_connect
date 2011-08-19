@@ -3,19 +3,21 @@ module OpenIDConnect
     class Principal
       class URI < Principal
         def initialize(identifier)
-          @identifier = normalize(identifier)
-          @host = @identifier.host
+          uri = normalize(identifier)
+          @identifier = uri.to_s
+          @host = uri.host
         end
 
         private
 
         def normalize(identifier)
-          uri = URI.parse(identifier)
+          uri = ::URI.parse(identifier)
           if uri.host.blank?
             uri.host, uri.path = uri.path.split('/', 2)
             uri.path = File.join('/', uri.path)
           end
           uri.scheme ||= 'https'
+          uri
         end
       end
     end
