@@ -52,7 +52,10 @@ describe OpenIDConnect::Discovery::Provider do
     end
 
     context 'when Email is given' do
-      it :TODO
+      let(:identifier) { "nov@#{host}" }
+      let(:host)       { 'server.example.com' }
+      let(:principal)  { identifier }
+      it_behaves_like :discover_provider
     end
 
   end
