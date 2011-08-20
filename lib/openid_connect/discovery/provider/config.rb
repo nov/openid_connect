@@ -2,7 +2,7 @@ module OpenIDConnect
   module Discovery
     module Provider
       class Config
-        def self.discover!(host, cache_options = {})
+        def self.discover!(identifier, cache_options = {})
           principal = Principal.parse(identifier)
           Resource.new(principal.host).discover!(cache_options)
         rescue SWD::Exception => e
@@ -12,3 +12,6 @@ module OpenIDConnect
     end
   end
 end
+
+require 'openid_connect/discovery/provider/config/resource'
+require 'openid_connect/discovery/provider/config/response'
