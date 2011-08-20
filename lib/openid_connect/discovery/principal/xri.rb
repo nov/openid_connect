@@ -6,7 +6,7 @@ module OpenIDConnect
           @identifier = identifier
         end
 
-        def discover!
+        def discover!(cache_options = {})
           raise NotImplementedError.new('XRI is not supported yet')
         end
       end

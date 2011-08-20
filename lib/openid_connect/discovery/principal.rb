@@ -18,11 +18,12 @@ module OpenIDConnect
         type.new identifier
       end
 
-      def discover!
+      def discover!(cache_options = {})
         SWD.discover!(
           :principal => identifier,
           :service => Provider::SERVICE_URI,
-          :host => host
+          :host => host,
+          :cache => cache_options
         )
       rescue SWD::Exception => e
         raise DiscoveryFailed.new(e.message)
