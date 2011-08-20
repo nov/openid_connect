@@ -5,7 +5,8 @@ module OpenIDConnect
         class Resource < SWD::Resource
           # NOTE: principal and service are required in SWD::Resource and should not exist here.
           undef_method :principal, :principal=, :service, :service=
-          @required_attributes.delete :principal, :service
+          @required_attributes.delete :principal
+          @required_attributes.delete :service
 
           class Expired < SWD::Resource::Expired; end
 
@@ -28,11 +29,7 @@ module OpenIDConnect
           end
 
           def cache_key
-            md5 = Digest::MD5.hexdigest [
-              principal,
-              service,
-              host
-            ].join(' ')
+            md5 = Digest::MD5.hexdigest host
             "swd:resource:opneid-conf:#{md5}"
           end
         end
