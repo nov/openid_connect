@@ -1,9 +1,9 @@
-require 'spec_helper.rb'
+require 'spec_helper'
 
-describe Rack::OAuth2::Server::Authorize::Token do
+describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
   subject { response }
   let(:request)      { Rack::MockRequest.new app }
-  let(:response)     { request.get("/?response_type=token&client_id=client") }
+  let(:response)     { request.get("/?response_type=token%20id_token&client_id=client") }
   let(:redirect_uri) { 'http://client.example.com/callback' }
   let(:bearer_token) { Rack::OAuth2::AccessToken::Bearer.new(:access_token => 'access_token') }
   let :id_token do
@@ -56,7 +56,8 @@ describe Rack::OAuth2::Server::Authorize::Token do
         response.approve!
       end
     end
-    its(:status)   { should == 302 }
-    its(:location) { should == "#{redirect_uri}#access_token=access_token&token_type=bearer" }
+    it do
+      expect { response }.should raise_error AttrRequired::AttrMissing, "'id_token', 'private_key' required."
+    end
   end
 end

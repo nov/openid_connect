@@ -45,7 +45,7 @@ describe Rack::OAuth2::Server::Token::AuthorizationCode do
         end
       end
       it do
-        expect { response }.should raise_error AttrRequired::AttrMissing, 'private_key is required'
+        expect { response }.should raise_error AttrRequired::AttrMissing, "'private_key' required."
       end
     end
   end

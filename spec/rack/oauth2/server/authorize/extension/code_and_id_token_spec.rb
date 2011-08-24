@@ -1,11 +1,11 @@
-require 'spec_helper.rb'
+require 'spec_helper'
 
-describe Rack::OAuth2::Server::Authorize::Token do
+describe Rack::OAuth2::Server::Authorize::Extension::CodeAndIdToken do
   subject { response }
   let(:request)      { Rack::MockRequest.new app }
-  let(:response)     { request.get("/?response_type=token&client_id=client") }
+  let(:response)     { request.get("/?response_type=code%20id_token&client_id=client") }
   let(:redirect_uri) { 'http://client.example.com/callback' }
-  let(:bearer_token) { Rack::OAuth2::AccessToken::Bearer.new(:access_token => 'access_token') }
+  let(:code)         { 'authorization_code' }
   let :id_token do
     OpenIDConnect::ResponseObject::IdToken.new(
       :iss => 'https://server.example.com',
@@ -19,25 +19,25 @@ describe Rack::OAuth2::Server::Authorize::Token do
     let :app do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri
-        response.access_token = bearer_token
+        response.code = code
         response.id_token = id_token
         response.private_key = private_key
         response.approve!
       end
     end
     its(:status)   { should == 302 }
-    its(:location) { should == "#{redirect_uri}#access_token=access_token&id_token=#{id_token.to_jwt(private_key)}&token_type=bearer" }
+    its(:location) { should == "#{redirect_uri}?code=#{code}#id_token=#{id_token.to_jwt(private_key)}" }
 
     context 'when id_token is String' do
       let(:id_token) { 'id_token' }
-      its(:location) { should == "#{redirect_uri}#access_token=access_token&id_token=id_token&token_type=bearer" }
+      its(:location) { should == "#{redirect_uri}?code=#{code}#id_token=id_token" }
     end
 
     context 'when private_key is missing' do
       let :app do
         Rack::OAuth2::Server::Authorize.new do |request, response|
           response.redirect_uri = redirect_uri
-          response.access_token = bearer_token
+          response.code = code
           response.id_token = id_token
           response.approve!
         end
@@ -52,11 +52,12 @@ describe Rack::OAuth2::Server::Authorize::Token do
     let :app do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri
-        response.access_token = bearer_token
+        response.code = code
         response.approve!
       end
     end
-    its(:status)   { should == 302 }
-    its(:location) { should == "#{redirect_uri}#access_token=access_token&token_type=bearer" }
+    it do
+      expect { response }.should raise_error AttrRequired::AttrMissing, "'id_token', 'private_key' required."
+    end
   end
 end
