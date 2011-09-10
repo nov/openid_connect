@@ -1,5 +1,3 @@
-require 'swd'
-
 module OpenIDConnect
   module Discovery
     class Principal

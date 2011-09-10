@@ -1,5 +1,6 @@
 require 'json'
 require 'logger'
+require 'swd'
 require 'rack/oauth2'
 require 'rack/oauth2/server/id_token_response'
 
@@ -21,19 +22,23 @@ module OpenIDConnect
     @@debugging
   end
   def self.debugging=(boolean)
+    SWD.debugging = boolean
     Rack::OAuth2.debugging = boolean
     @@debugging = boolean
   end
   def self.debug!
-    Rack::OAuth2.debugging = true
+    SWD.debug!
+    Rack::OAuth2.debug!
     self.debugging = true
   end
   def self.debug(&block)
+    swd_original = SWD.debugging?
     rack_oauth2_original = Rack::OAuth2.debugging?
     original = self.debugging?
     debug!
     yield
   ensure
+    SWD.debugging = swd_original
     Rack::OAuth2.debugging = rack_oauth2_original
     self.debugging = original
   end
