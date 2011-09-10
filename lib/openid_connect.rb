@@ -17,6 +17,7 @@ module OpenIDConnect
     @@debugging
   end
   def self.debugging=(boolean)
+    Rack::OAuth2.debugging = boolean
     @@debugging = boolean
   end
   def self.debug!
@@ -41,3 +42,4 @@ require 'openid_connect/access_token'
 require 'openid_connect/response_object'
 require 'openid_connect/server'
 require 'openid_connect/discovery'
+require 'openid_connect/debugger'

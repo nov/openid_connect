@@ -29,8 +29,10 @@ module OpenIDConnect
         def from_jwt(jwt_string, key_or_client)
           attributes = case key_or_client
           when Client
+            http_client = HTTPClient.new
+            http_client.request_filter << Debugger::RequestFilter
             resource_request do
-              HTTPClient.new.post key_or_client.check_session_uri, :id_token => jwt_string
+              http_client.post key_or_client.check_session_uri, :id_token => jwt_string
             end
           else
             JWT.decode(jwt_string, key_or_client).with_indifferent_access
