@@ -33,7 +33,7 @@ module OpenIDConnect
               HTTPClient.new.post key_or_client.check_session_uri, :id_token => jwt_string
             end
           else
-            JWT.decode(jwt_string, key).with_indifferent_access
+            JWT.decode(jwt_string, key_or_client).with_indifferent_access
           end
           new attributes
         end
