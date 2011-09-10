@@ -25,8 +25,30 @@ module OpenIDConnect
         JWT.encode as_json, key, algorithm
       end
 
-      def self.from_jwt(jwt_string, key)
-        new JWT.decode(jwt_string, key).with_indifferent_access
+      class << self
+        def from_jwt(jwt_string, key_or_client)
+          attributes = case key_or_client
+          when Client
+            resource_request do
+              HTTPClient.new.post key_or_client.check_session_uri, :id_token => jwt_string
+            end
+          else
+            JWT.decode(jwt_string, key).with_indifferent_access
+          end
+          new attributes
+        end
+
+        def resource_request
+          res = yield
+          case res.status
+          when 200
+            JSON.parse(res.body).with_indifferent_access
+          when 400
+            raise BadRequest.new('Check Session Faild', res)
+          else
+            raise HttpError.new(res.status, 'Unknown HttpError', res)
+          end
+        end
       end
     end
   end
