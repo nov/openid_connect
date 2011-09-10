@@ -12,5 +12,5 @@ def public_key
 end
 
 def private_key
-  @private_key ||= OpenSSL::PKey::RSA.new rsa.export(OpenSSL::Cipher::Cipher.new('aes-256-cbc'), 'pass-phrase'), 'pass-phrase'
+  @private_key ||= OpenSSL::PKey::RSA.new rsa.export(OpenSSL::Cipher::Cipher.new('DES-EDE3-CBC'), 'pass-phrase'), 'pass-phrase'
 end
