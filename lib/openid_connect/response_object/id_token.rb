@@ -29,8 +29,6 @@ module OpenIDConnect
         def from_jwt(jwt_string, key_or_client)
           attributes = case key_or_client
           when Client
-            http_client = HTTPClient.new
-            http_client.request_filter << Debugger::RequestFilter
             resource_request do
               http_client.post key_or_client.check_session_uri, :id_token => jwt_string
             end
@@ -50,6 +48,16 @@ module OpenIDConnect
           else
             raise HttpError.new(res.status, 'Unknown HttpError', res)
           end
+        end
+
+        private
+
+        def http_client
+          _http_client_ = HTTPClient.new(
+            :agent_name => "OpenIDConnect (#{VERSION})"
+          )
+          _http_client_.request_filter << Debugger::RequestFilter.new if OpenIDConnect.debugging?
+          _http_client_
         end
       end
     end

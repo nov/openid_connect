@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe OpenIDConnect do
-  subject { OpenIDConnect }
   after { OpenIDConnect.debugging = false }
 
   its(:logger) { should be_a Logger }
