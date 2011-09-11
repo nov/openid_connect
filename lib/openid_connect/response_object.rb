@@ -37,6 +37,7 @@ module OpenIDConnect
     end
 
     def as_json(options = {})
+      options ||= {} # options can be nil when to_json is called without options
       validate! unless options[:skip_validation]
       all_attributes.inject({}) do |hash, _attr_|
         hash.merge! _attr_ => self.send(_attr_)
