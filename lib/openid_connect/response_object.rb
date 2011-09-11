@@ -37,7 +37,7 @@ module OpenIDConnect
     end
 
     def as_json(options = {})
-      validate!
+      validate! unless options[:skip_validation]
       all_attributes.inject({}) do |hash, _attr_|
         hash.merge! _attr_ => self.send(_attr_)
       end.delete_if do |key, value|
