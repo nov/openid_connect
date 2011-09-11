@@ -11,10 +11,7 @@ module OpenIDConnect
     def authorization_uri(params = {})
       params[:response_type] ||= :token
       params[:scope] = setup_required_scope params[:scope]
-      Rack::OAuth2::Util.redirect_uri absolute_uri_for(authorization_endpoint), :query, params.merge(
-        :client_id => self.identifier,
-        :redirect_uri => self.redirect_uri
-      )
+      super
     end
 
     def check_session_uri
@@ -28,9 +25,9 @@ module OpenIDConnect
     private
 
     def setup_required_scope(scopes)
-      _scopes_ = Array(scopes).join(' ').split(' ')
+      _scopes_ = Array(scopes).collect(&:to_s).join(' ').split(' ')
       _scopes_ << 'openid' unless _scopes_.include?('openid')
-      _scopes_.join(' ')
+      _scopes_
     end
 
     def handle_success_response(response)
