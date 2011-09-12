@@ -2,7 +2,7 @@ module OpenIDConnect
   class ResponseObject
     module UserInfo
       class OpenID < ResponseObject
-        attr_optional :id, :name, :given_name, :family_name, :middle_name, :nickname
+        attr_optional :user_id, :name, :given_name, :family_name, :middle_name, :nickname
 
         attr_optional :phone_number
 
