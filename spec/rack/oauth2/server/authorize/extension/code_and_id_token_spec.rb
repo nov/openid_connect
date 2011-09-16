@@ -26,11 +26,13 @@ describe Rack::OAuth2::Server::Authorize::Extension::CodeAndIdToken do
       end
     end
     its(:status)   { should == 302 }
-    its(:location) { should == "#{redirect_uri}?code=#{code}#id_token=#{id_token.to_jwt(private_key)}" }
+    its(:location) { should include "#{redirect_uri}#" }
+    its(:location) { should include "code=#{code}" }
+    its(:location) { should include "id_token=#{id_token.to_jwt(private_key)}" }
 
     context 'when id_token is String' do
-      let(:id_token) { 'id_token' }
-      its(:location) { should == "#{redirect_uri}?code=#{code}#id_token=id_token" }
+      let(:id_token) { 'non_jwt_string' }
+      its(:location) { should include "id_token=non_jwt_string" }
     end
 
     context 'when private_key is missing' do

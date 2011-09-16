@@ -28,18 +28,9 @@ module Rack
               include IdTokenResponse
               attr_required :id_token, :private_key
 
-              def protocol_params
-                protocol_params_without_id_token
+              def protocol_params_location
+                :fragment
               end
-
-              def redirect_uri_with_credentials_with_id_token
-                _redirect_uri_ = URI.parse redirect_uri_with_credentials_without_id_token
-                _redirect_uri_.fragment = {
-                  :id_token => jwt_string
-                }.to_query
-                _redirect_uri_.to_s
-              end
-              alias_method_chain :redirect_uri_with_credentials, :id_token
 
             end
           end
