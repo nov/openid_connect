@@ -26,12 +26,7 @@ module Rack
 
             class Response < Authorize::Code::Response
               include IdTokenResponse
-              attr_required :id_token, :private_key
-
-              def protocol_params_location
-                :fragment
-              end
-
+              attr_required :id_token
             end
           end
         end

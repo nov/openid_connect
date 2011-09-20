@@ -30,17 +30,7 @@ module Rack
 
             class Response < Authorize::Response
               include IdTokenResponse
-              attr_required :id_token, :private_key
-
-              def protocol_params_location
-                :fragment
-              end
-
-              def protocol_params
-                super.merge(
-                  :id_token => jwt_string
-                )
-              end
+              attr_required :id_token
             end
           end
         end

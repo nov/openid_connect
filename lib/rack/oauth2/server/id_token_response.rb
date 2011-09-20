@@ -1,20 +1,15 @@
 module Rack::OAuth2::Server
   module IdTokenResponse
     def self.included(klass)
-      klass.send :attr_optional, :id_token, :private_key
+      klass.send :attr_optional, :id_token
       klass.class_eval do
-        def jwt_string
-          if id_token.is_a? OpenIDConnect::ResponseObject::IdToken
-            raise AttrRequired::AttrMissing.new("'private_key' required.") unless private_key
-            id_token.to_jwt private_key
-          else
-            id_token
-          end
+        def protocol_params_location
+          :fragment
         end
 
         def protocol_params_with_id_token
           protocol_params_without_id_token.merge(
-            :id_token => jwt_string
+            :id_token => id_token
           )
         end
         alias_method_chain :protocol_params, :id_token
@@ -22,7 +17,6 @@ module Rack::OAuth2::Server
     end
   end
   Token::Response.send :include, IdTokenResponse
-  Authorize::Token::Response.send :include, IdTokenResponse
 end
 
 require 'rack/oauth2/server/authorize/extension/code_and_id_token'

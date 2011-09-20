@@ -25,7 +25,8 @@ module Rack
             end
 
             class Response < Authorize::Token::Response
-              attr_required :id_token, :private_key
+              include IdTokenResponse
+              attr_required :id_token
             end
           end
         end
