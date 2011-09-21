@@ -1,4 +1,4 @@
-require 'jwt'
+require 'json/jwt'
 
 module OpenIDConnect
   class ResponseObject
@@ -21,8 +21,12 @@ module OpenIDConnect
         raise InvalidToken.new('Invalid audience or expired')
       end
 
-      def to_jwt(key, algorithm = 'RS256')
-        JWT.encode as_json, key, algorithm
+      def to_jwt(key, algorithm = :RS256)
+        token = JSON::JWT.new as_json
+        if algorithm != :none
+          token = token.sign key, algorithm
+        end
+        token.to_s
       end
 
       class << self
@@ -33,7 +37,7 @@ module OpenIDConnect
               http_client.post key_or_client.check_session_uri, :id_token => jwt_string
             end
           else
-            JWT.decode(jwt_string, key_or_client).with_indifferent_access
+            JSON::JWT.decode(jwt_string, key_or_client).with_indifferent_access
           end
           new attributes
         end
