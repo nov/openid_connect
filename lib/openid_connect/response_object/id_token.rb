@@ -34,7 +34,7 @@ module OpenIDConnect
           attributes = case key_or_client
           when Client
             resource_request do
-              http_client.post key_or_client.check_session_uri, :id_token => jwt_string
+              http_client.post key_or_client.check_id_uri, :id_token => jwt_string
             end
           else
             JSON::JWT.decode(jwt_string, key_or_client).with_indifferent_access

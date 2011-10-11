@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openid_connect (0.0.29)
+    openid_connect (0.0.30)
       activemodel (>= 3)
       attr_required (>= 0.0.3)
       json (>= 1.4.3)
@@ -32,7 +32,6 @@ GEM
     jruby-openssl (0.7.4)
       bouncy-castle-java
     json (1.6.1)
-    json (1.6.1-java)
     json-jwt (0.0.3)
       json (>= 1.4.3)
       url_safe_base64
