@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe OpenIDConnect::Discovery::Provider do
-  let(:provider) { 'https://server.example.com/authorize' }
+  let(:provider) { 'https://server.example.com' }
   let(:discover) { OpenIDConnect::Discovery::Provider.discover! identifier }
   let(:endpoint) { "https://#{host}/.well-known/simple-web-discovery" }
   let(:query) do
