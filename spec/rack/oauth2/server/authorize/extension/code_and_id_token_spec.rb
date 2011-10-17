@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Rack::OAuth2::Server::Authorize::Extension::CodeAndIdToken do
   subject { response }
   let(:request)      { Rack::MockRequest.new app }
-  let(:response)     { request.get("/?response_type=code%20id_token&client_id=client") }
+  let(:response)     { request.get("/?response_type=code%20id_token&client_id=client&state=state") }
   let(:redirect_uri) { 'http://client.example.com/callback' }
   let(:code)         { 'authorization_code' }
   let :id_token do
@@ -28,6 +28,7 @@ describe Rack::OAuth2::Server::Authorize::Extension::CodeAndIdToken do
     its(:location) { should include "#{redirect_uri}#" }
     its(:location) { should include "code=#{code}" }
     its(:location) { should include "id_token=#{id_token}" }
+    its(:location) { should include "state=state" }
 
     context 'when id_token is String' do
       let(:id_token) { 'non_jwt_string' }

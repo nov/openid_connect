@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
   subject { response }
   let(:request)      { Rack::MockRequest.new app }
-  let(:response)     { request.get("/?response_type=token%20id_token&client_id=client") }
+  let(:response)     { request.get('/?response_type=token%20id_token&client_id=client&state=state') }
   let(:redirect_uri) { 'http://client.example.com/callback' }
   let(:bearer_token) { Rack::OAuth2::AccessToken::Bearer.new(:access_token => 'access_token') }
   let :id_token do
@@ -15,7 +15,7 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
     ).to_jwt private_key
   end
 
-  context "when id_token is given" do
+  context 'when id_token is given' do
     let :app do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri
@@ -25,15 +25,20 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
       end
     end
     its(:status)   { should == 302 }
-    its(:location) { should == "#{redirect_uri}#access_token=access_token&id_token=#{id_token}&token_type=bearer" }
+    its(:location) { should_not include '?' }
+    its(:location) { should include '#' }
+    its(:location) { should include 'access_token=access_token' }
+    its(:location) { should include "id_token=#{id_token}" }
+    its(:location) { should include 'token_type=bearer' }
+    its(:location) { should include 'state=state' }
 
     context 'when id_token is String' do
       let(:id_token) { 'id_token' }
-      its(:location) { should == "#{redirect_uri}#access_token=access_token&id_token=id_token&token_type=bearer" }
+      its(:location) { should include 'id_token=id_token' }
     end
   end
 
-  context "otherwise" do
+  context 'otherwise' do
     let :app do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri
