@@ -5,17 +5,14 @@ module OpenIDConnect
 
       class RegistrationFailed < HttpError; end
 
-      attr_required :endpoint
-      attr_optional(
+      singular_attributes = [
         :type,
         :client_id,
         :client_secret,
         :access_token,
-        :contacts,
         :application_type,
         :application_name,
         :logo_url,
-        :redirect_uris,
         :token_endpoint_auth_type,
         :policy_url,
         :jwk_url,
@@ -25,11 +22,24 @@ module OpenIDConnect
         :sector_identifier_url,
         :user_id_type,
         :require_signed_request_object,
+      ]
+      plurar_attributes = [
+        :contacts,
+        :redirect_uris,
         :userinfo_signed_response_algs,
         :userinfo_encrypted_response_algs,
         :id_token_signed_response_algs,
         :id_token_encrypted_response_algs
-      )
+      ]
+      attr_required :endpoint
+      attr_optional *(singular_attributes + plurar_attributes)
+
+      plurar_attributes.each do |_attr_|
+        define_method "#{_attr_}_with_split" do
+          self.send("#{_attr_}_without_split").to_s.split(' ')
+        end
+        alias_method_chain _attr_, :split
+      end
 
       validates :type,                  :presence => true
       validates :client_id,             :presence => {:if => lambda { |c| c.type.to_s == 'client_update' }}
