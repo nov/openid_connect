@@ -48,15 +48,16 @@ module OpenIDConnect
         :in => ['client_secret_post', 'client_secret_basic', 'client_secret_jwt', 'private_key_jwt']
       }, :allow_nil => true
 
-      validates *[
+      validates(
         :logo_url,
         :policy_url,
         :jwk_url,
         :jwk_encryption_url,
         :x509_url,
         :x509_encryption_url,
-        :sector_identifier_url
-      ], :url => true, :allow_nil => true
+        :sector_identifier_url,
+        :url => true, :allow_nil => true
+      )
 
       # TODOs
       # validate :validate_contacts
@@ -68,7 +69,7 @@ module OpenIDConnect
       def initialize(endpoint, attributes = {})
         @endpoint = endpoint
         optional_attributes.each do |_attr_|
-          self.send :"#{_attr_}=", attributes[_attr_].try(:to_s)
+          self.send "#{_attr_}=", attributes[_attr_].try(:to_s)
         end
         attr_missing!
       end
