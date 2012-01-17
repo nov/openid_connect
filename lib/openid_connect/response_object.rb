@@ -2,15 +2,6 @@ module OpenIDConnect
   class ResponseObject
     include ActiveModel::Validations, AttrRequired, AttrOptional
 
-    class ValidationFailed < Exception
-      attr_reader :errors
-
-      def initialize(errors)
-        super errors.full_messages.to_sentence
-        @errors = errors
-      end
-    end
-
     def initialize(attributes = {})
       all_attributes.each do |_attr_|
         self.send :"#{_attr_}=", attributes[_attr_]

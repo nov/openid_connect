@@ -1,6 +1,15 @@
 module OpenIDConnect
   class Exception < StandardError; end
 
+  class ValidationFailed < Exception
+    attr_reader :errors
+
+    def initialize(errors)
+      super errors.full_messages.to_sentence
+      @errors = errors
+    end
+  end
+
   class HttpError < Exception
     attr_accessor :status, :response
     def initialize(status, message = nil, response = nil)

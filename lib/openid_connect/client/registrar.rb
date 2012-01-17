@@ -3,19 +3,13 @@ module OpenIDConnect
     class Registrar
       include ActiveModel::Validations, AttrRequired, AttrOptional
 
-      class ValidationFailed < Exception
-        attr_reader :errors
-
-        def initialize(errors)
-          super errors.full_messages.to_sentence
-          @errors = errors
-        end
-      end
       class RegistrationFailed < HttpError; end
 
       attr_required :endpoint
       attr_optional(
         :type,
+        :client_id,
+        :client_secret,
         :access_token,
         :contacts,
         :application_type,
@@ -62,7 +56,7 @@ module OpenIDConnect
       # TODOs
       # validate :validate_contacts
       # validate :validate_redirect_uris
-      # validate :validate_key_urls, :unless => :skip_key_url_validation?
+      # validate :validate_key_urls
       # validate :validate_signature_algorithms
       # validate :validate_encription_algorithms
 
@@ -84,23 +78,28 @@ module OpenIDConnect
         post!
       end
 
-      def skip_key_url_validation!
-        # Key URLs "SHOULD" be validated
-        @skip_key_url_validation = true
+      def as_json(options = {})
+        validate!
+        (optional_attributes - [:access_token]).inject({}) do |hash, _attr_|
+          value = self.send(_attr_)
+          hash.merge! _attr_ => case value
+          when Array
+            value.collect(&:to_s).join(' ')
+          else
+            value
+          end
+        end.delete_if do |key, value|
+          value.nil?
+        end
       end
-
-      def skip_key_url_validation?
-        @skip_key_url_validation
-      end
-
-      private
 
       def validate!
         valid? or raise ValidationFailed.new(errors)
       end
 
+      private
+
       def post!
-        validate!
         handle_response do
           http_client.post endpoint, as_json
         end
