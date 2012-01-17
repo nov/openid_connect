@@ -30,27 +30,15 @@ module OpenIDConnect
       end
 
       class << self
-        def from_jwt(jwt_string, key_or_client)
+        def decode(jwt_string, key_or_client)
           attributes = case key_or_client
           when Client
-            resource_request do
-              OpenIDConnect.http_client.post key_or_client.check_id_uri, :id_token => jwt_string
-            end
+            OpenIDConnect::AccessToken.new(
+              :client => key_or_client,
+              :access_token => jwt_string
+            ).id_token!
           else
-            JSON::JWT.decode(jwt_string, key_or_client).with_indifferent_access
-          end
-          new attributes
-        end
-
-        def resource_request
-          res = yield
-          case res.status
-          when 200
-            JSON.parse(res.body).with_indifferent_access
-          when 400
-            raise BadRequest.new('Check Session Faild', res)
-          else
-            raise HttpError.new(res.status, 'Unknown HttpError', res)
+            new JSON::JWT.decode(jwt_string, key_or_client)
           end
         end
       end

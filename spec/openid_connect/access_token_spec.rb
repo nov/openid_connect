@@ -48,6 +48,40 @@ describe OpenIDConnect::AccessToken do
     end
   end
 
+  shared_examples_for :access_token_error_handling do
+    context 'when bad_request' do
+      it 'should raise OpenIDConnect::Forbidden' do
+        mock_json :get, endpoint, 'errors/invalid_request', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 400 do
+          expect { request }.should raise_error OpenIDConnect::BadRequest
+        end
+      end
+    end
+
+    context 'when unauthorized' do
+      it 'should raise OpenIDConnect::Unauthorized' do
+        mock_json :get, endpoint, 'errors/invalid_access_token', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 401 do
+          expect { request }.should raise_error OpenIDConnect::Unauthorized
+        end
+      end
+    end
+
+    context 'when forbidden' do
+      it 'should raise OpenIDConnect::Forbidden' do
+        mock_json :get, endpoint, 'errors/insufficient_scope', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 403 do
+          expect { request }.should raise_error OpenIDConnect::Forbidden
+        end
+      end
+    end
+
+    context 'when unknown' do
+      it 'should raise OpenIDConnect::HttpError' do
+        mock_json :get, endpoint, 'errors/unknown', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 500 do
+          expect { request }.should raise_error OpenIDConnect::HttpError
+        end
+      end
+    end
+  end
+
   describe '#user_info!' do
     it 'should return OpenIDConnect::ResponseObject::UserInfo::OpenID' do
       mock_json :get, client.user_info_uri, 'user_info/openid', :HTTP_AUTHORIZATION => 'Bearer access_token' do
@@ -56,37 +90,23 @@ describe OpenIDConnect::AccessToken do
     end
 
     describe 'error handling' do
-      context 'when bad_request' do
-        it 'should raise OpenIDConnect::Forbidden' do
-          mock_json :get, client.user_info_uri, 'errors/invalid_request', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 400 do
-            expect { access_token.user_info! }.should raise_error OpenIDConnect::BadRequest
-          end
-        end
-      end
+      let(:endpoint) { client.user_info_uri }
+      let(:request) { access_token.user_info! }
+      it_behaves_like :access_token_error_handling
+    end
+  end
 
-      context 'when unauthorized' do
-        it 'should raise OpenIDConnect::Unauthorized' do
-          mock_json :get, client.user_info_uri, 'errors/invalid_access_token', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 401 do
-            expect { access_token.user_info! }.should raise_error OpenIDConnect::Unauthorized
-          end
-        end
+  describe '#id_token!' do
+    it 'should return OpenIDConnect::ResponseObject::UserInfo::OpenID' do
+      mock_json :get, client.check_id_uri, 'id_token', :HTTP_AUTHORIZATION => 'Bearer access_token' do
+        access_token.id_token!.should be_a OpenIDConnect::ResponseObject::IdToken
       end
+    end
 
-      context 'when forbidden' do
-        it 'should raise OpenIDConnect::Forbidden' do
-          mock_json :get, client.user_info_uri, 'errors/insufficient_scope', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 403 do
-            expect { access_token.user_info! }.should raise_error OpenIDConnect::Forbidden
-          end
-        end
-      end
-
-      context 'when unknown' do
-        it 'should raise OpenIDConnect::HttpError' do
-          mock_json :get, client.user_info_uri, 'errors/unknown', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 500 do
-            expect { access_token.user_info! }.should raise_error OpenIDConnect::HttpError
-          end
-        end
-      end
+    describe 'error handling' do
+      let(:endpoint) { client.check_id_uri }
+      let(:request) { access_token.id_token! }
+      it_behaves_like :access_token_error_handling
     end
   end
 end

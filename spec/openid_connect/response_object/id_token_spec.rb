@@ -54,13 +54,38 @@ describe OpenIDConnect::ResponseObject::IdToken do
     end
   end
 
-  describe '.from_jwt' do
-    subject { klass.from_jwt id_token.to_jwt(private_key), public_key }
-    let(:attributes) { required_attributes }
-    it { should be_a klass }
-    [:iss, :user_id, :aud].each do |key|
-      its(key) { should == attributes[key] }
+  describe '.decode' do
+    context 'when key is given' do
+      subject { klass.decode id_token.to_jwt(private_key), public_key }
+      let(:attributes) { required_attributes }
+      it { should be_a klass }
+      [:iss, :user_id, :aud].each do |key|
+        its(key) { should == attributes[key] }
+      end
+      its(:exp) { should == attributes[:exp].to_i }
     end
-    its(:exp) { should == attributes[:exp].to_i }
+
+    context 'when client is given' do
+      let :client do
+        OpenIDConnect::Client.new(
+          :identifier => 'client_id',
+          :secret => 'client_secret',
+          :host => 'server.example.com'
+        )
+      end
+      subject do
+        mock_json :get, client.check_id_uri, 'id_token', :HTTP_AUTHORIZATION => 'Bearer access_token' do
+          @subject = klass.decode id_token.to_jwt(private_key), client
+        end
+        @subject
+      end
+      let(:attributes) { required_attributes }
+      let(:ext) { 1303852880 }
+      it { should be_a klass }
+      [:iss, :user_id, :aud].each do |key|
+        its(key) { should == attributes[key] }
+      end
+      its(:exp) { should == attributes[:exp].to_i }
+    end
   end
 end

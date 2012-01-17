@@ -15,6 +15,14 @@ module OpenIDConnect
       ResponseObject::UserInfo::OpenID.new hash
     end
 
+    def id_token!
+      client.check_id_uri
+      hash = resource_request do
+        get client.check_id_uri
+      end
+      ResponseObject::IdToken.new hash
+    end
+
     private
 
     def resource_request
