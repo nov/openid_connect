@@ -1,6 +1,12 @@
 require 'json'
 require 'logger'
 require 'swd'
+require 'active_model'
+require 'tzinfo'
+require 'validate_url'
+require 'validate_email'
+require 'attr_required'
+require 'attr_optional'
 require 'rack/oauth2'
 require 'rack/oauth2/server/id_token_response'
 

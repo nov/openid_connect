@@ -43,3 +43,7 @@ module OpenIDConnect
     end
   end
 end
+
+Dir[File.dirname(__FILE__) + '/client/*.rb'].each do |file|
+  require file
+end

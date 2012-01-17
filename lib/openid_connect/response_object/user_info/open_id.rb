@@ -2,28 +2,35 @@ module OpenIDConnect
   class ResponseObject
     module UserInfo
       class OpenID < ResponseObject
-        attr_optional :user_id, :name, :given_name, :family_name, :middle_name, :nickname
+        attr_optional(
+          :user_id,
+          :name,
+          :given_name,
+          :family_name,
+          :middle_name,
+          :nickname,
+          :phone_number,
+          :verified,
+          :gender,
+          :zoneinfo,
+          :locale,
+          :birthday,
+          :updated_time,
+          :profile,
+          :picture,
+          :website,
+          :email,
+          :address
+        )
 
-        attr_optional :phone_number
-
-        attr_optional :verified, :gender, :zoneinfo, :locale
         validates :verified, :inclusion => {:in => [true, false]},                             :allow_nil => true
         validates :gender,   :inclusion => {:in => ['male', 'female']},                        :allow_nil => true
         validates :zoneinfo, :inclusion => {:in => TZInfo::TimezoneProxy.all.collect(&:name)}, :allow_nil => true
-        # TODO: validate locale
-
-        attr_optional :birthday, :updated_time
-
-        attr_optional :profile, :picture, :website
         validates :profile, :picture, :website, :url => true, :allow_nil => true
-
-        attr_optional :email
         validates :email, :email => true, :allow_nil => true
-
-        attr_optional :address
         validate :validate_address
-
         validate :require_at_least_one_attributes
+        # TODO: validate locale
 
         def initialize(attributes = {})
           super
@@ -33,7 +40,7 @@ module OpenIDConnect
         end
 
         def validate_address
-          errors.add :address, 'cannot be blank' unless address.blank? || address.valid?
+          errors.add :address, address.errors.full_messages.join(', ') if address.present? && !address.valid?
         end
 
         def address=(hash_or_address)

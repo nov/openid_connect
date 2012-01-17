@@ -1,10 +1,3 @@
-require 'active_model'
-require 'tzinfo'
-require 'validate_url'
-require 'validate_email'
-require 'attr_required'
-require 'attr_optional'
-
 module OpenIDConnect
   class ResponseObject
     include ActiveModel::Validations, AttrRequired, AttrOptional
