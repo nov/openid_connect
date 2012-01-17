@@ -36,6 +36,14 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
       its(:errors) { should include :base }
     end
 
+    context 'when email is invalid' do
+      let :attributes do
+        {:email => 'nov@localhost'}
+      end
+      its(:valid?) { should be_false }
+      its(:errors) { should include :email }
+    end
+
     [:verified, :gender, :zoneinfo].each do |one_of_list|
       context "when #{one_of_list} is invalid" do
         let :attributes do

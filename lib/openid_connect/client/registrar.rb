@@ -53,12 +53,11 @@ module OpenIDConnect
         :url => true, :allow_nil => true
       )
 
-      # TODOs
-      # validate :validate_contacts
-      # validate :validate_redirect_uris
-      # validate :validate_key_urls
-      # validate :validate_signature_algorithms
-      # validate :validate_encription_algorithms
+      validate :validate_contacts
+      validate :validate_redirect_uris
+      validate :validate_key_urls
+      validate :validate_signature_algorithms
+      validate :validate_encription_algorithms
 
       def initialize(endpoint, attributes = {})
         @endpoint = endpoint
@@ -69,11 +68,15 @@ module OpenIDConnect
       end
 
       def sector_identifier
-        if sector_identifier_url
-          URI.parse(sector_identifier_url).host rescue nil
+        if valid_uri?(sector_identifier_url)
+          URI.parse(sector_identifier_url).host
         else
           hosts = Array(redirect_uris).collect do |redirect_uri|
-            URI.parse(redirect_uri).host rescue nil
+            if valid_uri?(redirect_uri, nil)
+              URI.parse(redirect_uri).host
+            else
+              nil
+            end
           end.compact.uniq
           if hosts.size == 1
             hosts.first
@@ -117,6 +120,45 @@ module OpenIDConnect
       def sector_identifier_required?
         user_id_type == 'pairwise' &&
         sector_identifier.blank?
+      end
+
+      def valid_uri?(uri, schemes = ['http', 'https'])
+        # NOTE: specify nil for schemes to allow any schemes
+        URI::regexp(schemes).match(uri).present?
+      end
+
+      def validate_contacts
+        contacts.each do |contact|
+          EmailValidator.new.validate_each(self, :contacts, contact)
+        end
+        include_invalid = contacts.any? do |contact|
+          begin
+            mail = Mail::Address.new(contact)
+            mail.address != contact || mail.domain.split(".").length <= 1
+          rescue
+            :invalid
+          end
+        end
+        errors.add :contacts, 'includes invalid email' if include_invalid
+      end
+
+      def validate_redirect_uris
+        include_invalid = redirect_uris.any? do |redirect_uri|
+          !valid_uri?(redirect_uri, nil)
+        end
+        errors.add :redirect_uris, 'includes invalid URL' if include_invalid
+      end
+
+      def validate_key_urls
+        # TODO
+      end
+
+      def validate_signature_algorithms
+        # TODO
+      end
+
+      def validate_encription_algorithms
+        # TODO
       end
 
       def post!
