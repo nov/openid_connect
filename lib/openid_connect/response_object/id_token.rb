@@ -34,7 +34,7 @@ module OpenIDConnect
           attributes = case key_or_client
           when Client
             resource_request do
-              http_client.post key_or_client.check_id_uri, :id_token => jwt_string
+              OpenIDConnect.http_client.post key_or_client.check_id_uri, :id_token => jwt_string
             end
           else
             JSON::JWT.decode(jwt_string, key_or_client).with_indifferent_access
@@ -52,16 +52,6 @@ module OpenIDConnect
           else
             raise HttpError.new(res.status, 'Unknown HttpError', res)
           end
-        end
-
-        private
-
-        def http_client
-          _http_client_ = HTTPClient.new(
-            :agent_name => "OpenIDConnect (#{VERSION})"
-          )
-          _http_client_.request_filter << Debugger::RequestFilter.new if OpenIDConnect.debugging?
-          _http_client_
         end
       end
     end
