@@ -33,7 +33,7 @@ module OpenIDConnect
 
       validates :type,                  :presence => true
       validates :client_id,             :presence => {:if => lambda { |c| c.type.to_s == 'client_update' }}
-      validates :sector_identifier_url, :presence => {:if => lambda { |c| c.user_id_type.to_s == 'pairwise' }}
+      validates :sector_identifier_url, :presence => {:if => :sector_identifier_required?}
 
       validates :type,             :inclusion => {:in => ['client_associate', 'client_update']}
       validates :application_type, :inclusion => {:in => ['native', 'web']},      :allow_nil => true
@@ -68,14 +68,19 @@ module OpenIDConnect
         attr_missing!
       end
 
-      def associate!
-        self.type = 'client_associate'
-        post!
-      end
-
-      def update!
-        self.type = 'client_update'
-        post!
+      def sector_identifier
+        if sector_identifier_url
+          URI.parse(sector_identifier_url).host rescue nil
+        else
+          hosts = Array(redirect_uris).collect do |redirect_uri|
+            URI.parse(redirect_uri).host rescue nil
+          end.compact.uniq
+          if hosts.size == 1
+            hosts.first
+          else
+            nil
+          end
+        end
       end
 
       def as_json(options = {})
@@ -93,11 +98,26 @@ module OpenIDConnect
         end
       end
 
+      def associate!
+        self.type = 'client_associate'
+        post!
+      end
+
+      def update!
+        self.type = 'client_update'
+        post!
+      end
+
       def validate!
         valid? or raise ValidationFailed.new(errors)
       end
 
       private
+
+      def sector_identifier_required?
+        user_id_type == 'pairwise' &&
+        sector_identifier.blank?
+      end
 
       def post!
         handle_response do

@@ -69,15 +69,19 @@ describe OpenIDConnect::Client::Registrar do
     end
   end
 
+  describe '#sector_identifier' do
+    it :TODO
+  end
+
+  describe '#as_json' do
+    it :TODO
+  end
+
   describe '#associate!' do
     it :TODO
   end
 
   describe '#update!' do
-    it :TODO
-  end
-
-  describe '#as_json' do
     it :TODO
   end
 
