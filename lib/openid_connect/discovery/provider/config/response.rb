@@ -35,6 +35,8 @@ module OpenIDConnect
             optional_attributes.each do |key|
               self.send "#{key}=", hash[key]
             end
+            @user_info_endpoint ||= hash[:userinfo_endpoint]
+            @user_info_algs_supported ||= hash[:userinfo_algs_supported]
             @version ||= '3.0'
             @raw = hash
           end
