@@ -16,12 +16,12 @@ OpenID Connect Server & Client Library
 
 === Provider
 
-* Running on Heroku (https://openid-connect.herokuapp.com)
+* Running on Heroku (http://connect-op.heroku.com/)
 * Source on GitHub (https://github.com/nov/openid_connect_sample)
 
 === Relying Party
 
-* Running on Heroku (https://openid-connect-rp.herokuapp.com)
+* Running on Heroku (https://connect-rp.heroku.com/)
 * Source on GitHub (https://github.com/nov/openid_connect_sample_rp)
 
 == Note on Patches/Pull Requests
