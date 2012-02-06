@@ -1,6 +1,6 @@
 module OpenIDConnect
   class Client < Rack::OAuth2::Client
-    attr_optional :check_id_endpoint, :user_info_endpoint
+    attr_optional :check_id_endpoint, :user_info_endpoint, :expires_in
 
     def initialize(attributes = {})
       super

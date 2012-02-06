@@ -101,6 +101,16 @@ describe OpenIDConnect::Client do
       end
     end
 
+    context 'when invalid JSON is returned' do
+      it 'should raise OpenIDConnect::Exception' do
+        mock_json :post, client.token_endpoint, 'access_token/invalid_json', :params => protocol_params do
+          expect do
+            access_token
+          end.should raise_error OpenIDConnect::Exception, 'Unknown Token Type'
+        end
+      end
+    end
+
     context 'otherwise' do
       it 'should raise Unexpected Token Type exception' do
         mock_json :post, client.token_endpoint, 'access_token/mac', :params => protocol_params do

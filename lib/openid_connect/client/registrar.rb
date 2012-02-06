@@ -36,7 +36,13 @@ module OpenIDConnect
 
       plurar_attributes.each do |_attr_|
         define_method "#{_attr_}_with_split" do
-          self.send("#{_attr_}_without_split").to_s.split(' ')
+          value = self.send("#{_attr_}_without_split")
+          case value
+          when String
+            value.split(' ')
+          else
+            value
+          end
         end
         alias_method_chain _attr_, :split
       end
@@ -72,7 +78,12 @@ module OpenIDConnect
       def initialize(endpoint, attributes = {})
         @endpoint = endpoint
         optional_attributes.each do |_attr_|
-          self.send "#{_attr_}=", attributes[_attr_].try(:to_s)
+          value = if _attr_ == :access_token
+            attributes[_attr_]
+          else
+            attributes[_attr_].try(:to_s)
+          end
+          self.send "#{_attr_}=", value
         end
         attr_missing!
       end
@@ -138,25 +149,26 @@ module OpenIDConnect
       end
 
       def validate_contacts
-        contacts.each do |contact|
-          EmailValidator.new.validate_each(self, :contacts, contact)
-        end
-        include_invalid = contacts.any? do |contact|
-          begin
-            mail = Mail::Address.new(contact)
-            mail.address != contact || mail.domain.split(".").length <= 1
-          rescue
-            :invalid
+        if contacts
+          include_invalid = contacts.any? do |contact|
+            begin
+              mail = Mail::Address.new(contact)
+              mail.address != contact || mail.domain.split(".").length <= 1
+            rescue
+              :invalid
+            end
           end
+          errors.add :contacts, 'includes invalid email' if include_invalid
         end
-        errors.add :contacts, 'includes invalid email' if include_invalid
       end
 
       def validate_redirect_uris
-        include_invalid = redirect_uris.any? do |redirect_uri|
-          !valid_uri?(redirect_uri, nil)
+        if redirect_uris
+          include_invalid = redirect_uris.any? do |redirect_uri|
+            !valid_uri?(redirect_uri, nil)
+          end
+          errors.add :redirect_uris, 'includes invalid URL' if include_invalid
         end
-        errors.add :redirect_uris, 'includes invalid URL' if include_invalid
       end
 
       def validate_key_urls
