@@ -10,14 +10,15 @@ describe OpenIDConnect::ResponseObject::IdToken do
       :iss => 'https://server.example.com',
       :user_id => 'user_id',
       :aud => 'client_id',
+      :nonce => 'nonce',
       :exp => ext
     }
   end
 
   describe 'attributes' do
     subject { klass }
-    its(:required_attributes) { should == [:iss, :user_id, :aud, :exp] }
-    its(:optional_attributes) { should == [:iso29115, :nonce, :issued_to] }
+    its(:required_attributes) { should == [:iss, :user_id, :aud, :exp, :nonce] }
+    its(:optional_attributes) { should == [:acr, :auth_time] }
   end
 
   describe '#verify!' do

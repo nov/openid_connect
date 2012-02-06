@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openid_connect (0.1.0)
+    openid_connect (0.1.1)
       activemodel (>= 3)
       attr_required (>= 0.0.3)
       json (>= 1.4.3)

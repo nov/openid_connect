@@ -5,8 +5,10 @@ module OpenIDConnect
     class IdToken < ResponseObject
       class InvalidToken < Exception; end
 
-      attr_required :iss, :user_id, :aud, :exp
-      attr_optional :iso29115, :nonce, :issued_to
+      attr_required :iss, :user_id, :aud, :exp, :nonce
+      attr_optional :acr, :auth_time
+
+      validates :acr, :inclusion => {:in => [0, 1, 2, 3, 4]}, :allow_nil => true
 
       def initialize(attributes = {})
         super

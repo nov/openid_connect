@@ -34,6 +34,7 @@ describe OpenIDConnect::AccessToken do
           :iss => 'https://server.example.com',
           :user_id => 'user_id',
           :aud => 'client_id',
+          :nonce => 'nonce',
           :exp => 1313424327
         )
       end

@@ -11,6 +11,7 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
       :iss => 'https://server.example.com',
       :user_id => 'user_id',
       :aud => 'client_id',
+      :nonce => 'nonce',
       :exp => 1313424327
     ).to_jwt private_key
   end

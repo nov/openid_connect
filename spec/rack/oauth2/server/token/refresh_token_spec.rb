@@ -16,6 +16,7 @@ describe Rack::OAuth2::Server::Token::RefreshToken do
       :user_id => 'user_id',
       :aud => 'client_id',
       :exp => 1313424327,
+      :nonce => 'nonce',
       :secret => 'secret'
     ).to_jwt private_key
   end

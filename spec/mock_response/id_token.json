@@ -1,7 +1,7 @@
 {
   "iss": "https://server.example.com",
   "aud": "client_id",
-  "issued_to": "https://client.example.com",
   "user_id": "user_id",
+  "nonce": "nonce",
   "exp": 1303852880
 }
