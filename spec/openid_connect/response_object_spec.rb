@@ -58,11 +58,11 @@ describe OpenIDConnect::ResponseObject do
         {:required => 'Out of List and Too Long'}
       end
 
-      it 'should raise OpenIDConnect::ValidationFailed with ActiveModel::Errors' do
+      it 'should raise OpenIDConnect::ValidationFailed with ActiveModel::Errors owner' do
         expect { instance.as_json }.should raise_error(OpenIDConnect::ValidationFailed) { |e|
           e.message.should include 'Required is not included in the list'
           e.message.should include 'Required is too long (maximum is 10 characters)'
-          e.errors.should be_a ActiveModel::Errors
+          e.object.errors.should be_a ActiveModel::Errors
         }
       end
     end
@@ -79,11 +79,11 @@ describe OpenIDConnect::ResponseObject do
         {:required => 'Out of List and Too Long'}
       end
 
-      it 'should raise OpenIDConnect::ValidationFailed with ActiveModel::Errors' do
+      it 'should raise OpenIDConnect::ValidationFailed with ActiveModel::Errors owner' do
         expect { instance.validate! }.should raise_error(OpenIDConnect::ValidationFailed) { |e|
           e.message.should include 'Required is not included in the list'
           e.message.should include 'Required is too long (maximum is 10 characters)'
-          e.errors.should be_a ActiveModel::Errors
+          e.object.errors.should be_a ActiveModel::Errors
         }
       end
     end

@@ -133,7 +133,7 @@ module OpenIDConnect
       end
 
       def validate!
-        valid? or raise ValidationFailed.new(errors)
+        valid? or raise ValidationFailed.new(self)
       end
 
       private

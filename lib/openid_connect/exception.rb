@@ -2,11 +2,11 @@ module OpenIDConnect
   class Exception < StandardError; end
 
   class ValidationFailed < Exception
-    attr_reader :errors
+    attr_reader :object
 
-    def initialize(errors)
-      super errors.full_messages.to_sentence
-      @errors = errors
+    def initialize(object)
+      super object.errors.full_messages.to_sentence
+      @object = object
     end
   end
 
