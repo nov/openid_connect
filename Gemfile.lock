@@ -3,11 +3,11 @@ PATH
   specs:
     openid_connect (0.1.1)
       activemodel (>= 3)
-      attr_required (>= 0.0.3)
+      attr_required (>= 0.0.5)
       json (>= 1.4.3)
       json-jwt (>= 0.0.3)
-      rack-oauth2 (>= 0.14.0)
-      swd (>= 0.1.0)
+      rack-oauth2 (>= 0.14.2)
+      swd (>= 0.1.2)
       tzinfo
       validate_email
       validate_url
@@ -22,7 +22,7 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     addressable (2.2.6)
-    attr_required (0.0.3)
+    attr_required (0.0.5)
     bouncy-castle-java (1.5.0146.1)
     builder (3.0.0)
     configatron (2.9.0)
@@ -35,10 +35,11 @@ GEM
     hashie (1.2.0)
     httpclient (2.2.4)
     i18n (0.6.0)
-    jruby-openssl (0.7.5)
+    jruby-openssl (0.7.6.1)
       bouncy-castle-java (>= 1.5.0146.1)
     json (1.6.5)
-    json-jwt (0.0.5)
+    json (1.6.5-java)
+    json-jwt (0.0.7)
       activesupport (>= 2.3)
       i18n
       json (>= 1.4.3)
@@ -51,9 +52,9 @@ GEM
     multi_json (1.0.4)
     polyglot (0.3.3)
     rack (1.4.1)
-    rack-oauth2 (0.14.0)
+    rack-oauth2 (0.14.2)
       activesupport (>= 2.3)
-      attr_required (>= 0.0.3)
+      attr_required (>= 0.0.5)
       httpclient (>= 2.2.0.2)
       i18n
       json (>= 1.4.3)
@@ -67,9 +68,9 @@ GEM
     rspec-expectations (2.8.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.8.0)
-    swd (0.1.1)
+    swd (0.1.2)
       activesupport (>= 3)
-      attr_required (>= 0.0.3)
+      attr_required (>= 0.0.5)
       httpclient (>= 2.2.1)
       i18n
       json (>= 1.4.3)

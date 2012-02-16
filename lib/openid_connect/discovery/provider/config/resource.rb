@@ -3,10 +3,7 @@ module OpenIDConnect
     module Provider
       class Config
         class Resource < SWD::Resource
-          # NOTE: principal and service are required in SWD::Resource and should not exist here.
-          undef_method :principal, :principal=, :service, :service=
-          @required_attributes.delete :principal
-          @required_attributes.delete :service
+          undef_required_attributes :principal, :service
 
           class Expired < SWD::Resource::Expired; end
 

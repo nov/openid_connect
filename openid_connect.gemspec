@@ -12,13 +12,13 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_runtime_dependency "json", ">= 1.4.3"
   s.add_runtime_dependency "tzinfo"
-  s.add_runtime_dependency "attr_required", ">= 0.0.3"
+  s.add_runtime_dependency "attr_required", ">= 0.0.5"
   s.add_runtime_dependency "activemodel", ">= 3"
   s.add_runtime_dependency "validate_url"
   s.add_runtime_dependency "validate_email"
   s.add_runtime_dependency "json-jwt", ">= 0.0.3"
-  s.add_runtime_dependency "swd", ">= 0.1.0"
-  s.add_runtime_dependency "rack-oauth2", ">= 0.14.0"
+  s.add_runtime_dependency "swd", ">= 0.1.2"
+  s.add_runtime_dependency "rack-oauth2", ">= 0.14.2"
   s.add_development_dependency "rake", ">= 0.8"
   if RUBY_VERSION >= '1.9'
     s.add_development_dependency "cover_me", ">= 1.2.0"
