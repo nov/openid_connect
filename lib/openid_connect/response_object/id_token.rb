@@ -18,9 +18,12 @@ module OpenIDConnect
         @exp = @exp.to_i
       end
 
-      def verify!(client_id)
-        exp.to_i >= Time.now.to_i && aud == client_id or
-        raise InvalidToken.new('Invalid audience or expired')
+      def verify!(expected = {})
+        exp.to_i >= Time.now.to_i &&
+        iss == expected[:issuer] &&
+        aud == expected[:client_id] &&
+        nonce == expected[:nonce] or
+        raise InvalidToken.new('Invalid ID Token')
       end
 
       def to_jwt(key, algorithm = :RS256)
@@ -33,7 +36,7 @@ module OpenIDConnect
 
       class << self
         def decode(jwt_string, key_or_client)
-          attributes = case key_or_client
+          case key_or_client
           when Client
             OpenIDConnect::AccessToken.new(
               :client => key_or_client,

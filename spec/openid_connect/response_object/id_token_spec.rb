@@ -22,20 +22,95 @@ describe OpenIDConnect::ResponseObject::IdToken do
   end
 
   describe '#verify!' do
-    context 'when valid client_id is given' do
-      it { id_token.verify!('client_id').should be_true }
+    context 'when both issuer, client_id and nonce are valid' do
+      it do
+        id_token.verify!(
+          :issuer => attributes[:iss],
+          :client_id => attributes[:aud],
+          :nonce => attributes[:nonce]
+        ).should be_true
+      end
 
       context 'when expired' do
         let(:ext) { 10.minutes.ago }
         it do
-          expect { id_token.verify! 'client_id' }.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+          expect do
+            id_token.verify!(
+              :issuer => attributes[:iss],
+              :client_id => attributes[:aud],
+              :nonce => attributes[:nonce]
+            )
+          end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
         end
       end
     end
 
-    context 'otherwise' do
+    context 'when issuer is invalid' do
       it do
-        expect { id_token.verify! 'invalid_client' }.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+        expect do
+          id_token.verify!(
+            :issuer => 'invalid_issuer',
+            :client_id => attributes[:aud],
+            :nonce => attributes[:nonce]
+          )
+        end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+      end
+    end
+
+    context 'when issuer is missing' do
+      it do
+        expect do
+          id_token.verify!(
+            :client_id => attributes[:aud],
+            :nonce => attributes[:nonce]
+          )
+        end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+      end
+    end
+
+    context 'when client_id is invalid' do
+      it do
+        expect do
+          id_token.verify!(
+            :issuer => attributes[:iss],
+            :client_id => 'invalid_client',
+            :nonce => attributes[:nonce]
+          )
+        end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+      end
+    end
+
+    context 'when client_id is missing' do
+      it do
+        expect do
+          id_token.verify!(
+            :issuer => attributes[:iss],
+            :nonce => attributes[:nonce]
+          )
+        end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+      end
+    end
+
+    context 'when nonce is invalid' do
+      it do
+        expect do
+          id_token.verify!(
+            :issuer => attributes[:iss],
+            :client_id => attributes[:aud],
+            :nonce => 'invalid_nonce'
+          )
+        end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+      end
+    end
+
+    context 'when nonce is missing' do
+      it do
+        expect do
+          id_token.verify!(
+            :issuer => attributes[:iss],
+            :client_id => attributes[:aud]
+          )
+        end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
       end
     end
   end
