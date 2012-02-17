@@ -8,7 +8,7 @@ require 'validate_email'
 require 'attr_required'
 require 'attr_optional'
 require 'rack/oauth2'
-require 'rack/oauth2/server/authorize'
+require 'rack/oauth2/server/authorize/request_with_connect_params'
 require 'rack/oauth2/server/id_token_response'
 
 module OpenIDConnect
