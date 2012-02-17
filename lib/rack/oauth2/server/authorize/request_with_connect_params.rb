@@ -1,4 +1,4 @@
-module Rack::OAuth2::Server::Authorize
+class Rack::OAuth2::Server::Authorize
   module RequestWithConnectParams
     # NOTE: nonce is REQUIRED, but define optional attributes not to break rack-oauth2 for now
     CONNECT_EXT_PARAMS = [:nonce, :display, :prompt, :request, :request_uri]
