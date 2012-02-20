@@ -26,11 +26,10 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
       end
     end
     its(:status)   { should == 302 }
-    its(:location) { should_not include '?' }
-    its(:location) { should include '#' }
-    its(:location) { should include 'access_token=access_token' }
+    its(:location) { should include "#{redirect_uri}#" }
+    its(:location) { should include "access_token=#{bearer_token.access_token}" }
     its(:location) { should include "id_token=#{id_token}" }
-    its(:location) { should include 'token_type=bearer' }
+    its(:location) { should include "token_type=#{bearer_token.token_type}" }
     its(:location) { should include 'state=state' }
 
     context 'when id_token is String' do

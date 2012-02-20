@@ -20,5 +20,7 @@ module Rack::OAuth2::Server
 end
 
 require 'rack/oauth2/server/authorize/extension/code_and_id_token'
+require 'rack/oauth2/server/authorize/extension/code_and_token'
+require 'rack/oauth2/server/authorize/extension/code_and_id_token_and_token'
 require 'rack/oauth2/server/authorize/extension/id_token'
 require 'rack/oauth2/server/authorize/extension/id_token_and_token'
