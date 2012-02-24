@@ -118,6 +118,16 @@ describe OpenIDConnect::ResponseObject::IdToken do
   describe '#to_jwt' do
     subject { id_token.to_jwt private_key }
     it { should be_a String }
+
+    context 'when block given' do
+      it 'should allow add additional headers' do
+        t = id_token.to_jwt private_key do |t|
+          t.header[:x5u] = "http://server.example.com/x5u"
+        end
+        h = UrlSafeBase64.decode64 t.split('.').first
+        h.should include 'x5u'
+      end
+    end
   end
 
   describe '#as_json' do
