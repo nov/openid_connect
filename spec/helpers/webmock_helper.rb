@@ -28,7 +28,6 @@ module WebMockHelper
     if options[:request_header]
       request[:headers] = options[:request_header]
     end
-    p request
     request
   end
 

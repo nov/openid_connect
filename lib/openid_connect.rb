@@ -69,6 +69,7 @@ end
 require 'openid_connect/exception'
 require 'openid_connect/client'
 require 'openid_connect/access_token'
-require 'openid_connect/response_object'
+require 'openid_connect/jwtnizable'
+require 'openid_connect/connect_object'
 require 'openid_connect/discovery'
 require 'openid_connect/debugger'

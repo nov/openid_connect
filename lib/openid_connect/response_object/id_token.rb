@@ -2,7 +2,7 @@ require 'json/jwt'
 
 module OpenIDConnect
   class ResponseObject
-    class IdToken < ResponseObject
+    class IdToken < ConnectObject
       class InvalidToken < Exception; end
 
       attr_required :iss, :user_id, :aud, :exp, :nonce
@@ -26,15 +26,7 @@ module OpenIDConnect
         raise InvalidToken.new('Invalid ID Token')
       end
 
-      def to_jwt(key, algorithm = :RS256)
-        token = JSON::JWT.new as_json
-        yield token if block_given?
-        if algorithm != :none
-          token = token.sign key, algorithm
-        end
-        token.to_s
-      end
-
+      include JWTnizable
       class << self
         def decode(jwt_string, key_or_client)
           case key_or_client

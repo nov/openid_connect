@@ -1,7 +1,7 @@
 module OpenIDConnect
   class ResponseObject
     module UserInfo
-      class OpenID < ResponseObject
+      class OpenID < ConnectObject
         attr_optional(
           :user_id,
           :name,

@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe OpenIDConnect::ResponseObject do
-  class OpenIDConnect::ResponseObject::SubClass < OpenIDConnect::ResponseObject
+describe OpenIDConnect::ConnectObject do
+  class OpenIDConnect::ConnectObject::SubClass < OpenIDConnect::ConnectObject
     attr_required :required
     attr_optional :optional
     validates :required, :inclusion => {:in => ['Required', 'required']}, :length => 1..10
   end
 
   subject        { instance }
-  let(:klass)    { OpenIDConnect::ResponseObject::SubClass }
+  let(:klass)    { OpenIDConnect::ConnectObject::SubClass }
   let(:instance) { klass.new attributes }
   let :attributes do
     {:required => 'Required', :optional => 'Optional'}
