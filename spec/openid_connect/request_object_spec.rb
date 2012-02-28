@@ -17,7 +17,8 @@ describe OpenIDConnect::RequestObject do
         :prompt => :none,
         :userinfo => {
           :claims => {
-            :name => :required
+            :name => :required,
+            :email => :optional
           }
         },
         :id_token => {
@@ -31,7 +32,7 @@ describe OpenIDConnect::RequestObject do
       }
     end
     let(:jwtnized) do
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfaWQiOiJjbGllbnRfaWQiLCJyZXNwb25zZV90eXBlIjoidG9rZW4gaWRfdG9rZW4iLCJyZWRpcmVjdF91cmkiOiJodHRwczovL2NsaWVudC5leGFtcGxlLmNvbSIsInNjb3BlIjoib3BlbmlkIGVtYWlsIiwic3RhdGUiOiJzdGF0ZTEyMzQiLCJub25jZSI6Im5vbmNlMTIzNCIsImRpc3BsYXkiOiJ0b3VjaCIsInByb21wdCI6Im5vbmUiLCJpZF90b2tlbiI6eyJjbGFpbXMiOnsiYWNyIjp7InZhbHVlcyI6WzIsMyw0XX19LCJtYXhfYWdlIjoxMH0sInVzZXJpbmZvIjp7ImNsYWltcyI6eyJuYW1lIjpudWxsfX19.8tgLupcioh7eTBmX21rqHmk9aOP81PAp6L1nwqEPME8'
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfaWQiOiJjbGllbnRfaWQiLCJyZXNwb25zZV90eXBlIjoidG9rZW4gaWRfdG9rZW4iLCJyZWRpcmVjdF91cmkiOiJodHRwczovL2NsaWVudC5leGFtcGxlLmNvbSIsInNjb3BlIjoib3BlbmlkIGVtYWlsIiwic3RhdGUiOiJzdGF0ZTEyMzQiLCJub25jZSI6Im5vbmNlMTIzNCIsImRpc3BsYXkiOiJ0b3VjaCIsInByb21wdCI6Im5vbmUiLCJpZF90b2tlbiI6eyJjbGFpbXMiOnsiYWNyIjp7InZhbHVlcyI6WzIsMyw0XX19LCJtYXhfYWdlIjoxMH0sInVzZXJpbmZvIjp7ImNsYWltcyI6eyJuYW1lIjpudWxsLCJlbWFpbCI6eyJvcHRpb25hbCI6dHJ1ZX19fX0.fdwSNB3TSnxpRZR6QwXTDb7PtBiPkk6ozN6ABZcoGxc'
     end
     let(:jsonized) do
       {
@@ -53,7 +54,10 @@ describe OpenIDConnect::RequestObject do
         },
         :userinfo => {
           :claims => {
-            :name => nil
+            :name => nil,
+            :email => {
+              :optional => true
+            }
           }
         }
       }
@@ -72,6 +76,20 @@ describe OpenIDConnect::RequestObject do
     describe '.decode' do
       it do
         OpenIDConnect::RequestObject.decode(jwtnized, 'secret').to_json.should == jsonized.to_json
+      end
+    end
+
+    describe '#required?' do
+      it do
+        request_object.user_info.required?(:name).should be_true
+        request_object.user_info.optional?(:name).should be_false
+      end
+    end
+
+    describe '#optional' do
+      it do
+        request_object.user_info.required?(:email).should be_false
+        request_object.user_info.optional?(:email).should be_true
       end
     end
   end

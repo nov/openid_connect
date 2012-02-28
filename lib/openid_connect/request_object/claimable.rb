@@ -31,6 +31,14 @@ module OpenIDConnect
         end
         hash
       end
+
+      def required?(claim)
+        claims && !optional?(claim)
+      end
+
+      def optional?(claim)
+        claim && claims[claim].is_a?(Hash) && claims[claim][:optional]
+      end
     end
   end
 end
