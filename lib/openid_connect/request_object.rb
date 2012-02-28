@@ -34,6 +34,6 @@ module OpenIDConnect
   end
 end
 
-Dir[File.dirname(__FILE__) + '/request_object/*.rb'].each do |file|
-  require file
-end
+require 'openid_connect/request_object/claimable'
+require 'openid_connect/request_object/id_token'
+require 'openid_connect/request_object/user_info'
