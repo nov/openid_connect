@@ -30,6 +30,11 @@ module OpenIDConnect
       def decode(jwt_string, key)
         new JSON::JWT.decode(jwt_string, key)
       end
+
+      def fetch(request_uri, key)
+        jwt_string = OpenIDConnect.http_client.get_content(request_uri)
+        decode jwt_string, key
+      end
     end
   end
 end
