@@ -25,6 +25,10 @@ module WebMockHelper
         request[:query] = options[:params]
       end
     end
+    if options[:request_header]
+      request[:headers] = options[:request_header]
+    end
+    p request
     request
   end
 

@@ -74,10 +74,14 @@ describe OpenIDConnect::Client do
     end
     let :protocol_params do
       {
-        :client_id => 'client_id',
-        :client_secret => 'client_secret',
         :grant_type => 'authorization_code',
         :code => 'code'
+      }
+    end
+    let :header_params do
+      {
+        'Authorization' => 'Basic Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ=',
+        'Content-Type' => 'application/x-www-form-urlencoded'
       }
     end
     let :access_token do
@@ -87,14 +91,14 @@ describe OpenIDConnect::Client do
 
     context 'when bearer token is returned' do
       it 'should return OpenIDConnect::AccessToken' do
-        mock_json :post, client.token_endpoint, 'access_token/bearer', :params => protocol_params do
+        mock_json :post, client.token_endpoint, 'access_token/bearer', :request_header => header_params, :params => protocol_params do
           access_token.should be_a OpenIDConnect::AccessToken
         end
       end
 
       context 'when id_token is returned' do
         it 'should include id_token' do
-          mock_json :post, client.token_endpoint, 'access_token/bearer_with_id_token', :params => protocol_params do
+          mock_json :post, client.token_endpoint, 'access_token/bearer_with_id_token', :request_header => header_params, :params => protocol_params do
             access_token.id_token.should == 'id_token'
           end
         end
@@ -103,7 +107,7 @@ describe OpenIDConnect::Client do
 
     context 'when invalid JSON is returned' do
       it 'should raise OpenIDConnect::Exception' do
-        mock_json :post, client.token_endpoint, 'access_token/invalid_json', :params => protocol_params do
+        mock_json :post, client.token_endpoint, 'access_token/invalid_json', :request_header => header_params, :params => protocol_params do
           expect do
             access_token
           end.should raise_error OpenIDConnect::Exception, 'Unknown Token Type'
@@ -113,7 +117,7 @@ describe OpenIDConnect::Client do
 
     context 'otherwise' do
       it 'should raise Unexpected Token Type exception' do
-        mock_json :post, client.token_endpoint, 'access_token/mac', :params => protocol_params do
+        mock_json :post, client.token_endpoint, 'access_token/mac', :request_header => header_params, :params => protocol_params do
           expect { access_token }.should raise_error OpenIDConnect::Exception, 'Unexpected Token Type: mac'
         end
       end
