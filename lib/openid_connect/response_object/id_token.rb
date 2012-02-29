@@ -8,11 +8,9 @@ module OpenIDConnect
       attr_required :iss, :user_id, :aud, :exp, :nonce
       attr_optional :acr, :auth_time
 
-      validates :acr, :inclusion => {:in => [0, 1, 2, 3, 4]}, :allow_nil => true
-
       def initialize(attributes = {})
         super
-        (all_attributes - [:exp]).each do |key|
+        (all_attributes - [:exp, :auth_time]).each do |key|
           self.send "#{key}=", self.send(key).try(:to_s)
         end
         @exp = @exp.to_i
