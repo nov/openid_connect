@@ -41,7 +41,7 @@ module OpenIDConnect
       end
 
       def accessible?(claim)
-        claims.try(:[], claim)
+        claims.try(:include?, claim)
       end
     end
   end
