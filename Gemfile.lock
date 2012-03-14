@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openid_connect (0.2.0.alpha)
+    openid_connect (0.2.0.alpha3)
       activemodel (>= 3)
       attr_required (>= 0.0.5)
       json (>= 1.4.3)
@@ -15,10 +15,10 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activemodel (3.2.1)
-      activesupport (= 3.2.1)
+    activemodel (3.2.2)
+      activesupport (= 3.2.2)
       builder (~> 3.0.0)
-    activesupport (3.2.1)
+    activesupport (3.2.2)
       i18n (~> 0.6)
       multi_json (~> 1.0)
     addressable (2.2.7)
@@ -38,12 +38,13 @@ GEM
     jruby-openssl (0.7.6.1)
       bouncy-castle-java (>= 1.5.0146.1)
     json (1.6.5)
+    json (1.6.5-java)
     json-jwt (0.0.7)
       activesupport (>= 2.3)
       i18n
       json (>= 1.4.3)
       url_safe_base64
-    mail (2.4.1)
+    mail (2.4.4)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -76,14 +77,14 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.31)
+    tzinfo (0.3.32)
     url_safe_base64 (0.2.1)
     validate_email (0.1.5)
       activemodel (>= 3.0)
       mail (>= 2.2.5)
     validate_url (0.2.0)
       activemodel (>= 3.0.0)
-    webmock (1.8.0)
+    webmock (1.8.2)
       addressable (>= 2.2.7)
       crack (>= 0.1.7)
     yamler (0.1.0)

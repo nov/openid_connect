@@ -9,8 +9,11 @@ module OpenIDConnect
       attr_missing!
     end
 
-    def all_attributes
+    def self.all_attributes
       required_attributes + optional_attributes
+    end
+    def all_attributes
+      self.class.all_attributes
     end
 
     def require_at_least_one_attributes

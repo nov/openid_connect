@@ -13,8 +13,8 @@ describe OpenIDConnect::RequestObject do
         :scope => 'openid email',
         :state => 'state1234',
         :nonce => 'nonce1234',
-        :display => :touch,
-        :prompt => :none,
+        :display => 'touch',
+        :prompt => 'none',
         :userinfo => {
           :claims => {
             :name => :required,
@@ -25,14 +25,14 @@ describe OpenIDConnect::RequestObject do
           :max_age => 10,
           :claims => {
             :acr => {
-              :values => [2, 3, 4]
+              :values => ['2', '3', '4']
             }
           }
         }
       }
     end
     let(:jwtnized) do
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfaWQiOiJjbGllbnRfaWQiLCJyZXNwb25zZV90eXBlIjoidG9rZW4gaWRfdG9rZW4iLCJyZWRpcmVjdF91cmkiOiJodHRwczovL2NsaWVudC5leGFtcGxlLmNvbSIsInNjb3BlIjoib3BlbmlkIGVtYWlsIiwic3RhdGUiOiJzdGF0ZTEyMzQiLCJub25jZSI6Im5vbmNlMTIzNCIsImRpc3BsYXkiOiJ0b3VjaCIsInByb21wdCI6Im5vbmUiLCJpZF90b2tlbiI6eyJjbGFpbXMiOnsiYWNyIjp7InZhbHVlcyI6WzIsMyw0XX19LCJtYXhfYWdlIjoxMH0sInVzZXJpbmZvIjp7ImNsYWltcyI6eyJuYW1lIjpudWxsLCJlbWFpbCI6eyJvcHRpb25hbCI6dHJ1ZX19fX0.fdwSNB3TSnxpRZR6QwXTDb7PtBiPkk6ozN6ABZcoGxc'
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfaWQiOiJjbGllbnRfaWQiLCJyZXNwb25zZV90eXBlIjoidG9rZW4gaWRfdG9rZW4iLCJyZWRpcmVjdF91cmkiOiJodHRwczovL2NsaWVudC5leGFtcGxlLmNvbSIsInNjb3BlIjoib3BlbmlkIGVtYWlsIiwic3RhdGUiOiJzdGF0ZTEyMzQiLCJub25jZSI6Im5vbmNlMTIzNCIsImRpc3BsYXkiOiJ0b3VjaCIsInByb21wdCI6Im5vbmUiLCJpZF90b2tlbiI6eyJjbGFpbXMiOnsiYWNyIjp7InZhbHVlcyI6WyIyIiwiMyIsIjQiXX19LCJtYXhfYWdlIjoxMH0sInVzZXJpbmZvIjp7ImNsYWltcyI6eyJuYW1lIjpudWxsLCJlbWFpbCI6eyJvcHRpb25hbCI6dHJ1ZX19fX0.ARgNywrsRkQtTFIqWnl38JLDYfb2g91yLY04l5-yQvQ'
     end
     let(:jsonized) do
       {
@@ -42,12 +42,12 @@ describe OpenIDConnect::RequestObject do
         :scope => "openid email",
         :state => "state1234",
         :nonce => "nonce1234",
-        :display => :touch,
-        :prompt => :none,
+        :display => "touch",
+        :prompt => "none",
         :id_token => {
           :claims => {
             :acr => {
-              :values => [2, 3, 4]
+              :values => ['2', '3', '4']
             }
           },
           :max_age => 10
@@ -66,7 +66,7 @@ describe OpenIDConnect::RequestObject do
     its(:as_json) do
       should == jsonized
     end
-    
+
     describe '#to_jwt' do
       it do
         request_object.to_jwt('secret', :HS256).should == jwtnized
@@ -75,7 +75,7 @@ describe OpenIDConnect::RequestObject do
 
     describe '.decode' do
       it do
-        OpenIDConnect::RequestObject.decode(jwtnized, 'secret').to_json.should == jsonized.to_json
+        OpenIDConnect::RequestObject.decode(jwtnized, 'secret').as_json.should == jsonized
       end
     end
 

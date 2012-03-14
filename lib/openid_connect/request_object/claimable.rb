@@ -10,16 +10,23 @@ module OpenIDConnect
       def initialize_with_claims(attributes = {})
         initialize_without_claims attributes
         if claims.present?
+          _claims_ = {}
           claims.each do |key, value|
-            case value
-            when :optional
-              claims[key] = {
+            if [ResponseObject::IdToken, ResponseObject::UserInfo::OpenID].collect(&:all_attributes).collect(&:to_s).include?(key)
+              key = key.to_sym
+            end
+            _claims_[key] = case value
+            when :optional, 'optional'
+              {
                 :optional => true
               }
-            when :required
-              claims[key] = nil
+            when :required, 'required'
+              nil
+            else
+              value.try(:symbolize_keys)
             end
           end
+          self.claims = _claims_
         end
       end
 
