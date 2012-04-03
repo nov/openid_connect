@@ -12,9 +12,6 @@ module OpenIDConnect
         if claims.present?
           _claims_ = {}
           claims.each do |key, value|
-            if [ResponseObject::IdToken, ResponseObject::UserInfo::OpenID].collect(&:all_attributes).collect(&:to_s).include?(key)
-              key = key.to_sym
-            end
             _claims_[key] = case value
             when :optional, 'optional'
               {
@@ -23,10 +20,10 @@ module OpenIDConnect
             when :required, 'required'
               nil
             else
-              value.try(:symbolize_keys)
+              value
             end
           end
-          self.claims = _claims_
+          self.claims = _claims_.with_indifferent_access
         end
       end
 

@@ -21,7 +21,7 @@ module OpenIDConnect
       if hash.include?(:user_info)
         hash[:userinfo] = hash.delete(:user_info)
       end
-      hash
+      hash.with_indifferent_access
     end
     alias_method_chain :as_json, :user_info
 

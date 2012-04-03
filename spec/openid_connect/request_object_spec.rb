@@ -64,7 +64,7 @@ describe OpenIDConnect::RequestObject do
     end
     it { should be_valid }
     its(:as_json) do
-      should == jsonized
+      should == jsonized.with_indifferent_access
     end
 
     describe '#to_jwt' do
@@ -75,7 +75,7 @@ describe OpenIDConnect::RequestObject do
 
     describe '.decode' do
       it do
-        OpenIDConnect::RequestObject.decode(jwtnized, 'secret').as_json.should == jsonized
+        OpenIDConnect::RequestObject.decode(jwtnized, 'secret').as_json.should == jsonized.with_indifferent_access
       end
     end
 
