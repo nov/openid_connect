@@ -19,7 +19,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
   describe 'attributes' do
     subject { klass }
     its(:required_attributes) { should == [:iss, :user_id, :aud, :exp, :iat] }
-    its(:optional_attributes) { should == [:acr, :auth_time, :nonce] }
+    its(:optional_attributes) { should == [:acr, :auth_time, :nonce, :at_hash] }
   end
 
   describe '#verify!' do
