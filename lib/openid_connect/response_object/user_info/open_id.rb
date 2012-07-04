@@ -5,25 +5,26 @@ module OpenIDConnect
         attr_optional(
           :user_id,
           :name,
-          :given_name,
           :family_name,
+          :given_name,
           :middle_name,
           :nickname,
-          :phone_number,
-          :verified,
-          :gender,
-          :zoneinfo,
-          :locale,
-          :birthday,
-          :updated_time,
+          :preferred_username,
           :profile,
           :picture,
           :website,
+          :gender,
+          :birthday,
+          :zoneinfo,
+          :locale,
+          :updated_time,
           :email,
-          :address
+          :email_verified,
+          :address,
+          :phone_number
         )
 
-        validates :verified, :inclusion => {:in => [true, false]},                             :allow_nil => true
+        validates :email_verified, :inclusion => {:in => [true, false]},                       :allow_nil => true
         validates :gender,   :inclusion => {:in => ['male', 'female']},                        :allow_nil => true
         validates :zoneinfo, :inclusion => {:in => TZInfo::TimezoneProxy.all.collect(&:name)}, :allow_nil => true
         validates :profile, :picture, :website, :url => true, :allow_nil => true
@@ -34,7 +35,7 @@ module OpenIDConnect
 
         def initialize(attributes = {})
           super
-          (all_attributes - [:verified, :address]).each do |key|
+          (all_attributes - [:email_verified, :address]).each do |key|
             self.send "#{key}=", self.send(key).try(:to_s)
           end
         end

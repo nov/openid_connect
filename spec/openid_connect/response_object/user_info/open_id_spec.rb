@@ -10,13 +10,25 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
     its(:required_attributes) { should == [] }
     its(:optional_attributes) do
       should == [
-        :user_id, :name, :given_name, :family_name, :middle_name, :nickname,
-        :phone_number,
-        :verified, :gender, :zoneinfo, :locale,
-        :birthday, :updated_time,
-        :profile, :picture, :website,
+        :user_id,
+        :name,
+        :family_name,
+        :given_name,
+        :middle_name,
+        :nickname,
+        :preferred_username,
+        :profile,
+        :picture,
+        :website,
+        :gender,
+        :birthday,
+        :zoneinfo,
+        :locale,
+        :updated_time,
         :email,
-        :address
+        :email_verified,
+        :address,
+        :phone_number
       ]
     end
   end
@@ -44,7 +56,7 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
       its(:errors) { should include :email }
     end
 
-    [:verified, :gender, :zoneinfo].each do |one_of_list|
+    [:email_verified, :gender, :zoneinfo].each do |one_of_list|
       context "when #{one_of_list} is invalid" do
         let :attributes do
           {one_of_list => 'Out of List'}
