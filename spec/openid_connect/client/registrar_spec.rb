@@ -224,7 +224,7 @@ describe OpenIDConnect::Client::Registrar do
       } do
         client = instance.associate!
         client.should be_instance_of OpenIDConnect::Client
-        client.identifier.should == 'client_id'
+        client.identifier.should == 'client.example.com'
         client.secret.should == 'client_secret'
         client.expires_in.should == 3600
       end
@@ -255,13 +255,13 @@ describe OpenIDConnect::Client::Registrar do
       mock_json :post, endpoint, 'client/updated', :params => {
         :type => 'client_update',
         :client_id => 'client.example.com',
-        :client_secret => 'client_secret'
+        :client_secret => 'client_secret',
+        :application_name => 'New Name'
       } do
+        instance.application_name = 'New Name'
         client = instance.update!
         client.should be_instance_of OpenIDConnect::Client
-        client.identifier.should == 'new_client_id'
-        client.secret.should == 'new_client_secret'
-        client.expires_in.should == 3600
+        client.identifier.should == 'client.example.com'
       end
     end
 
@@ -276,6 +276,29 @@ describe OpenIDConnect::Client::Registrar do
             instance.update!
           end.should raise_error OpenIDConnect::Client::Registrar::RegistrationFailed
         end
+      end
+    end
+  end
+
+  describe '#rotate_secret!' do
+    let(:attributes) do
+      {
+        :client_id => 'client.example.com',
+        :client_secret => 'client_secret'
+      }
+    end
+
+    it 'should return OpenIDConnect::Client' do
+      mock_json :post, endpoint, 'client/rotated', :params => {
+        :type => 'rotate_secret',
+        :client_id => 'client.example.com',
+        :client_secret => 'client_secret'
+      } do
+        client = instance.rotate_secret!
+        client.should be_instance_of OpenIDConnect::Client
+        client.identifier.should == 'client.example.com'
+        client.secret.should == 'new_client_secret'
+        client.expires_in.should == 3600
       end
     end
   end

@@ -22,14 +22,21 @@ module OpenIDConnect
         :sector_identifier_url,
         :user_id_type,
         :require_signed_request_object,
+        :userinfo_signed_response_alg,
+        :userinfo_encrypted_response_alg,
+        :userinfo_encrypted_response_enc,
+        :userinfo_encrypted_response_int,
+        :id_token_signed_response_alg,
+        :id_token_encrypted_response_alg,
+        :id_token_encrypted_response_enc,
+        :id_token_encrypted_response_int,
+        :default_max_age,
+        :require_auth_time,
+        :default_acr
       ]
       plurar_attributes = [
         :contacts,
-        :redirect_uris,
-        :userinfo_signed_response_algs,
-        :userinfo_encrypted_response_algs,
-        :id_token_signed_response_algs,
-        :id_token_encrypted_response_algs
+        :redirect_uris
       ]
       attr_required :endpoint
       attr_optional *(singular_attributes + plurar_attributes)
@@ -48,10 +55,10 @@ module OpenIDConnect
       end
 
       validates :type,                  :presence => true
-      validates :client_id,             :presence => {:if => lambda { |c| c.type.to_s == 'client_update' }}
+      validates :client_id,             :presence => {:if => lambda { |c| ['client_update', 'rotate_secret'].include?(c.type.to_s) }}
       validates :sector_identifier_url, :presence => {:if => :sector_identifier_required?}
 
-      validates :type,             :inclusion => {:in => ['client_associate', 'client_update']}
+      validates :type,             :inclusion => {:in => ['client_associate', 'rotate_secret', 'client_update']}
       validates :application_type, :inclusion => {:in => ['native', 'web']},      :allow_nil => true
       validates :user_id_type,     :inclusion => {:in => ['pairwise', 'public']}, :allow_nil => true
       validates :token_endpoint_auth_type, :inclusion => {
@@ -124,6 +131,11 @@ module OpenIDConnect
 
       def associate!
         self.type = 'client_associate'
+        post!
+      end
+
+      def rotate_secret!
+        self.type = 'rotate_secret'
         post!
       end
 

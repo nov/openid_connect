@@ -1,5 +1,3 @@
 {
-  "client_id": "new_client_id",
-  "client_secret": "new_client_secret",
-  "expires_in": 3600
+  "client_id": "client.example.com"
 }
