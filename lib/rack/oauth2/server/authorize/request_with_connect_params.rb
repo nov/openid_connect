@@ -1,6 +1,5 @@
 class Rack::OAuth2::Server::Authorize
   module RequestWithConnectParams
-    # NOTE: nonce is REQUIRED, but define optional attributes not to break rack-oauth2 for now
     CONNECT_EXT_PARAMS = [:nonce, :display, :prompt, :request, :request_uri]
 
     def self.included(klass)
@@ -11,7 +10,6 @@ class Rack::OAuth2::Server::Authorize
           CONNECT_EXT_PARAMS.each do |attribute|
             self.send :"#{attribute}=", params[attribute.to_s]
           end
-          invalid_request!('Nonce Required') if openid_connect_request? && nonce.blank?
         end
         alias_method_chain :initialize, :connect_params
 
