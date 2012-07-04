@@ -25,16 +25,8 @@ module OpenIDConnect
 
       include JWTnizable
       class << self
-        def decode(jwt_string, key_or_client)
-          case key_or_client
-          when Client
-            OpenIDConnect::AccessToken.new(
-              :client => key_or_client,
-              :access_token => jwt_string
-            ).id_token!
-          else
-            new JSON::JWT.decode(jwt_string, key_or_client)
-          end
+        def decode(jwt_string, key)
+          new JSON::JWT.decode(jwt_string, key)
         end
       end
     end

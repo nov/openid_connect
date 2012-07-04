@@ -12,7 +12,6 @@ module OpenIDConnect
             :authorization_endpoint,
             :token_endpoint,
             :user_info_endpoint,
-            :check_id_endpoint,
             :refresh_session_endpoint,
             :end_session_endpoint,
             :jwk_url,

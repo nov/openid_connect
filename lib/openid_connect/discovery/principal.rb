@@ -6,8 +6,6 @@ module OpenIDConnect
       def self.parse(identifier)
         raise InvalidIdentifier.new('Identifier Required') if identifier.blank?
         type = case identifier
-        when /^(=|@|!)/
-          XRI
         when /@/
           Email
         else
@@ -32,4 +30,3 @@ end
 
 require 'openid_connect/discovery/principal/email'
 require 'openid_connect/discovery/principal/uri'
-require 'openid_connect/discovery/principal/xri'

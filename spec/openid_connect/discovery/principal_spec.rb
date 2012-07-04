@@ -5,9 +5,7 @@ describe OpenIDConnect::Discovery::Principal do
     {
       'server.example.com' => OpenIDConnect::Discovery::Principal::URI,
       'http://server.example.com' => OpenIDConnect::Discovery::Principal::URI,
-      'nov@server.example.com' => OpenIDConnect::Discovery::Principal::Email,
-      '=nov' => OpenIDConnect::Discovery::Principal::XRI,
-      '@nov' => OpenIDConnect::Discovery::Principal::XRI
+      'nov@server.example.com' => OpenIDConnect::Discovery::Principal::Email
     }.each do |input, klass|
       describe input do
         it do

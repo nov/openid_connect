@@ -1,21 +1,16 @@
 module OpenIDConnect
   class Client < Rack::OAuth2::Client
-    attr_optional :check_id_endpoint, :user_info_endpoint, :expires_in
+    attr_optional :user_info_endpoint, :expires_in
 
     def initialize(attributes = {})
       super
       @user_info_endpoint ||= '/user_info'
-      @check_id_endpoint  ||= '/id_token'
     end
 
     def authorization_uri(params = {})
       params[:response_type] ||= :token
       params[:scope] = setup_required_scope params[:scope]
       super
-    end
-
-    def check_id_uri
-      absolute_uri_for check_id_endpoint
     end
 
     def user_info_uri

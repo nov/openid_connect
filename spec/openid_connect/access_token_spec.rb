@@ -97,18 +97,4 @@ describe OpenIDConnect::AccessToken do
       it_behaves_like :access_token_error_handling
     end
   end
-
-  describe '#id_token!' do
-    it 'should return OpenIDConnect::ResponseObject::UserInfo::OpenID' do
-      mock_json :get, client.check_id_uri, 'id_token', :HTTP_AUTHORIZATION => 'Bearer access_token' do
-        access_token.id_token!.should be_a OpenIDConnect::ResponseObject::IdToken
-      end
-    end
-
-    describe 'error handling' do
-      let(:endpoint) { client.check_id_uri }
-      let(:request) { access_token.id_token! }
-      it_behaves_like :access_token_error_handling
-    end
-  end
 end

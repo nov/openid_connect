@@ -14,7 +14,6 @@ describe OpenIDConnect::Discovery::Provider::Config do
         config.authorization_endpoint.should == 'https://connect-op.heroku.com/authorizations/new'
         config.token_endpoint.should == 'https://connect-op.heroku.com/access_tokens'
         config.user_info_endpoint.should == 'https://connect-op.heroku.com/user_info'
-        config.check_id_endpoint.should == 'https://connect-op.heroku.com/id_token'
         config.refresh_session_endpoint.should be_nil
         config.end_session_endpoint.should be_nil
         config.jwk_url.should be_nil
