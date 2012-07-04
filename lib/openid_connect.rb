@@ -10,6 +10,7 @@ require 'attr_optional'
 require 'rack/oauth2'
 require 'rack/oauth2/server/authorize/request_with_connect_params'
 require 'rack/oauth2/server/id_token_response'
+require 'rack/oauth2/server/resource/error_with_connect_ext'
 
 module OpenIDConnect
   VERSION = ::File.read(
