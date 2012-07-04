@@ -35,7 +35,8 @@ describe OpenIDConnect::AccessToken do
           :user_id => 'user_id',
           :aud => 'client_id',
           :nonce => 'nonce',
-          :exp => 1313424327
+          :exp => 1.week.from_now,
+          :iat => Time.now
         )
       end
       its(:id_token) { should be_a OpenIDConnect::ResponseObject::IdToken }

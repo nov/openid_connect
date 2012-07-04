@@ -5,15 +5,14 @@ module OpenIDConnect
     class IdToken < ConnectObject
       class InvalidToken < Exception; end
 
-      attr_required :iss, :user_id, :aud, :exp, :nonce
-      attr_optional :acr, :auth_time
+      attr_required :iss, :user_id, :aud, :exp, :iat
+      attr_optional :acr, :auth_time, :nonce
 
       def initialize(attributes = {})
         super
-        (all_attributes - [:exp, :auth_time]).each do |key|
+        (all_attributes - [:exp, :iat, :auth_time]).each do |key|
           self.send "#{key}=", self.send(key).try(:to_s)
         end
-        @exp = @exp.to_i
       end
 
       def verify!(expected = {})
