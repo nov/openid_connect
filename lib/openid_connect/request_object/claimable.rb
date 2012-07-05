@@ -13,7 +13,7 @@ module OpenIDConnect
           _claims_ = {}
           claims.each do |key, value|
             _claims_[key] = case value.to_s
-            when 'optional'
+            when 'optional', 'voluntary'
               {
                 :essential => false
               }
@@ -39,12 +39,14 @@ module OpenIDConnect
       end
 
       def required?(claim)
-        accessible?(claim) && !optional?(claim)
+        accessible?(claim) && claims[claim].is_a?(Hash) && claims[claim][:essential]
       end
+      alias_method :essential?, :required?
 
       def optional?(claim)
-        accessible?(claim) && claims[claim].is_a?(Hash) && claims[claim][:optional]
+        accessible?(claim) && !required?(claim)
       end
+      alias_method :voluntary?, :optional?
 
       def accessible?(claim)
         claims.try(:include?, claim)

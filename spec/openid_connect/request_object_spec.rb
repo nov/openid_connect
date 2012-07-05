@@ -32,7 +32,7 @@ describe OpenIDConnect::RequestObject do
       }
     end
     let(:jwtnized) do
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfaWQiOiJjbGllbnRfaWQiLCJyZXNwb25zZV90eXBlIjoidG9rZW4gaWRfdG9rZW4iLCJyZWRpcmVjdF91cmkiOiJodHRwczovL2NsaWVudC5leGFtcGxlLmNvbSIsInNjb3BlIjoib3BlbmlkIGVtYWlsIiwic3RhdGUiOiJzdGF0ZTEyMzQiLCJub25jZSI6Im5vbmNlMTIzNCIsImRpc3BsYXkiOiJ0b3VjaCIsInByb21wdCI6Im5vbmUiLCJpZF90b2tlbiI6eyJjbGFpbXMiOnsiYWNyIjp7InZhbHVlcyI6WyIyIiwiMyIsIjQiXX19LCJtYXhfYWdlIjoxMH0sInVzZXJpbmZvIjp7ImNsYWltcyI6eyJuYW1lIjpudWxsLCJlbWFpbCI6eyJvcHRpb25hbCI6dHJ1ZX19fX0.ARgNywrsRkQtTFIqWnl38JLDYfb2g91yLY04l5-yQvQ'
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfaWQiOiJjbGllbnRfaWQiLCJyZXNwb25zZV90eXBlIjoidG9rZW4gaWRfdG9rZW4iLCJyZWRpcmVjdF91cmkiOiJodHRwczovL2NsaWVudC5leGFtcGxlLmNvbSIsInNjb3BlIjoib3BlbmlkIGVtYWlsIiwic3RhdGUiOiJzdGF0ZTEyMzQiLCJub25jZSI6Im5vbmNlMTIzNCIsImRpc3BsYXkiOiJ0b3VjaCIsInByb21wdCI6Im5vbmUiLCJpZF90b2tlbiI6eyJjbGFpbXMiOnsiYWNyIjp7InZhbHVlcyI6WyIyIiwiMyIsIjQiXX19LCJtYXhfYWdlIjoxMH0sInVzZXJpbmZvIjp7ImNsYWltcyI6eyJuYW1lIjp7ImVzc2VudGlhbCI6dHJ1ZX0sImVtYWlsIjp7ImVzc2VudGlhbCI6ZmFsc2V9fX19.MLTDQVPdhAdkJhboM06IRtjHJrvamJ_H2vFGRupXmTA'
     end
     let(:jsonized) do
       {
@@ -54,9 +54,11 @@ describe OpenIDConnect::RequestObject do
         },
         :userinfo => {
           :claims => {
-            :name => nil,
+            :name => {
+              :essential => true
+            },
             :email => {
-              :optional => true
+              :essential => false
             }
           }
         }
