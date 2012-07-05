@@ -16,7 +16,7 @@ module OpenIDConnect
       end
 
       def verify!(expected = {})
-        exp.to_i >= Time.now.to_i &&
+        exp.to_i > Time.now.to_i &&
         iss == expected[:issuer] &&
         aud == expected[:client_id] &&
         nonce == expected[:nonce] or
