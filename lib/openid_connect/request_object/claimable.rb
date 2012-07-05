@@ -12,13 +12,15 @@ module OpenIDConnect
         if claims.present?
           _claims_ = {}
           claims.each do |key, value|
-            _claims_[key] = case value
-            when :optional, 'optional'
+            _claims_[key] = case value.to_s
+            when 'optional'
               {
-                :optional => true
+                :essential => false
               }
-            when :required, 'required'
-              nil
+            when 'required', 'essential'
+              {
+                :essential => true
+              }
             else
               value
             end
