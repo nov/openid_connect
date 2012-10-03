@@ -31,6 +31,18 @@ describe OpenIDConnect::Discovery::Principal::URI do
       let(:identifier) { input }
       its(:identifier) { should == output }
       its(:host) { should == 'server.example.com' }
+      its(:port) { should be_nil }
+    end
+  end
+
+  {
+    'server.example.com:8080' => 'https://server.example.com:8080'
+  }.each do |input, output|
+    context "when '#{input}' is given" do
+      let(:identifier) { input }
+      its(:identifier) { should == output }
+      its(:host) { should == 'server.example.com' }
+      its(:port) { should == 8080 }
     end
   end
 

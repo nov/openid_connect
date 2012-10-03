@@ -23,6 +23,19 @@ describe OpenIDConnect::Discovery::Principal do
       request
     end
 
+    context 'when port specified' do
+      it do
+        SWD.should_receive(:discover!).with(
+          :principal => "https://example.com:8080",
+          :service => "http://openid.net/specs/connect/1.0/issuer",
+          :host => "example.com",
+          :port => 8080,
+          :cache => {}
+        )
+        OpenIDConnect::Discovery::Principal.parse('example.com:8080').discover!
+      end
+    end
+
     context 'when discovery failed' do
       it do
         SWD.should_receive(:discover!).and_raise(SWD::Exception)

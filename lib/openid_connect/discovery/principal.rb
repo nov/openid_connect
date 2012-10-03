@@ -1,7 +1,7 @@
 module OpenIDConnect
   module Discovery
     class Principal
-      attr_reader :identifier, :host
+      attr_reader :identifier, :host, :port
 
       def self.parse(identifier)
         raise InvalidIdentifier.new('Identifier Required') if identifier.blank?
@@ -19,6 +19,7 @@ module OpenIDConnect
           :principal => identifier,
           :service => Provider::SERVICE_URI,
           :host => host,
+          :port => port,
           :cache => cache_options
         )
       rescue SWD::Exception => e

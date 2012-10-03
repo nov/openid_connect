@@ -6,6 +6,7 @@ module OpenIDConnect
           uri = normalize(identifier)
           @identifier = uri.to_s
           @host = uri.host
+          @port = uri.port unless [80, 443].include?(uri.port)
         end
 
         private
