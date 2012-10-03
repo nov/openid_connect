@@ -35,13 +35,13 @@ describe OpenIDConnect::ConnectObject do
         {:optional => 'Optional'}
       end
       it do
-        expect { klass.new attributes }.should raise_error AttrRequired::AttrMissing
+        expect { klass.new attributes }.to raise_error AttrRequired::AttrMissing
       end
     end
 
     context 'otherwise' do
       it do
-        expect { klass.new }.should raise_error AttrRequired::AttrMissing
+        expect { klass.new }.to raise_error AttrRequired::AttrMissing
       end
     end
   end
@@ -59,7 +59,7 @@ describe OpenIDConnect::ConnectObject do
       end
 
       it 'should raise OpenIDConnect::ValidationFailed with ActiveModel::Errors owner' do
-        expect { instance.as_json }.should raise_error(OpenIDConnect::ValidationFailed) { |e|
+        expect { instance.as_json }.to raise_error(OpenIDConnect::ValidationFailed) { |e|
           e.message.should include 'Required is not included in the list'
           e.message.should include 'Required is too long (maximum is 10 characters)'
           e.object.errors.should be_a ActiveModel::Errors
@@ -80,7 +80,7 @@ describe OpenIDConnect::ConnectObject do
       end
 
       it 'should raise OpenIDConnect::ValidationFailed with ActiveModel::Errors owner' do
-        expect { instance.validate! }.should raise_error(OpenIDConnect::ValidationFailed) { |e|
+        expect { instance.validate! }.to raise_error(OpenIDConnect::ValidationFailed) { |e|
           e.message.should include 'Required is not included in the list'
           e.message.should include 'Required is too long (maximum is 10 characters)'
           e.object.errors.should be_a ActiveModel::Errors

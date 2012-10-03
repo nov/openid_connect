@@ -26,7 +26,7 @@ describe OpenIDConnect::Discovery::Principal do
     context 'when discovery failed' do
       it do
         SWD.should_receive(:discover!).and_raise(SWD::Exception)
-        expect { request }.should raise_error OpenIDConnect::Discovery::DiscoveryFailed
+        expect { request }.to raise_error OpenIDConnect::Discovery::DiscoveryFailed
       end
     end
   end

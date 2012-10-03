@@ -6,7 +6,7 @@ describe Rack::OAuth2::Server::Resource::ErrorWithConnectExt do
 
   describe 'invalid_schema!' do
     it do
-      expect { request.invalid_schema! }.should raise_error Rack::OAuth2::Server::Resource::BadRequest
+      expect { request.invalid_schema! }.to raise_error Rack::OAuth2::Server::Resource::BadRequest
     end
   end
 end

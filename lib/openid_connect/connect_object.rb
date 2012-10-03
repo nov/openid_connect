@@ -2,13 +2,13 @@ module OpenIDConnect
   class ConnectObject
     include ActiveModel::Validations, AttrRequired, AttrOptional
 
-    attr_reader :raw_attributes
+    attr_accessor :raw_attributes
 
     def initialize(attributes = {})
       all_attributes.each do |_attr_|
         self.send :"#{_attr_}=", attributes[_attr_]
       end
-      raw_attributes = attributes
+      self.raw_attributes = attributes
       attr_missing!
     end
 

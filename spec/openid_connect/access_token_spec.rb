@@ -56,7 +56,7 @@ describe OpenIDConnect::AccessToken do
         mock_json :get, endpoint, 'errors/invalid_request', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 400, :params => {
           :schema => 'openid'
         } do
-          expect { request }.should raise_error OpenIDConnect::BadRequest
+          expect { request }.to raise_error OpenIDConnect::BadRequest
         end
       end
     end
@@ -66,7 +66,7 @@ describe OpenIDConnect::AccessToken do
         mock_json :get, endpoint, 'errors/invalid_access_token', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 401, :params => {
           :schema => 'openid'
         } do
-          expect { request }.should raise_error OpenIDConnect::Unauthorized
+          expect { request }.to raise_error OpenIDConnect::Unauthorized
         end
       end
     end
@@ -76,7 +76,7 @@ describe OpenIDConnect::AccessToken do
         mock_json :get, endpoint, 'errors/insufficient_scope', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 403, :params => {
           :schema => 'openid'
         } do
-          expect { request }.should raise_error OpenIDConnect::Forbidden
+          expect { request }.to raise_error OpenIDConnect::Forbidden
         end
       end
     end
@@ -86,7 +86,7 @@ describe OpenIDConnect::AccessToken do
         mock_json :get, endpoint, 'errors/unknown', :HTTP_AUTHORIZATION => 'Bearer access_token', :status => 500, :params => {
           :schema => 'openid'
         } do
-          expect { request }.should raise_error OpenIDConnect::HttpError
+          expect { request }.to raise_error OpenIDConnect::HttpError
         end
       end
     end

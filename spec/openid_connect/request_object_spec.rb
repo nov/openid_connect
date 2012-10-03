@@ -104,7 +104,7 @@ describe OpenIDConnect::RequestObject do
     it do
       expect do
         request_object.as_json
-      end.should raise_error OpenIDConnect::ValidationFailed
+      end.to raise_error OpenIDConnect::ValidationFailed
     end
   end
 end

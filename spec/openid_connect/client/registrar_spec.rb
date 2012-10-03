@@ -56,7 +56,7 @@ describe OpenIDConnect::Client::Registrar do
       it do
         expect do
           instance
-        end.should_not raise_error
+        end.not_to raise_error
       end
       it { should_not be_valid }
     end
@@ -69,7 +69,7 @@ describe OpenIDConnect::Client::Registrar do
     it do
       expect do
         instance
-      end.should raise_error AttrRequired::AttrMissing
+      end.to raise_error AttrRequired::AttrMissing
     end
   end
 
@@ -208,7 +208,7 @@ describe OpenIDConnect::Client::Registrar do
       it do
         expect do
           instance.as_json
-        end.should raise_error OpenIDConnect::ValidationFailed
+        end.to raise_error OpenIDConnect::ValidationFailed
       end
     end
   end
@@ -237,7 +237,7 @@ describe OpenIDConnect::Client::Registrar do
         }, :status => 400 do
           expect do
             instance.associate!
-          end.should raise_error OpenIDConnect::Client::Registrar::RegistrationFailed
+          end.to raise_error OpenIDConnect::Client::Registrar::RegistrationFailed
         end
       end
     end
@@ -274,7 +274,7 @@ describe OpenIDConnect::Client::Registrar do
         }, :status => 400 do
           expect do
             instance.update!
-          end.should raise_error OpenIDConnect::Client::Registrar::RegistrationFailed
+          end.to raise_error OpenIDConnect::Client::Registrar::RegistrationFailed
         end
       end
     end
@@ -308,7 +308,7 @@ describe OpenIDConnect::Client::Registrar do
       it do
         expect do
           instance.validate!
-        end.should_not raise_error OpenIDConnect::ValidationFailed
+        end.not_to raise_error OpenIDConnect::ValidationFailed
       end
     end
 
@@ -321,7 +321,7 @@ describe OpenIDConnect::Client::Registrar do
       it do
         expect do
           instance.validate!
-        end.should raise_error OpenIDConnect::ValidationFailed
+        end.to raise_error OpenIDConnect::ValidationFailed
       end
     end
   end

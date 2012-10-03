@@ -43,7 +43,7 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdToken do
       end
     end
     it do
-      expect { response }.should raise_error AttrRequired::AttrMissing, "'id_token' required."
+      expect { response }.to raise_error AttrRequired::AttrMissing, "'id_token' required."
     end
   end
 end

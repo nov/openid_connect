@@ -26,7 +26,7 @@ describe OpenIDConnect::Client do
       [:authorization_uri, :user_info_uri].each do |endpoint|
         describe endpoint do
           it do
-            expect { client.send endpoint }.should raise_error 'No Host Info'
+            expect { client.send endpoint }.to raise_error 'No Host Info'
           end
         end
       end
@@ -109,7 +109,7 @@ describe OpenIDConnect::Client do
         mock_json :post, client.token_endpoint, 'access_token/invalid_json', :request_header => header_params, :params => protocol_params do
           expect do
             access_token
-          end.should raise_error OpenIDConnect::Exception, 'Unknown Token Type'
+          end.to raise_error OpenIDConnect::Exception, 'Unknown Token Type'
         end
       end
     end
@@ -117,7 +117,7 @@ describe OpenIDConnect::Client do
     context 'otherwise' do
       it 'should raise Unexpected Token Type exception' do
         mock_json :post, client.token_endpoint, 'access_token/mac', :request_header => header_params, :params => protocol_params do
-          expect { access_token }.should raise_error OpenIDConnect::Exception, 'Unexpected Token Type: mac'
+          expect { access_token }.to raise_error OpenIDConnect::Exception, 'Unexpected Token Type: mac'
         end
       end
     end

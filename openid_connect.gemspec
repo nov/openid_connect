@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "activemodel", ">= 3"
   s.add_runtime_dependency "validate_url"
   s.add_runtime_dependency "validate_email"
-  s.add_runtime_dependency "json-jwt", ">= 0.0.3"
+  s.add_runtime_dependency "json-jwt", ">= 0.3.0"
   s.add_runtime_dependency "swd", ">= 0.1.2"
   s.add_runtime_dependency "rack-oauth2", ">= 0.14.2"
   s.add_development_dependency "rake", ">= 0.8"

@@ -37,7 +37,7 @@ describe OpenIDConnect::Discovery::Principal::URI do
   describe 'error handling' do
     let(:identifier) { '**' }
     it do
-      expect { uri }.should raise_error OpenIDConnect::Discovery::InvalidIdentifier
+      expect { uri }.to raise_error OpenIDConnect::Discovery::InvalidIdentifier
     end
   end
 end

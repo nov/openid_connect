@@ -19,7 +19,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
   describe 'attributes' do
     subject { klass }
     its(:required_attributes) { should == [:iss, :user_id, :aud, :exp, :iat] }
-    its(:optional_attributes) { should == [:acr, :auth_time, :nonce, :at_hash, :c_hash] }
+    its(:optional_attributes) { should == [:acr, :auth_time, :nonce, :user_jwk, :at_hash, :c_hash] }
   end
 
   describe '#verify!' do
@@ -39,7 +39,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
               :issuer => attributes[:iss],
               :client_id => attributes[:aud]
             )
-          end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+          end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
         end
       end
     end
@@ -51,7 +51,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
             :issuer => 'invalid_issuer',
             :client_id => attributes[:aud]
           )
-        end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+        end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
       end
     end
 
@@ -61,7 +61,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
           id_token.verify!(
             :client_id => attributes[:aud]
           )
-        end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+        end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
       end
     end
 
@@ -72,7 +72,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
             :issuer => attributes[:iss],
             :client_id => 'invalid_client'
           )
-        end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+        end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
       end
     end
 
@@ -82,7 +82,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
           id_token.verify!(
             :issuer => attributes[:iss]
           )
-        end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+        end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
       end
     end
 
@@ -107,7 +107,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
               :client_id => attributes[:aud],
               :nonce => 'invalid_nonce'
             )
-          end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+          end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
         end
       end
 
@@ -118,7 +118,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
               :issuer => attributes[:iss],
               :client_id => attributes[:aud]
             )
-          end.should raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+          end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
         end
       end
     end

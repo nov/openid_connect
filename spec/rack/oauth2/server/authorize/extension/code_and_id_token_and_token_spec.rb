@@ -50,7 +50,7 @@ describe Rack::OAuth2::Server::Authorize::Extension::CodeAndIdTokenAndToken do
       end
     end
     it do
-      expect { response }.should raise_error AttrRequired::AttrMissing, "'access_token', 'code', 'id_token' required."
+      expect { response }.to raise_error AttrRequired::AttrMissing, "'access_token', 'code', 'id_token' required."
     end
   end
 end
