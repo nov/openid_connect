@@ -36,6 +36,7 @@ module OpenIDConnect
         def decode_self_issued(jwt_string)
           jwt = JSON::JWT.decode jwt_string, :skip_verification
           jwk = jwt[:user_jwk]
+          raise InvalidToken.new('Missing user_jwk') if jwk.blank?
           public_key = JSON::JWK.decode jwk
           user_id_base_string = case public_key
           when OpenSSL::PKey::RSA
