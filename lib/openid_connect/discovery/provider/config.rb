@@ -4,7 +4,7 @@ module OpenIDConnect
       class Config
         def self.discover!(identifier, cache_options = {})
           principal = Principal.parse(identifier)
-          Resource.new(principal.host).discover!(cache_options)
+          Resource.new(principal).discover!(cache_options)
         rescue SWD::Exception => e
           raise DiscoveryFailed.new(e.message)
         end

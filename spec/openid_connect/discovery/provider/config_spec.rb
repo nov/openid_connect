@@ -26,4 +26,15 @@ describe OpenIDConnect::Discovery::Provider::Config do
       end
     end
   end
+
+  context 'when OP identifier includes custom port' do
+    let(:provider) { 'https://connect-op.heroku.com:8080' }
+    let(:endpoint) { "https://connect-op.heroku.com:8080/.well-known/openid-configuration" }
+
+    it 'should construct well-known URI with given port' do
+      mock_json :get, endpoint, 'discovery/config' do
+        OpenIDConnect::Discovery::Provider::Config.discover! provider
+      end
+    end
+  end
 end
