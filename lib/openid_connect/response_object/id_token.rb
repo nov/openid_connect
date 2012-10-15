@@ -40,7 +40,7 @@ module OpenIDConnect
           public_key = JSON::JWK.decode jwk
           user_id_base_string = case public_key
           when OpenSSL::PKey::RSA
-            [jwk[:mod], jwk[:exp]].join
+            [jwk[:mod], jwk[:xpo]].join
           when OpenSSL::PKey::EC
             raise NotImplementedError.new('Not Implemented Yet')
           else

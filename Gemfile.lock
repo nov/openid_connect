@@ -23,7 +23,6 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.2)
     attr_required (0.0.5)
-    bouncy-castle-java (1.5.0146.1)
     builder (3.0.3)
     configatron (2.9.1)
       yamler (>= 0.1.0)
@@ -35,11 +34,9 @@ GEM
     hashie (1.2.0)
     httpclient (2.3.0.1)
     i18n (0.6.1)
-    jruby-openssl (0.7.7)
-      bouncy-castle-java (>= 1.5.0146.1)
     json (1.7.5)
     json (1.7.5-java)
-    json-jwt (0.3.0)
+    json-jwt (0.3.1)
       activesupport (>= 2.3)
       i18n
       json (>= 1.4.3)
@@ -95,7 +92,6 @@ PLATFORMS
 
 DEPENDENCIES
   cover_me (>= 1.2.0)
-  jruby-openssl (>= 0.7)
   openid_connect!
   rake (>= 0.8)
   rspec (>= 2)
