@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openid_connect (0.3.3)
+    openid_connect (0.3.4)
       activemodel (>= 3)
       attr_required (>= 0.0.5)
       json (>= 1.4.3)
@@ -23,7 +23,7 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.2)
     attr_required (0.0.5)
-    builder (3.0.3)
+    builder (3.0.4)
     configatron (2.9.1)
       yamler (>= 0.1.0)
     cover_me (1.2.0)
@@ -36,7 +36,7 @@ GEM
     i18n (0.6.1)
     json (1.7.5)
     json (1.7.5-java)
-    json-jwt (0.3.1)
+    json-jwt (0.3.2)
       activesupport (>= 2.3)
       i18n
       json (>= 1.4.3)
