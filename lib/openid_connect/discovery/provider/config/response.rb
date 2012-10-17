@@ -88,8 +88,8 @@ module OpenIDConnect
               jwk_url
             end
             if endpoint
-              jwk_string = OpenIDConnect.http_client.get_content(endpoint)
-              JSON::JWK.decode JSON.parse(jwk_string, symbolize_names: true)
+              jwk_set = JSON.parse OpenIDConnect.http_client.get_content(endpoint), symbolize_names: true
+              JSON::JWK.decode jwk_set[:keys].first
             end
           end
         end
