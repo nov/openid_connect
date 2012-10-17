@@ -17,7 +17,7 @@ module OpenIDConnect
             :jwk_url,
             :jwk_encryption_url,
             :x509_url,
-            :x509_encryption_ur,
+            :x509_encryption_url,
             :registration_endpoint,
             :scopes_supported,
             :response_types_supported,
@@ -50,6 +50,46 @@ module OpenIDConnect
             hash[:userinfo_algs_supported] = hash.delete(:user_info_algs_supported)
             hash.delete_if do |key, value|
               value.nil?
+            end
+          end
+
+          def signing_key
+            x509_public_key || jwk_public_key
+          end
+
+          def encryption_key
+            if x509_encryption_url
+              x509_public_key :for_encryption
+            elsif jwk_encryption_url
+              jwk_public_key :for_encryption
+            else
+              signing_key
+            end
+          end
+
+          private
+
+          def x509_public_key(for_encryption = false)
+            endpoint = if for_encryption
+              x509_encryption_url || x509_url
+            else
+              x509_url
+            end
+            if endpoint
+              cert = OpenSSL::X509::Certificate.new OpenIDConnect.http_client.get_content(endpoint)
+              cert.public_key
+            end
+          end
+
+          def jwk_public_key(for_encryption = false)
+            endpoint = if for_encryption
+              jwk_encryption_url || jwk_url
+            else
+              jwk_url
+            end
+            if endpoint
+              jwk_string = OpenIDConnect.http_client.get_content(endpoint)
+              JSON::JWK.decode JSON.parse(jwk_string, symbolize_names: true)
             end
           end
         end
