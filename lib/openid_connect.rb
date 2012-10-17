@@ -54,7 +54,7 @@ module OpenIDConnect
 
   def self.http_client
     _http_client_ = HTTPClient.new(
-      :agent_name => "OpenIDConnect (#{VERSION})"
+      agent_name: "OpenIDConnect (#{VERSION})"
     )
     _http_client_.request_filter << Debugger::RequestFilter.new if debugging?
     http_config.try(:call, _http_client_)

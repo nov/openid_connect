@@ -10,7 +10,7 @@ module OpenIDConnect
 
     def user_info!(schema = :openid)
       hash = resource_request do
-        get client.user_info_uri, :schema => schema
+        get client.user_info_uri, schema: schema
       end
       ResponseObject::UserInfo::OpenID.new hash
     end
@@ -21,7 +21,7 @@ module OpenIDConnect
       res = yield
       case res.status
       when 200
-        JSON.parse(res.body, :symbolize_names => true)
+        JSON.parse res.body, symbolize_names: true
       when 400
         raise BadRequest.new('API Access Faild', res)
       when 401

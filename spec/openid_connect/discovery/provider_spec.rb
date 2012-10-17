@@ -6,14 +6,14 @@ describe OpenIDConnect::Discovery::Provider do
   let(:endpoint) { "https://#{host}/.well-known/simple-web-discovery" }
   let(:query) do
     {
-      :service => OpenIDConnect::Discovery::Provider::SERVICE_URI,
-      :principal => principal
+      service: OpenIDConnect::Discovery::Provider::SERVICE_URI,
+      principal: principal
     }
   end
 
   shared_examples_for :discover_provider do
     it "should succeed" do
-      mock_json :get, endpoint, 'discovery/swd', :params => query do
+      mock_json :get, endpoint, 'discovery/swd', params: query do
         res = discover
         res.should be_a SWD::Response
         res.location.should == provider

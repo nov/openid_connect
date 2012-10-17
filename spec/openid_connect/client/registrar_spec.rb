@@ -5,7 +5,7 @@ describe OpenIDConnect::Client::Registrar do
   let(:attributes) { minimum_attributes }
   let(:minimum_attributes) do
     {
-      :type => :client_associate
+      type: :client_associate
     }
   end
   let(:instance) { OpenIDConnect::Client::Registrar.new(endpoint, attributes) }
@@ -24,8 +24,8 @@ describe OpenIDConnect::Client::Registrar do
         context 'when client_id given' do
           let(:attributes) do
             {
-              :type => :client_update,
-              :client_id => 'client.example.com'
+              type: :client_update,
+              client_id: 'client.example.com'
             }
           end
           it { should be_valid }
@@ -34,7 +34,7 @@ describe OpenIDConnect::Client::Registrar do
         context 'otherwise' do
           let(:attributes) do
             {
-              :type => :client_update
+              type: :client_update
             }
           end
           it { should_not be_valid }
@@ -44,7 +44,7 @@ describe OpenIDConnect::Client::Registrar do
       context 'otherwise' do
         let(:attributes) do
           {
-            :type => :invalid_type
+            type: :invalid_type
           }
         end
         it { should_not be_valid }
@@ -77,7 +77,7 @@ describe OpenIDConnect::Client::Registrar do
     context 'when sector_identifier_url given' do
       let(:attributes) do
         minimum_attributes.merge(
-          :sector_identifier_url => 'https://client.example.com/sector_identifier.json'
+          sector_identifier_url: 'https://client.example.com/sector_identifier.json'
         )
       end
       its(:sector_identifier) { should == 'client.example.com' }
@@ -85,7 +85,7 @@ describe OpenIDConnect::Client::Registrar do
       context 'when sector_identifier_url is invalid URI' do
         let(:attributes) do
           minimum_attributes.merge(
-            :sector_identifier_url => ':invalid'
+            sector_identifier_url: ':invalid'
           )
         end
         its(:sector_identifier) { should be_nil }
@@ -94,8 +94,8 @@ describe OpenIDConnect::Client::Registrar do
       context 'when redirect_uris given' do
         let(:attributes) do
           minimum_attributes.merge(
-            :sector_identifier_url => 'https://client.example.com/sector_identifier.json',
-            :redirect_uris => 'https://client2.example.com/callback'
+            sector_identifier_url: 'https://client.example.com/sector_identifier.json',
+            redirect_uris: 'https://client2.example.com/callback'
           )
         end
         its(:sector_identifier) { should == 'client.example.com' }
@@ -107,7 +107,7 @@ describe OpenIDConnect::Client::Registrar do
         context 'when single host' do
           let(:attributes) do
             minimum_attributes.merge(
-              :redirect_uris => [
+              redirect_uris: [
                 'https://client.example.com/callback/op1',
                 'https://client.example.com/callback/op2'
               ].join(' ')
@@ -119,7 +119,7 @@ describe OpenIDConnect::Client::Registrar do
         context 'when multi host' do
           let(:attributes) do
             minimum_attributes.merge(
-              :redirect_uris => [
+              redirect_uris: [
                 'https://client1.example.com/callback',
                 'https://client2.example.com/callback'
               ].join(' ')
@@ -131,7 +131,7 @@ describe OpenIDConnect::Client::Registrar do
         context 'when invalid URI' do
           let(:attributes) do
             minimum_attributes.merge(
-              :redirect_uris => ':invalid'
+              redirect_uris: ':invalid'
             )
           end
           its(:sector_identifier) { should be_nil }
@@ -149,7 +149,7 @@ describe OpenIDConnect::Client::Registrar do
       context 'when invalid email included' do
         let(:attributes) do
           minimum_attributes.merge(
-            :contacts => [
+            contacts: [
               ':invalid',
               'nov@matake.jp'
             ].join(' ')
@@ -161,7 +161,7 @@ describe OpenIDConnect::Client::Registrar do
       context 'when localhost address included' do
         let(:attributes) do
           minimum_attributes.merge(
-            :contacts => [
+            contacts: [
               'nov@localhost',
               'nov@matake.jp'
             ].join(' ')
@@ -173,7 +173,7 @@ describe OpenIDConnect::Client::Registrar do
       context 'otherwise' do
         let(:attributes) do
           minimum_attributes.merge(
-            :contacts => 'nov@matake.jp'
+            contacts: 'nov@matake.jp'
           )
         end
         it { should be_valid }
@@ -185,7 +185,7 @@ describe OpenIDConnect::Client::Registrar do
     context 'when valid' do
       let(:attributes) do
         minimum_attributes.merge(
-          :redirect_uris => [
+          redirect_uris: [
             'https://client1.example.com/callback',
             'https://client2.example.com/callback'
           ].join(' ')
@@ -193,8 +193,8 @@ describe OpenIDConnect::Client::Registrar do
       end
       its(:as_json) do
         should == {
-          :type => 'client_associate',
-          :redirect_uris => 'https://client1.example.com/callback https://client2.example.com/callback'
+          type: 'client_associate',
+          redirect_uris: 'https://client1.example.com/callback https://client2.example.com/callback'
         }
       end
     end
@@ -202,7 +202,7 @@ describe OpenIDConnect::Client::Registrar do
     context 'otherwise' do
       let(:attributes) do
         {
-          :type => :client_update
+          type: :client_update
         }
       end
       it do
@@ -219,8 +219,8 @@ describe OpenIDConnect::Client::Registrar do
     end
 
     it 'should return OpenIDConnect::Client' do
-      mock_json :post, endpoint, 'client/registered', :params => {
-        :type => 'client_associate'
+      mock_json :post, endpoint, 'client/registered', params: {
+        type: 'client_associate'
       } do
         client = instance.associate!
         client.should be_instance_of OpenIDConnect::Client
@@ -232,9 +232,9 @@ describe OpenIDConnect::Client::Registrar do
 
     context 'when failed' do
       it 'should raise OpenIDConnect::Client::Registrar::RegistrationFailed' do
-        mock_json :post, endpoint, 'errors/unknown', :params => {
-          :type => 'client_associate'
-        }, :status => 400 do
+        mock_json :post, endpoint, 'errors/unknown', params: {
+          type: 'client_associate'
+        }, status: 400 do
           expect do
             instance.associate!
           end.to raise_error OpenIDConnect::Client::Registrar::RegistrationFailed
@@ -246,17 +246,17 @@ describe OpenIDConnect::Client::Registrar do
   describe '#update!' do
     let(:attributes) do
       {
-        :client_id => 'client.example.com',
-        :client_secret => 'client_secret'
+        client_id: 'client.example.com',
+        client_secret: 'client_secret'
       }
     end
 
     it 'should return OpenIDConnect::Client' do
-      mock_json :post, endpoint, 'client/updated', :params => {
-        :type => 'client_update',
-        :client_id => 'client.example.com',
-        :client_secret => 'client_secret',
-        :application_name => 'New Name'
+      mock_json :post, endpoint, 'client/updated', params: {
+        type: 'client_update',
+        client_id: 'client.example.com',
+        client_secret: 'client_secret',
+        application_name: 'New Name'
       } do
         instance.application_name = 'New Name'
         client = instance.update!
@@ -267,11 +267,11 @@ describe OpenIDConnect::Client::Registrar do
 
     context 'when failed' do
       it 'should raise OpenIDConnect::Client::Registrar::RegistrationFailed' do
-        mock_json :post, endpoint, 'errors/unknown', :params => {
-          :type => 'client_update',
-          :client_id => 'client.example.com',
-          :client_secret => 'client_secret'
-        }, :status => 400 do
+        mock_json :post, endpoint, 'errors/unknown', params: {
+          type: 'client_update',
+          client_id: 'client.example.com',
+          client_secret: 'client_secret'
+        }, status: 400 do
           expect do
             instance.update!
           end.to raise_error OpenIDConnect::Client::Registrar::RegistrationFailed
@@ -283,16 +283,16 @@ describe OpenIDConnect::Client::Registrar do
   describe '#rotate_secret!' do
     let(:attributes) do
       {
-        :client_id => 'client.example.com',
-        :client_secret => 'client_secret'
+        client_id: 'client.example.com',
+        client_secret: 'client_secret'
       }
     end
 
     it 'should return OpenIDConnect::Client' do
-      mock_json :post, endpoint, 'client/rotated', :params => {
-        :type => 'rotate_secret',
-        :client_id => 'client.example.com',
-        :client_secret => 'client_secret'
+      mock_json :post, endpoint, 'client/rotated', params: {
+        type: 'rotate_secret',
+        client_id: 'client.example.com',
+        client_secret: 'client_secret'
       } do
         client = instance.rotate_secret!
         client.should be_instance_of OpenIDConnect::Client
@@ -315,7 +315,7 @@ describe OpenIDConnect::Client::Registrar do
     context 'otherwise' do
       let(:attributes) do
         {
-          :type => :client_update
+          type: :client_update
         }
       end
       it do
@@ -332,13 +332,13 @@ describe OpenIDConnect::Client::Registrar do
     context 'when access_token given' do
       let(:attributes) do
         minimum_attributes.merge(
-          :access_token => access_token
+          access_token: access_token
         )
       end
 
       context 'when Rack::OAuth2::AccessToken::Bearer given' do
         let(:access_token) do
-          Rack::OAuth2::AccessToken::Bearer.new(:access_token => 'access_token')
+          Rack::OAuth2::AccessToken::Bearer.new(access_token: 'access_token')
         end
         it { should be_instance_of Rack::OAuth2::AccessToken::Bearer }
         its(:access_token) { should == 'access_token' }

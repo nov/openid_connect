@@ -7,12 +7,12 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdToken do
   let(:redirect_uri) { 'http://client.example.com/callback' }
   let :id_token do
     OpenIDConnect::ResponseObject::IdToken.new(
-      :iss => 'https://server.example.com',
-      :user_id => 'user_id',
-      :aud => 'client_id',
-      :nonce => 'nonce',
-      :exp => 1313424327,
-      :iat => 1313420327
+      iss: 'https://server.example.com',
+      user_id: 'user_id',
+      aud: 'client_id',
+      nonce: 'nonce',
+      exp: 1313424327,
+      iat: 1313420327
     ).to_jwt private_key
   end
 

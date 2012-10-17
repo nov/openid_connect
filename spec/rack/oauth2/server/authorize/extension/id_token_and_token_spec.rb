@@ -5,15 +5,15 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken do
   let(:request)      { Rack::MockRequest.new app }
   let(:response)     { request.get('/?response_type=token%20id_token&client_id=client&state=state') }
   let(:redirect_uri) { 'http://client.example.com/callback' }
-  let(:bearer_token) { Rack::OAuth2::AccessToken::Bearer.new(:access_token => 'access_token') }
+  let(:bearer_token) { Rack::OAuth2::AccessToken::Bearer.new(access_token: 'access_token') }
   let :id_token do
     OpenIDConnect::ResponseObject::IdToken.new(
-      :iss => 'https://server.example.com',
-      :user_id => 'user_id',
-      :aud => 'client_id',
-      :nonce => 'nonce',
-      :exp => 1313424327,
-      :iat => 1313420327
+      iss: 'https://server.example.com',
+      user_id: 'user_id',
+      aud: 'client_id',
+      nonce: 'nonce',
+      exp: 1313424327,
+      iat: 1313420327
     ).to_jwt private_key
   end
 

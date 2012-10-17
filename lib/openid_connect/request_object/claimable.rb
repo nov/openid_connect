@@ -15,11 +15,11 @@ module OpenIDConnect
             _claims_[key] = case value
             when :optional, :voluntary
               {
-                :essential => false
+                essential: false
               }
             when :required, :essential
               {
-                :essential => true
+                essential: true
               }
             else
               value

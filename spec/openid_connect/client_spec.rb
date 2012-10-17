@@ -6,7 +6,7 @@ describe OpenIDConnect::Client do
   let(:attributes) { required_attributes }
   let :required_attributes do
     {
-      :identifier => 'client_id'
+      identifier: 'client_id'
     }
   end
 
@@ -14,7 +14,7 @@ describe OpenIDConnect::Client do
     context 'when host info is given' do
       let :attributes do
         required_attributes.merge(
-          :host => 'server.example.com'
+          host: 'server.example.com'
         )
       end
       its(:authorization_uri) { should include 'https://server.example.com/oauth2/authorize' }
@@ -36,13 +36,13 @@ describe OpenIDConnect::Client do
   describe '#authorization_uri' do
     describe 'scope' do
       subject do
-        query = URI.parse(client.authorization_uri :scope => scope).query
+        query = URI.parse(client.authorization_uri scope: scope).query
         Rack::Utils.parse_query(query).with_indifferent_access[:scope]
       end
       let(:scope) { nil }
       let :attributes do
         required_attributes.merge(
-          :host => 'server.example.com'
+          host: 'server.example.com'
         )
       end
 
@@ -67,14 +67,14 @@ describe OpenIDConnect::Client do
   describe '#access_token!' do
     let :attributes do
       required_attributes.merge(
-        :secret => 'client_secret',
-        :token_endpoint => 'http://server.example.com/access_tokens'
+        secret: 'client_secret',
+        token_endpoint: 'http://server.example.com/access_tokens'
       )
     end
     let :protocol_params do
       {
-        :grant_type => 'authorization_code',
-        :code => 'code'
+        grant_type: 'authorization_code',
+        code: 'code'
       }
     end
     let :header_params do
@@ -90,14 +90,14 @@ describe OpenIDConnect::Client do
 
     context 'when bearer token is returned' do
       it 'should return OpenIDConnect::AccessToken' do
-        mock_json :post, client.token_endpoint, 'access_token/bearer', :request_header => header_params, :params => protocol_params do
+        mock_json :post, client.token_endpoint, 'access_token/bearer', request_header: header_params, params: protocol_params do
           access_token.should be_a OpenIDConnect::AccessToken
         end
       end
 
       context 'when id_token is returned' do
         it 'should include id_token' do
-          mock_json :post, client.token_endpoint, 'access_token/bearer_with_id_token', :request_header => header_params, :params => protocol_params do
+          mock_json :post, client.token_endpoint, 'access_token/bearer_with_id_token', request_header: header_params, params: protocol_params do
             access_token.id_token.should == 'id_token'
           end
         end
@@ -106,7 +106,7 @@ describe OpenIDConnect::Client do
 
     context 'when invalid JSON is returned' do
       it 'should raise OpenIDConnect::Exception' do
-        mock_json :post, client.token_endpoint, 'access_token/invalid_json', :request_header => header_params, :params => protocol_params do
+        mock_json :post, client.token_endpoint, 'access_token/invalid_json', request_header: header_params, params: protocol_params do
           expect do
             access_token
           end.to raise_error OpenIDConnect::Exception, 'Unknown Token Type'
@@ -116,7 +116,7 @@ describe OpenIDConnect::Client do
 
     context 'otherwise' do
       it 'should raise Unexpected Token Type exception' do
-        mock_json :post, client.token_endpoint, 'access_token/mac', :request_header => header_params, :params => protocol_params do
+        mock_json :post, client.token_endpoint, 'access_token/mac', request_header: header_params, params: protocol_params do
           expect { access_token }.to raise_error OpenIDConnect::Exception, 'Unexpected Token Type: mac'
         end
       end

@@ -8,11 +8,11 @@ describe OpenIDConnect::ResponseObject::IdToken do
   let(:iat)         { Time.now }
   let :required_attributes do
     {
-      :iss => 'https://server.example.com',
-      :user_id => 'user_id',
-      :aud => 'client_id',
-      :exp => ext,
-      :iat => iat
+      iss: 'https://server.example.com',
+      user_id: 'user_id',
+      aud: 'client_id',
+      exp: ext,
+      iat: iat
     }
   end
 
@@ -26,8 +26,8 @@ describe OpenIDConnect::ResponseObject::IdToken do
     context 'when both issuer, client_id are valid' do
       it do
         id_token.verify!(
-          :issuer => attributes[:iss],
-          :client_id => attributes[:aud]
+          issuer: attributes[:iss],
+          client_id: attributes[:aud]
         ).should be_true
       end
 
@@ -36,8 +36,8 @@ describe OpenIDConnect::ResponseObject::IdToken do
         it do
           expect do
             id_token.verify!(
-              :issuer => attributes[:iss],
-              :client_id => attributes[:aud]
+              issuer: attributes[:iss],
+              client_id: attributes[:aud]
             )
           end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
         end
@@ -48,8 +48,8 @@ describe OpenIDConnect::ResponseObject::IdToken do
       it do
         expect do
           id_token.verify!(
-            :issuer => 'invalid_issuer',
-            :client_id => attributes[:aud]
+            issuer: 'invalid_issuer',
+            client_id: attributes[:aud]
           )
         end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
       end
@@ -59,7 +59,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
       it do
         expect do
           id_token.verify!(
-            :client_id => attributes[:aud]
+            client_id: attributes[:aud]
           )
         end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
       end
@@ -69,8 +69,8 @@ describe OpenIDConnect::ResponseObject::IdToken do
       it do
         expect do
           id_token.verify!(
-            :issuer => attributes[:iss],
-            :client_id => 'invalid_client'
+            issuer: attributes[:iss],
+            client_id: 'invalid_client'
           )
         end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
       end
@@ -80,21 +80,21 @@ describe OpenIDConnect::ResponseObject::IdToken do
       it do
         expect do
           id_token.verify!(
-            :issuer => attributes[:iss]
+            issuer: attributes[:iss]
           )
         end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
       end
     end
 
     context 'when nonce is given' do
-      let(:attributes)  { required_attributes.merge(:nonce => 'nonce') }
+      let(:attributes)  { required_attributes.merge(nonce: 'nonce') }
 
       context 'when nonce is valid' do
         it do
           id_token.verify!(
-            :issuer => attributes[:iss],
-            :client_id => attributes[:aud],
-            :nonce => attributes[:nonce]
+            issuer: attributes[:iss],
+            client_id: attributes[:aud],
+            nonce: attributes[:nonce]
           ).should be_true
         end
       end
@@ -103,9 +103,9 @@ describe OpenIDConnect::ResponseObject::IdToken do
         it do
           expect do
             id_token.verify!(
-              :issuer => attributes[:iss],
-              :client_id => attributes[:aud],
-              :nonce => 'invalid_nonce'
+              issuer: attributes[:iss],
+              client_id: attributes[:aud],
+              nonce: 'invalid_nonce'
             )
           end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
         end
@@ -115,8 +115,8 @@ describe OpenIDConnect::ResponseObject::IdToken do
         it do
           expect do
             id_token.verify!(
-              :issuer => attributes[:iss],
-              :client_id => attributes[:aud]
+              issuer: attributes[:iss],
+              client_id: attributes[:aud]
             )
           end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
         end

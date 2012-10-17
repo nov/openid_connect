@@ -4,13 +4,13 @@ module Rack
       class Authorize
         module ErrorWithConnectExt
           DEFAULT_DESCRIPTION = {
-            :invalid_redirect_uri => 'The redirect_uri in the request does not match any of pre-registered redirect_uris.',
-            :interaction_required => 'End-User interaction required.',
-            :login_required => 'End-User authentication required.',
-            :session_selection_required => 'The End-User is required to select a session at the Authorization Server.',
-            :consent_required => 'End-User consent required.',
-            :invalid_request_uri => 'The request_uri in the request returns an error or invalid data.',
-            :invalid_openid_request_object => 'The request parameter contains an invalid OpenID Request Object.'
+            invalid_redirect_uri: 'The redirect_uri in the request does not match any of pre-registered redirect_uris.',
+            interaction_required: 'End-User interaction required.',
+            login_required: 'End-User authentication required.',
+            session_selection_required: 'The End-User is required to select a session at the Authorization Server.',
+            consent_required: 'End-User consent required.',
+            invalid_request_uri: 'The request_uri in the request returns an error or invalid data.',
+            invalid_openid_request_object: 'The request parameter contains an invalid OpenID Request Object.'
           }
 
           def self.included(klass)

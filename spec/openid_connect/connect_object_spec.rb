@@ -4,14 +4,14 @@ describe OpenIDConnect::ConnectObject do
   class OpenIDConnect::ConnectObject::SubClass < OpenIDConnect::ConnectObject
     attr_required :required
     attr_optional :optional
-    validates :required, :inclusion => {:in => ['Required', 'required']}, :length => 1..10
+    validates :required, inclusion: {in: ['Required', 'required']}, length: 1..10
   end
 
   subject        { instance }
   let(:klass)    { OpenIDConnect::ConnectObject::SubClass }
   let(:instance) { klass.new attributes }
   let :attributes do
-    {:required => 'Required', :optional => 'Optional'}
+    {required: 'Required', optional: 'Optional'}
   end
 
   context 'when required attributes are given' do
@@ -22,7 +22,7 @@ describe OpenIDConnect::ConnectObject do
 
     context 'otherwise' do
       let :attributes do
-        {:required => 'Required'}
+        {required: 'Required'}
       end
       its(:required) { should == 'Required' }
       its(:optional) { should == nil }
@@ -32,7 +32,7 @@ describe OpenIDConnect::ConnectObject do
   context 'otherwise' do
     context 'when optional attributes are given' do
       let :attributes do
-        {:optional => 'Optional'}
+        {optional: 'Optional'}
       end
       it do
         expect { klass.new attributes }.to raise_error AttrRequired::AttrMissing
@@ -55,7 +55,7 @@ describe OpenIDConnect::ConnectObject do
 
     context 'otherwise' do
       let :attributes do
-        {:required => 'Out of List and Too Long'}
+        {required: 'Out of List and Too Long'}
       end
 
       it 'should raise OpenIDConnect::ValidationFailed with ActiveModel::Errors owner' do
@@ -76,7 +76,7 @@ describe OpenIDConnect::ConnectObject do
 
     context 'otherwise' do
       let :attributes do
-        {:required => 'Out of List and Too Long'}
+        {required: 'Out of List and Too Long'}
       end
 
       it 'should raise OpenIDConnect::ValidationFailed with ActiveModel::Errors owner' do

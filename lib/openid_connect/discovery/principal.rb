@@ -16,11 +16,11 @@ module OpenIDConnect
 
       def discover!(cache_options = {})
         SWD.discover!(
-          :principal => identifier,
-          :service => Provider::SERVICE_URI,
-          :host => host,
-          :port => port,
-          :cache => cache_options
+          principal: identifier,
+          service:   Provider::SERVICE_URI,
+          host:      host,
+          port:      port,
+          cache: cache_options
         )
       rescue SWD::Exception => e
         raise DiscoveryFailed.new(e.message)

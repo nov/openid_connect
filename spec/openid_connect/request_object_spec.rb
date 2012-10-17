@@ -7,25 +7,25 @@ describe OpenIDConnect::RequestObject do
   context 'with all attributes' do
     let(:attributes) do
       {
-        :client_id => 'client_id',
-        :response_type => 'token id_token',
-        :redirect_uri => 'https://client.example.com',
-        :scope => 'openid email',
-        :state => 'state1234',
-        :nonce => 'nonce1234',
-        :display => 'touch',
-        :prompt => 'none',
-        :userinfo => {
-          :claims => {
-            :name => :required,
-            :email => :optional
+        client_id: 'client_id',
+        response_type: 'token id_token',
+        redirect_uri: 'https://client.example.com',
+        scope: 'openid email',
+        state: 'state1234',
+        nonce: 'nonce1234',
+        display: 'touch',
+        prompt: 'none',
+        userinfo: {
+          claims: {
+            name: :required,
+            email: :optional
           }
         },
-        :id_token => {
-          :max_age => 10,
-          :claims => {
-            :acr => {
-              :values => ['2', '3', '4']
+        id_token: {
+          max_age: 10,
+          claims: {
+            acr: {
+              values: ['2', '3', '4']
             }
           }
         }
@@ -36,29 +36,29 @@ describe OpenIDConnect::RequestObject do
     end
     let(:jsonized) do
       {
-        :client_id => "client_id",
-        :response_type => "token id_token",
-        :redirect_uri => "https://client.example.com",
-        :scope => "openid email",
-        :state => "state1234",
-        :nonce => "nonce1234",
-        :display => "touch",
-        :prompt => "none",
-        :id_token => {
-          :claims => {
-            :acr => {
-              :values => ['2', '3', '4']
+        client_id: "client_id",
+        response_type: "token id_token",
+        redirect_uri: "https://client.example.com",
+        scope: "openid email",
+        state: "state1234",
+        nonce: "nonce1234",
+        display: "touch",
+        prompt: "none",
+        id_token: {
+          claims: {
+            acr: {
+              values: ['2', '3', '4']
             }
           },
-          :max_age => 10
+          max_age: 10
         },
-        :userinfo => {
-          :claims => {
-            :name => {
-              :essential => true
+        userinfo: {
+          claims: {
+            name: {
+              essential: true
             },
-            :email => {
-              :essential => false
+            email: {
+              essential: false
             }
           }
         }

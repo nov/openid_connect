@@ -50,7 +50,7 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
 
     context 'when email is invalid' do
       let :attributes do
-        {:email => 'nov@localhost'}
+        {email: 'nov@localhost'}
       end
       its(:valid?) { should be_false }
       its(:errors) { should include :email }
@@ -82,7 +82,7 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
 
     context 'when address is blank' do
       let :attributes do
-        {:address => {}}
+        {address: {}}
       end
       its(:valid?) { should be_false }
       its(:errors) { should include :address }
@@ -92,14 +92,14 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
   describe '#address=' do
     context 'when Hash is given' do
       let :attributes do
-        {:address => {}}
+        {address: {}}
       end
       its(:address) { should be_a OpenIDConnect::ResponseObject::UserInfo::OpenID::Address }
     end
 
     context 'when Address is given' do
       let :attributes do
-        {:address => OpenIDConnect::ResponseObject::UserInfo::OpenID::Address.new}
+        {address: OpenIDConnect::ResponseObject::UserInfo::OpenID::Address.new}
       end
       its(:address) { should be_a OpenIDConnect::ResponseObject::UserInfo::OpenID::Address }
     end
@@ -108,9 +108,9 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
   describe '#to_json' do
     let :attributes do
       {
-        :user_id => 'nov.matake#12345',
-        :address => {
-          :formatted => 'Tokyo, Japan'
+        user_id: 'nov.matake#12345',
+        address: {
+          formatted: 'Tokyo, Japan'
         }
       }
     end

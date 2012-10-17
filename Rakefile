@@ -16,4 +16,4 @@ task :spec do
   Rake::Task['cover_me:report'].invoke
 end
 
-task :default => :spec
+task default: :spec

@@ -24,11 +24,11 @@ module OpenIDConnect
           :phone_number
         )
 
-        validates :email_verified, :inclusion => {:in => [true, false]},                       :allow_nil => true
-        validates :gender,   :inclusion => {:in => ['male', 'female']},                        :allow_nil => true
-        validates :zoneinfo, :inclusion => {:in => TZInfo::TimezoneProxy.all.collect(&:name)}, :allow_nil => true
-        validates :profile, :picture, :website, :url => true, :allow_nil => true
-        validates :email, :email => true, :allow_nil => true
+        validates :email_verified, inclusion: {in: [true, false]},                             allow_nil: true
+        validates :gender,         inclusion: {in: ['male', 'female']},                        allow_nil: true
+        validates :zoneinfo,       inclusion: {in: TZInfo::TimezoneProxy.all.collect(&:name)}, allow_nil: true
+        validates :profile, :picture, :website, url: true, allow_nil: true
+        validates :email, email: true, allow_nil: true
         validate :validate_address
         validate :require_at_least_one_attributes
         # TODO: validate locale

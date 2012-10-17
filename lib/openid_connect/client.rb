@@ -26,10 +26,10 @@ module OpenIDConnect
     end
 
     def handle_success_response(response)
-      token_hash = JSON.parse(response.body, :symbolize_names => true)
+      token_hash = JSON.parse response.body, symbolize_names: true
       case token_type = token_hash[:token_type].try(:downcase)
       when 'bearer'
-        AccessToken.new token_hash.merge(:client => self)
+        AccessToken.new token_hash.merge(client: self)
       else
         raise Exception.new("Unexpected Token Type: #{token_type}")
       end

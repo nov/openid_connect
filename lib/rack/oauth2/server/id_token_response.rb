@@ -9,7 +9,7 @@ module Rack::OAuth2::Server
 
         def protocol_params_with_id_token
           protocol_params_without_id_token.merge(
-            :id_token => id_token
+            id_token: id_token
           )
         end
         alias_method_chain :protocol_params, :id_token

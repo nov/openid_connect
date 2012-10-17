@@ -54,16 +54,16 @@ module OpenIDConnect
         alias_method_chain _attr_, :split
       end
 
-      validates :type,                  :presence => true
-      validates :client_id,             :presence => {:if => lambda { |c| ['client_update', 'rotate_secret'].include?(c.type.to_s) }}
-      validates :sector_identifier_url, :presence => {:if => :sector_identifier_required?}
+      validates :type,                  presence: true
+      validates :client_id,             presence: {if: ->(c) { ['client_update', 'rotate_secret'].include?(c.type.to_s) }}
+      validates :sector_identifier_url, presence: {if: :sector_identifier_required?}
 
-      validates :type,             :inclusion => {:in => ['client_associate', 'rotate_secret', 'client_update']}
-      validates :application_type, :inclusion => {:in => ['native', 'web']},      :allow_nil => true
-      validates :user_id_type,     :inclusion => {:in => ['pairwise', 'public']}, :allow_nil => true
-      validates :token_endpoint_auth_type, :inclusion => {
-        :in => ['client_secret_post', 'client_secret_basic', 'client_secret_jwt', 'private_key_jwt']
-      }, :allow_nil => true
+      validates :type,             inclusion: {in: ['client_associate', 'rotate_secret', 'client_update']}
+      validates :application_type, inclusion: {in: ['native', 'web']},      allow_nil: true
+      validates :user_id_type,     inclusion: {in: ['pairwise', 'public']}, allow_nil: true
+      validates :token_endpoint_auth_type, inclusion: {
+        in: ['client_secret_post', 'client_secret_basic', 'client_secret_jwt', 'private_key_jwt']
+      }, allow_nil: true
 
       validates(
         :logo_url,
@@ -73,7 +73,8 @@ module OpenIDConnect
         :x509_url,
         :x509_encryption_url,
         :sector_identifier_url,
-        :url => true, :allow_nil => true
+        url: true,
+        allow_nil: true
       )
 
       validate :validate_contacts
@@ -209,7 +210,7 @@ module OpenIDConnect
           access_token
         else
           Rack::OAuth2::AccessToken::Bearer.new(
-            :access_token => access_token
+            access_token: access_token
           )
         end
       end
@@ -225,11 +226,11 @@ module OpenIDConnect
       end
 
       def handle_success_response(response)
-        credentials = JSON.parse(response.body, :symbolize_names => true)
+        credentials = JSON.parse response.body, symbolize_names: true
         Client.new(
-          :identifier => credentials[:client_id],
-          :secret     => credentials[:client_secret],
-          :expires_in => credentials[:expires_in]
+          identifier: credentials[:client_id],
+          secret:     credentials[:client_secret],
+          expires_in: credentials[:expires_in]
         )
       end
 
