@@ -49,7 +49,7 @@ module OpenIDConnect
           end
           expected_user_id = UrlSafeBase64.encode64 OpenSSL::Digest::SHA256.digest(user_id_base_string)
           raise InvalidToken.new('Invalid user_id') unless jwt[:user_id] == expected_user_id
-          jwt.verify public_key
+          jwt = JSON::JWT.decode jwt_string, public_key
           new jwt
         end
       end
