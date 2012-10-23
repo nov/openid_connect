@@ -146,7 +146,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
           jwt.should include :at_hash
           jwt.should_not include :c_hash
           jwt[:at_hash].should == UrlSafeBase64.encode64(
-            OpenSSL::Digest::SHA256.digest('access_token')[0, 128]
+            OpenSSL::Digest::SHA256.digest('access_token')[0, 128 / 8]
           )
         end
       end
@@ -170,7 +170,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
         jwt.should_not include :at_hash
         jwt.should include :c_hash
         jwt[:c_hash].should == UrlSafeBase64.encode64(
-          OpenSSL::Digest::SHA256.digest('authorization_code')[0, 128]
+          OpenSSL::Digest::SHA256.digest('authorization_code')[0, 128 / 8]
         )
       end
     end
@@ -186,10 +186,10 @@ describe OpenIDConnect::ResponseObject::IdToken do
         jwt.should include :at_hash
         jwt.should include :c_hash
         jwt[:at_hash].should == UrlSafeBase64.encode64(
-          OpenSSL::Digest::SHA256.digest('access_token')[0, 128]
+          OpenSSL::Digest::SHA256.digest('access_token')[0, 128 / 8]
         )
         jwt[:c_hash].should == UrlSafeBase64.encode64(
-          OpenSSL::Digest::SHA256.digest('authorization_code')[0, 128]
+          OpenSSL::Digest::SHA256.digest('authorization_code')[0, 128 / 8]
         )
       end
     end
