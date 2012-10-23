@@ -7,6 +7,7 @@ module OpenIDConnect
 
       attr_required :iss, :user_id, :aud, :exp, :iat
       attr_optional :acr, :auth_time, :nonce, :user_jwk, :at_hash, :c_hash
+      attr_accessor :access_token, :code
 
       def initialize(attributes = {})
         super
@@ -24,6 +25,31 @@ module OpenIDConnect
       end
 
       include JWTnizable
+      def to_jwt_with_at_hash_and_c_hash(key, algorithm = :RS256, &block)
+        hash_length = algorithm.to_s[2, 3].to_i
+        if access_token
+          token = case access_token
+          when Rack::OAuth2::AccessToken
+            access_token.access_token
+          else
+            access_token
+          end
+          self.at_hash = left_half_hash_of token, hash_length
+        end
+        if code
+          self.c_hash = left_half_hash_of code, hash_length
+        end
+        to_jwt_without_at_hash_and_c_hash key, algorithm, &block
+      end
+      alias_method_chain :to_jwt, :at_hash_and_c_hash
+
+      private
+
+      def left_half_hash_of(string, hash_length)
+        digest = OpenSSL::Digest::Digest.new("SHA#{hash_length}").digest string
+        UrlSafeBase64.encode64 digest[0, hash_length / 2]
+      end
+
       class << self
         def decode(jwt_string, key)
           if key == :self_issued

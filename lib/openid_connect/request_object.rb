@@ -26,6 +26,7 @@ module OpenIDConnect
     alias_method_chain :as_json, :user_info
 
     include JWTnizable
+
     class << self
       def decode(jwt_string, key)
         new JSON::JWT.decode(jwt_string, key)

@@ -137,6 +137,70 @@ describe OpenIDConnect::ResponseObject::IdToken do
         h.should include 'x5u'
       end
     end
+
+    context 'when access_token is given' do
+      shared_examples_for :id_token_with_at_hash do
+        it 'should include at_hash' do
+          t = id_token.to_jwt private_key
+          jwt = JSON::JWT.decode t, public_key
+          jwt.should include :at_hash
+          jwt.should_not include :c_hash
+          jwt[:at_hash].should == UrlSafeBase64.encode64(
+            OpenSSL::Digest::SHA256.digest('access_token')[0, 128]
+          )
+        end
+      end
+
+      context 'when access_token is a Rack::OAuth2::AccessToken' do
+        before { id_token.access_token = Rack::OAuth2::AccessToken::Bearer.new(access_token: 'access_token') }
+        it_should_behave_like :id_token_with_at_hash
+      end
+
+      context 'when access_token is a String' do
+        before { id_token.access_token = 'access_token' }
+        it_should_behave_like :id_token_with_at_hash
+      end
+    end
+
+    context 'when code is given' do
+      before { id_token.code = 'authorization_code' }
+      it 'should include at_hash' do
+        t = id_token.to_jwt private_key
+        jwt = JSON::JWT.decode t, public_key
+        jwt.should_not include :at_hash
+        jwt.should include :c_hash
+        jwt[:c_hash].should == UrlSafeBase64.encode64(
+          OpenSSL::Digest::SHA256.digest('authorization_code')[0, 128]
+        )
+      end
+    end
+
+    context 'when both access_token and code are given' do
+      before do
+        id_token.access_token = 'access_token'
+        id_token.code = 'authorization_code'
+      end
+      it 'should include at_hash' do
+        t = id_token.to_jwt private_key
+        jwt = JSON::JWT.decode t, public_key
+        jwt.should include :at_hash
+        jwt.should include :c_hash
+        jwt[:at_hash].should == UrlSafeBase64.encode64(
+          OpenSSL::Digest::SHA256.digest('access_token')[0, 128]
+        )
+        jwt[:c_hash].should == UrlSafeBase64.encode64(
+          OpenSSL::Digest::SHA256.digest('authorization_code')[0, 128]
+        )
+      end
+    end
+
+    context 'when neither access_token nor code are given' do
+      it 'should include at_hash' do
+        t = id_token.to_jwt private_key
+        jwt = JSON::JWT.decode t, public_key
+        jwt.should_not include :at_hash, :c_hash
+      end
+    end
   end
 
   describe '#as_json' do
