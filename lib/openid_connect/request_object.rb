@@ -28,11 +28,11 @@ module OpenIDConnect
     include JWTnizable
 
     class << self
-      def decode(jwt_string, key)
+      def decode(jwt_string, key = nil)
         new JSON::JWT.decode(jwt_string, key)
       end
 
-      def fetch(request_uri, key)
+      def fetch(request_uri, key = nil)
         jwt_string = OpenIDConnect.http_client.get_content(request_uri)
         decode jwt_string, key
       end
