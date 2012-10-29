@@ -63,20 +63,32 @@ module OpenIDConnect
           jwt = JSON::JWT.decode jwt_string, :skip_verification
           jwk = jwt[:user_jwk]
           raise InvalidToken.new('Missing user_jwk') if jwk.blank?
+          raise InvalidToken.new('Invalid user_id') unless jwt[:user_id] == self_issued_user_id(jwk)
           public_key = JSON::JWK.decode jwk
-          user_id_base_string = case public_key
-          when OpenSSL::PKey::RSA
+          jwt = JSON::JWT.decode jwt_string, public_key
+          new jwt
+        end
+
+        def self_issued(attributes = {})
+          attributes[:user_jwk] ||= JSON::JWK.new attributes.delete(:public_key)
+          _attributes_ = {
+            iss:      'https://self-issued.me',
+            user_id:  self_issued_user_id(attributes[:user_jwk])
+          }.merge(attributes)
+          new _attributes_
+        end
+
+        def self_issued_user_id(jwk)
+          user_id_base_string = case jwk[:alg].to_s
+          when 'RSA'
             [jwk[:mod], jwk[:xpo]].join
-          when OpenSSL::PKey::EC
+          when 'EC'
             raise NotImplementedError.new('Not Implemented Yet')
           else
             # Shouldn't reach here. All unknown algorithm error should occurs when decoding JWK
             raise InvalidToken.new('Unknown Algorithm')
           end
-          expected_user_id = UrlSafeBase64.encode64 OpenSSL::Digest::SHA256.digest(user_id_base_string)
-          raise InvalidToken.new('Invalid user_id') unless jwt[:user_id] == expected_user_id
-          jwt = JSON::JWT.decode jwt_string, public_key
-          new jwt
+          UrlSafeBase64.encode64 OpenSSL::Digest::SHA256.digest(user_id_base_string)
         end
       end
     end

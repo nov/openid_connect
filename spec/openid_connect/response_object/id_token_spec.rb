@@ -270,4 +270,24 @@ describe OpenIDConnect::ResponseObject::IdToken do
       end
     end
   end
+
+  describe '.self_issued' do
+    subject { self_issued }
+    let(:user_jwk) { JSON::JWK.new(public_key) }
+    let(:self_issued) do
+      klass.self_issued(
+        public_key: public_key,
+        aud: 'client.example.com',
+        exp: 1.week.from_now,
+        iat: Time.now
+      )
+    end
+
+    [:iss, :user_id, :aud, :exp, :iat, :user_jwk].each do |attribute|
+      its(attribute) { should be_present }
+    end
+    its(:iss)      { should == 'https://self-issued.me' }
+    its(:user_jwk) { should == user_jwk }
+    its(:user_id)  { should == OpenIDConnect::ResponseObject::IdToken.self_issued_user_id(user_jwk) }
+  end
 end
