@@ -290,4 +290,39 @@ describe OpenIDConnect::ResponseObject::IdToken do
     its(:user_jwk) { should == user_jwk }
     its(:user_id)  { should == OpenIDConnect::ResponseObject::IdToken.self_issued_user_id(user_jwk) }
   end
+
+  describe '.self_issued_user_id' do
+    context 'when RSA key given' do
+      let(:jwk) { JSON::JWK.new(public_key) }
+      it do
+        user_id = klass.self_issued_user_id jwk
+        user_id.should == UrlSafeBase64.encode64(
+          OpenSSL::Digest::SHA256.digest([jwk[:mod], jwk[:xpo]].join)
+        )
+      end
+    end
+
+    context 'when EC key given' do
+      let(:jwk) { JSON::JWK.new(ec_public_key) }
+      it do
+        expect do
+          user_id = klass.self_issued_user_id jwk
+        end.to raise_error NotImplementedError
+      end
+    end
+
+    context 'when unknown algorithm JWK given' do
+      let(:jwk) do
+        {
+          alg: 'unknown'
+        }
+      end
+
+      it do
+        expect do
+          user_id = klass.self_issued_user_id jwk
+        end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
+      end
+    end
+  end
 end

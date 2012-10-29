@@ -25,6 +25,16 @@ describe OpenIDConnect::Discovery::Provider::Config do
         config.user_id_types_supported.should == ["public", "pairwise"]
       end
     end
+
+    context 'when SWD::Exception raised' do
+      it do
+        expect do
+          mock_json :get, endpoint, 'errors/unknown', status: [404, 'Not Found'] do
+            OpenIDConnect::Discovery::Provider::Config.discover! provider
+          end
+        end.to raise_error OpenIDConnect::Discovery::DiscoveryFailed
+      end
+    end
   end
 
   context 'when OP identifier includes custom port' do

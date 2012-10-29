@@ -81,6 +81,16 @@ describe OpenIDConnect::RequestObject do
       end
     end
 
+    describe '.fetch' do
+      let(:endpoint) { 'https://client.example.com/request.jwk' }
+      it do
+        mock_json :get, endpoint, 'request_object/signed', format: :jwt do
+          request_object = OpenIDConnect::RequestObject.fetch endpoint, 'secret'
+          request_object.as_json.should == jsonized.with_indifferent_access
+        end
+      end
+    end
+
     describe '#required?' do
       it do
         request_object.user_info.required?(:name).should be_true

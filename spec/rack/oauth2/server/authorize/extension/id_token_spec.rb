@@ -35,7 +35,7 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdToken do
     end
   end
 
-  context 'otherwise' do
+  context 'when id_token is missing' do
     let :app do
       Rack::OAuth2::Server::Authorize.new do |request, response|
         response.redirect_uri = redirect_uri
@@ -44,6 +44,25 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdToken do
     end
     it do
       expect { response }.to raise_error AttrRequired::AttrMissing, "'id_token' required."
+    end
+  end
+
+  context 'when error response' do
+    let(:env)     { Rack::MockRequest.env_for("/authorize?client_id=client_id") }
+    let(:request) { Rack::OAuth2::Server::Authorize::Extension::IdToken::Request.new env }
+
+    it 'should set protocol_params_location = :fragment' do
+      expect { request.bad_request! }.to raise_error(Rack::OAuth2::Server::Authorize::BadRequest) { |e|
+        e.protocol_params_location.should == :fragment
+      }
+    end
+  end
+
+  context 'when openid scope given' do
+    let(:env)     { Rack::MockRequest.env_for("/authorize?client_id=client_id&scope=openid") }
+    let(:request) { Rack::OAuth2::Server::Authorize::Extension::IdToken::Request.new env }
+    it do
+      request.openid_connect_request?.should be_true
     end
   end
 end
