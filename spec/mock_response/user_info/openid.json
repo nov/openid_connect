@@ -11,7 +11,7 @@
   "picture": "http://example.com/johndoe/me.jpg",
   "website": "http://john.doe.blogs.example.net/",
   "gender": "male",
-  "birthday": "05/02/0000",
+  "birthdate": "05/02/0000",
   "zoneinfo": "America/Los_Angeles",
   "locale": "en_US",
   "phone_number": "+1 (425) 555-1212",

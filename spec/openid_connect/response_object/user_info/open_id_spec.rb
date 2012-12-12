@@ -21,7 +21,7 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
         :picture,
         :website,
         :gender,
-        :birthday,
+        :birthdate,
         :zoneinfo,
         :locale,
         :updated_time,

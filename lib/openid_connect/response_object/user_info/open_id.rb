@@ -14,7 +14,7 @@ module OpenIDConnect
           :picture,
           :website,
           :gender,
-          :birthday,
+          :birthdate,
           :zoneinfo,
           :locale,
           :updated_time,
@@ -57,6 +57,6 @@ module OpenIDConnect
   end
 end
 
-Dir[File.dirname(__FILE__) + '/open_id/*.rb'].each do |file| 
+Dir[File.dirname(__FILE__) + '/open_id/*.rb'].each do |file|
   require file
 end
