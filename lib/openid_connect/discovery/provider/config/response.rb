@@ -13,6 +13,7 @@ module OpenIDConnect
             :token_endpoint,
             :user_info_endpoint,
             :refresh_session_endpoint,
+            :check_session_endpoint,
             :end_session_endpoint,
             :jwk_url,
             :jwk_encryption_url,
@@ -23,11 +24,17 @@ module OpenIDConnect
             :response_types_supported,
             :acrs_supported,
             :user_id_types_supported,
-            :user_info_algs_supported,
-            :id_token_algs_supported,
-            :request_object_algs_supported,
+            :user_info_signing_alg_values_supported,
+            :user_info_encryption_alg_values_supported,
+            :user_info_encryption_enc_values_supported,
+            :id_token_signing_alg_values_supported,
+            :id_token_encryption_alg_values_supported,
+            :id_token_encryption_enc_values_supported,
+            :request_object_signing_alg_values_supported,
+            :request_object_encryption_alg_values_supported,
+            :request_object_encryption_enc_values_supported,
             :token_endpoint_auth_types_supported,
-            :token_endpoint_auth_algs_supported
+            :token_endpoint_auth_signing_alg_values_supported
           )
 
           def initialize(hash)
@@ -35,7 +42,9 @@ module OpenIDConnect
               self.send "#{key}=", hash[key]
             end
             @user_info_endpoint ||= hash[:userinfo_endpoint]
-            @user_info_algs_supported ||= hash[:userinfo_algs_supported]
+            @user_info_signing_alg_values_supported ||= hash[:userinfo_signing_alg_values_supported]
+            @user_info_encryption_alg_values_supported ||= hash[:userinfo_encryption_alg_values_supported]
+            @user_info_encryption_enc_values_supported ||= hash[:userinfo_encryption_enc_values_supported]
             @version ||= '3.0'
             @raw = hash
           end
@@ -47,7 +56,9 @@ module OpenIDConnect
               )
             end
             hash[:userinfo_endpoint] = hash.delete(:user_info_endpoint)
-            hash[:userinfo_algs_supported] = hash.delete(:user_info_algs_supported)
+            hash[:userinfo_signing_alg_values_supported] = hash.delete(:user_info_signing_alg_values_supported)
+            hash[:userinfo_encryption_alg_values_supported] = hash.delete(:user_info_encryption_alg_values_supported)
+            hash[:userinfo_encryption_enc_values_supported] = hash.delete(:user_info_encryption_enc_values_supported)
             hash.delete_if do |key, value|
               value.nil?
             end

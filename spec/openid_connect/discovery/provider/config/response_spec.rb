@@ -31,15 +31,21 @@ describe OpenIDConnect::Discovery::Provider::Config::Response do
       end
     end
 
-    context 'when user_info_algs_supported given' do
-      let :attributes do
-        {user_info_algs_supported: [:HS256, :RS256]}
-      end
-      it do
-        should include :userinfo_algs_supported
-      end
-      it do
-        should_not include :user_info_algs_supported
+    [
+      :user_info_signing_alg_values_supported,
+      :user_info_encryption_alg_values_supported,
+      :user_info_encryption_enc_values_supported
+    ].each do |key|
+      context "when #{key} given" do
+        let :attributes do
+          {key => [:x, :y]}
+        end
+        it do
+          should include key.to_s.sub('user_info', 'userinfo').to_sym
+        end
+        it do
+          should_not include key
+        end
       end
     end
   end
