@@ -12,23 +12,23 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
       should == [
         :user_id,
         :name,
-        :family_name,
         :given_name,
+        :family_name,
         :middle_name,
         :nickname,
         :preferred_username,
         :profile,
         :picture,
         :website,
+        :email,
+        :email_verified,
         :gender,
         :birthdate,
         :zoneinfo,
         :locale,
-        :updated_time,
-        :email,
-        :email_verified,
+        :phone_number,
         :address,
-        :phone_number
+        :updated_time
       ]
     end
   end

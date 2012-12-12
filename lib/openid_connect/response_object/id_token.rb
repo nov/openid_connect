@@ -72,8 +72,8 @@ module OpenIDConnect
         def self_issued(attributes = {})
           attributes[:user_jwk] ||= JSON::JWK.new attributes.delete(:public_key)
           _attributes_ = {
-            iss:      'https://self-issued.me',
-            user_id:  self_issued_user_id(attributes[:user_jwk])
+            iss:     'https://self-issued.me',
+            user_id: self_issued_user_id(attributes[:user_jwk])
           }.merge(attributes)
           new _attributes_
         end
@@ -81,7 +81,7 @@ module OpenIDConnect
         def self_issued_user_id(jwk)
           user_id_base_string = case jwk[:alg].to_s
           when 'RSA'
-            [jwk[:mod], jwk[:xpo]].join
+            [jwk[:n], jwk[:e]].join
           when 'EC'
             raise NotImplementedError.new('Not Implemented Yet')
           else
