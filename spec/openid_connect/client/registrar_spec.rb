@@ -144,6 +144,22 @@ describe OpenIDConnect::Client::Registrar do
     end
   end
 
+  describe '#redirect_uris' do
+    let(:base_url) { 'http://client.example.com/callback' }
+    let(:attributes) { minimum_attributes.merge(redirect_uris: redirect_uri) }
+
+    context 'when query included' do
+      let(:redirect_uri) { [base_url, '?foo=bar'].join }
+      it { should be_valid }
+      its(:redirect_uris) { should == [redirect_uri] }
+    end
+
+    context 'when fragment included' do
+      let(:redirect_uri) { [base_url, '#foo=bar'].join }
+      it { should_not be_valid }
+    end
+  end
+
   describe '#contacts' do
     context 'when contacts given' do
       context 'when invalid email included' do
