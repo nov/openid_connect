@@ -5,7 +5,7 @@ module OpenIDConnect
       # request:: HTTP::Message
       def filter_request(request)
         started = "======= [OpenIDConnect] HTTP REQUEST STARTED ======="
-        OpenIDConnect.logger.info [started, request.dump].join("\n")
+        log started, request.dump
       end
 
       # Callback called in HTTPClient (after received a response)
@@ -13,7 +13,15 @@ module OpenIDConnect
       # response:: HTTP::Message
       def filter_response(request, response)
         finished = "======= [OpenIDConnect] HTTP REQUEST FINISHED ======="
-        OpenIDConnect.logger.info ['-' * 50, response.dump, finished].join("\n")
+        log '-' * 50, response.dump, finished
+      end
+
+      private
+
+      def log(*outputs)
+        outputs.each do |output|
+          OpenIDConnect.logger.info output
+        end
       end
     end
   end
