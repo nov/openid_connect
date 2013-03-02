@@ -7,9 +7,9 @@ module OpenIDConnect
 
           class Expired < SWD::Resource::Expired; end
 
-          def initialize(principal)
-            @host = principal.host
-            @port = principal.port unless [80, 443].include?(principal.port)
+          def initialize(uri)
+            @host = uri.host
+            @port = uri.port unless [80, 443].include?(uri.port)
             @path ||= '/.well-known/openid-configuration'
             attr_missing!
           end

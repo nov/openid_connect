@@ -11,6 +11,7 @@ PATH
       tzinfo
       validate_email
       validate_url
+      webfinger (>= 0.0.2)
 
 GEM
   remote: https://rubygems.org/
@@ -31,9 +32,9 @@ GEM
       hashie
     crack (0.3.2)
     diff-lcs (1.2.1)
-    hashie (2.0.0)
+    hashie (2.0.2)
     httpclient (2.3.3)
-    i18n (0.6.1)
+    i18n (0.6.4)
     json (1.7.7)
     json (1.7.7-java)
     json-jwt (0.4.2)
@@ -81,7 +82,11 @@ GEM
       mail (>= 2.2.5)
     validate_url (0.2.0)
       activemodel (>= 3.0.0)
-    webmock (1.9.3)
+    webfinger (0.0.4)
+      activesupport (>= 3)
+      httpclient (>= 2.2.0.2)
+      multi_json
+    webmock (1.10.1)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
     yamler (0.1.0)

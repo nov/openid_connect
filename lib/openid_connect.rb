@@ -1,6 +1,7 @@
 require 'json'
 require 'logger'
 require 'swd'
+require 'webfinger'
 require 'active_model'
 require 'tzinfo'
 require 'validate_url'
