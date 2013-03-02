@@ -27,28 +27,37 @@ module OpenIDConnect
   self.logger = Logger.new(STDOUT)
   self.logger.progname = 'OpenIDConnect'
 
+  @sub_protocols = [
+    SWD,
+    WebFinger,
+    Rack::OAuth2
+  ]
   def self.debugging?
     @@debugging
   end
   def self.debugging=(boolean)
-    SWD.debugging = boolean
-    Rack::OAuth2.debugging = boolean
+    @sub_protocols.each do |klass|
+      klass.debugging = boolean
+    end
     @@debugging = boolean
   end
   def self.debug!
-    SWD.debug!
-    Rack::OAuth2.debug!
+    @sub_protocols.each do |klass|
+      klass.debug!
+    end
     self.debugging = true
   end
   def self.debug(&block)
-    swd_original = SWD.debugging?
-    rack_oauth2_original = Rack::OAuth2.debugging?
+    sub_protocol_originals = @sub_protocols.inject({}) do |sub_protocol_originals, klass|
+      sub_protocol_originals.merge!(klass => klass.debugging?)
+    end
     original = self.debugging?
     debug!
     yield
   ensure
-    SWD.debugging = swd_original
-    Rack::OAuth2.debugging = rack_oauth2_original
+    @sub_protocols.each do |klass|
+      klass.debugging = sub_protocol_originals[klass]
+    end
     self.debugging = original
   end
   self.debugging = false
@@ -62,8 +71,9 @@ module OpenIDConnect
     _http_client_
   end
   def self.http_config(&block)
-    SWD.http_config &block unless SWD.http_config
-    Rack::OAuth2.http_config &block unless Rack::OAuth2.http_config
+    @sub_protocols.each do |klass|
+      klass.http_config &block unless klass.http_config
+    end
     @@http_config ||= block
   end
 end

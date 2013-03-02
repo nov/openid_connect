@@ -15,6 +15,7 @@ describe OpenIDConnect do
     it 'should enable debugging within given block' do
       OpenIDConnect.debug do
         SWD.debugging?.should be_true
+        WebFinger.debugging?.should be_true
         Rack::OAuth2.debugging?.should be_true
         OpenIDConnect.debugging?.should be_true
       end
@@ -25,14 +26,17 @@ describe OpenIDConnect do
 
     it 'should not force disable debugging' do
       SWD.debug!
+      WebFinger.debug!
       Rack::OAuth2.debug!
       OpenIDConnect.debug!
       OpenIDConnect.debug do
         SWD.debugging?.should be_true
+        WebFinger.debugging?.should be_true
         Rack::OAuth2.debugging?.should be_true
         OpenIDConnect.debugging?.should be_true
       end
       SWD.debugging?.should be_true
+      WebFinger.debugging?.should be_true
       Rack::OAuth2.debugging?.should be_true
       OpenIDConnect.debugging?.should be_true
     end
@@ -46,7 +50,7 @@ describe OpenIDConnect do
         end
       end
       it 'should configure OpenIDConnect, SWD and Rack::OAuth2\'s http_client' do
-        [OpenIDConnect, SWD, Rack::OAuth2].each do |klass|
+        [OpenIDConnect, SWD, WebFinger, Rack::OAuth2].each do |klass|
           klass.http_client.ssl_config.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
         end
       end
