@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openid_connect (0.5.0)
+    openid_connect (0.5.1)
       activemodel (>= 3)
       attr_required (>= 0.0.5)
       json (>= 1.4.3)
@@ -36,7 +36,6 @@ GEM
     httpclient (2.3.3)
     i18n (0.6.4)
     json (1.7.7)
-    json (1.7.7-java)
     json-jwt (0.4.2)
       activesupport (>= 2.3)
       i18n
