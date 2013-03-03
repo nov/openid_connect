@@ -15,6 +15,7 @@ module OpenIDConnect
         :logo_url,
         :token_endpoint_auth_method,
         :policy_url,
+        :tos_url,
         :jwk_url,
         :jwk_encryption_url,
         :x509_url,
@@ -30,7 +31,9 @@ module OpenIDConnect
         :id_token_encrypted_response_enc,
         :default_max_age,
         :require_auth_time,
-        :default_acr
+        :default_acr,
+        :initiate_login_uri,
+        :post_logout_redirect_url
       ]
       plurar_attributes = [
         :contacts,
@@ -66,11 +69,14 @@ module OpenIDConnect
       validates(
         :logo_url,
         :policy_url,
+        :tos_url,
         :jwk_url,
         :jwk_encryption_url,
         :x509_url,
         :x509_encryption_url,
         :sector_identifier_url,
+        :initiate_login_uri,
+        :post_logout_redirect_url,
         url: true,
         allow_nil: true
       )
