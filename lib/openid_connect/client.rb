@@ -5,7 +5,8 @@ module OpenIDConnect
     alias_method :user_info_endpoint=, :userinfo_endpoint=
 
     def initialize(attributes = {})
-      super
+      attributes[:userinfo_endpoint] ||= attributes[:user_info_endpoint]
+      super attributes
       self.userinfo_endpoint ||= '/user_info'
     end
 

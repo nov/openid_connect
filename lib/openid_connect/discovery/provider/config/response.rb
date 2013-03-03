@@ -34,7 +34,7 @@ module OpenIDConnect
             :request_object_signing_alg_values_supported,
             :request_object_encryption_alg_values_supported,
             :request_object_encryption_enc_values_supported,
-            :token_endpoint_auth_types_supported,
+            :token_endpoint_auth_methods_supported,
             :token_endpoint_auth_signing_alg_values_supported
           )
           [

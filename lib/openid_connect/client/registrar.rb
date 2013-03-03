@@ -13,7 +13,7 @@ module OpenIDConnect
         :application_type,
         :client_name,
         :logo_url,
-        :token_endpoint_auth_type,
+        :token_endpoint_auth_method,
         :policy_url,
         :jwk_url,
         :jwk_encryption_url,
@@ -59,7 +59,7 @@ module OpenIDConnect
       validates :operation,        inclusion: {in: ['client_register', 'rotate_secret', 'client_update']}
       validates :application_type, inclusion: {in: ['native', 'web']},      allow_nil: true
       validates :subject_type,     inclusion: {in: ['pairwise', 'public']}, allow_nil: true
-      validates :token_endpoint_auth_type, inclusion: {
+      validates :token_endpoint_auth_method, inclusion: {
         in: ['client_secret_post', 'client_secret_basic', 'client_secret_jwt', 'private_key_jwt']
       }, allow_nil: true
 
