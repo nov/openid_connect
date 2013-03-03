@@ -48,4 +48,15 @@ describe OpenIDConnect::Discovery::Provider::Config do
       end
     end
   end
+
+  context 'when OP identifier includes path' do
+    let(:provider) { 'https://connect.openid4.us/abop' }
+    let(:endpoint) { "https://connect.openid4.us/abop/.well-known/openid-configuration" }
+
+    it 'should construct well-known URI with given port' do
+      mock_json :get, endpoint, 'discovery/config' do
+        OpenIDConnect::Discovery::Provider::Config.discover! provider
+      end
+    end
+  end
 end

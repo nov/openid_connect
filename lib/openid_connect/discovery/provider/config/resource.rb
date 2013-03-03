@@ -10,7 +10,7 @@ module OpenIDConnect
           def initialize(uri)
             @host = uri.host
             @port = uri.port unless [80, 443].include?(uri.port)
-            @path ||= '/.well-known/openid-configuration'
+            @path = File.join uri.path, '.well-known/openid-configuration'
             attr_missing!
           end
 
