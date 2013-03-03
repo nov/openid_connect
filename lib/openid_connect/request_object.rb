@@ -1,10 +1,13 @@
 module OpenIDConnect
   class RequestObject < ConnectObject
-    attr_optional :client_id, :response_type, :redirect_uri, :scope, :state, :nonce, :display, :prompt, :user_info, :id_token
+    include JWTnizable
+
+    attr_optional :client_id, :response_type, :redirect_uri, :scope, :state, :nonce, :display, :prompt, :userinfo, :id_token
+    alias_method :user_info, :userinfo
     validate :require_at_least_one_attributes
 
     def initialize(attributes = {})
-      attributes[:user_info] ||= attributes[:userinfo]
+      attributes[:userinfo] ||= attributes[:user_info]
       super attributes
     end
 
@@ -12,20 +15,16 @@ module OpenIDConnect
       @id_token = IdToken.new(attributes) if attributes.present?
     end
 
-    def user_info=(attributes = {})
-      @user_info = UserInfo.new(attributes) if attributes.present?
+    def userinfo=(attributes = {})
+      @userinfo = UserInfo.new(attributes) if attributes.present?
     end
+    alias_method :user_info=, :userinfo=
 
-    def as_json_with_user_info(options = {})
-      hash = as_json_without_user_info options
-      if hash.include?(:user_info)
-        hash[:userinfo] = hash.delete(:user_info)
-      end
+    def as_json_with_mixed_keys(options = {})
+      hash = as_json_without_mixed_keys options
       hash.with_indifferent_access
     end
-    alias_method_chain :as_json, :user_info
-
-    include JWTnizable
+    alias_method_chain :as_json, :mixed_keys
 
     class << self
       def decode(jwt_string, key = nil)

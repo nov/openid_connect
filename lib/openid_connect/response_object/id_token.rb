@@ -5,13 +5,15 @@ module OpenIDConnect
     class IdToken < ConnectObject
       class InvalidToken < Exception; end
 
-      attr_required :iss, :user_id, :aud, :exp, :iat
-      attr_optional :acr, :auth_time, :nonce, :user_jwk, :at_hash, :c_hash
+      attr_required :iss, :sub, :aud, :exp, :iat
+      attr_optional :acr, :auth_time, :nonce, :sub_jwk, :at_hash, :c_hash
       attr_accessor :access_token, :code
+      alias_method :subject, :sub
+      alias_method :subject=, :sub=
 
       def initialize(attributes = {})
         super
-        (all_attributes - [:exp, :iat, :auth_time, :user_jwk]).each do |key|
+        (all_attributes - [:exp, :iat, :auth_time, :sub_jwk]).each do |key|
           self.send "#{key}=", self.send(key).try(:to_s)
         end
       end
@@ -61,25 +63,25 @@ module OpenIDConnect
 
         def decode_self_issued(jwt_string)
           jwt = JSON::JWT.decode jwt_string, :skip_verification
-          jwk = jwt[:user_jwk]
-          raise InvalidToken.new('Missing user_jwk') if jwk.blank?
-          raise InvalidToken.new('Invalid user_id') unless jwt[:user_id] == self_issued_user_id(jwk)
+          jwk = jwt[:sub_jwk]
+          raise InvalidToken.new('Missing sub_jwk') if jwk.blank?
+          raise InvalidToken.new('Invalid subject') unless jwt[:sub] == self_issued_subject(jwk)
           public_key = JSON::JWK.decode jwk
           jwt = JSON::JWT.decode jwt_string, public_key
           new jwt
         end
 
         def self_issued(attributes = {})
-          attributes[:user_jwk] ||= JSON::JWK.new attributes.delete(:public_key)
+          attributes[:sub_jwk] ||= JSON::JWK.new attributes.delete(:public_key)
           _attributes_ = {
-            iss:     'https://self-issued.me',
-            user_id: self_issued_user_id(attributes[:user_jwk])
+            iss: 'https://self-issued.me',
+            sub: self_issued_subject(attributes[:sub_jwk])
           }.merge(attributes)
           new _attributes_
         end
 
-        def self_issued_user_id(jwk)
-          user_id_base_string = case jwk[:alg].to_s
+        def self_issued_subject(jwk)
+          subject_base_string = case jwk[:alg].to_s
           when 'RSA'
             [jwk[:n], jwk[:e]].join
           when 'EC'
@@ -88,7 +90,7 @@ module OpenIDConnect
             # Shouldn't reach here. All unknown algorithm error should occurs when decoding JWK
             raise InvalidToken.new('Unknown Algorithm')
           end
-          UrlSafeBase64.encode64 OpenSSL::Digest::SHA256.digest(user_id_base_string)
+          UrlSafeBase64.encode64 OpenSSL::Digest::SHA256.digest(subject_base_string)
         end
       end
     end

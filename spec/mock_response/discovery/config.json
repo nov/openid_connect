@@ -7,6 +7,7 @@
     "registration_endpoint": "https://connect-op.heroku.com/connect/client",
     "scopes_supported": ["openid", "profile", "email", "address"],
     "response_types_supported": ["code", "token", "id_token", "code token", "code id_token", "id_token token"],
-    "user_id_types_supported": ["public", "pairwise"],
+    "subject_types_supported": ["public", "pairwise"],
+    "claims_supported": ["sub", "iss", "name", "email"],
     "x509_url": "https://connect-op.heroku.com/cert.pem"
 }

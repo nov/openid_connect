@@ -11,7 +11,7 @@ module OpenIDConnect
             :issuer,
             :authorization_endpoint,
             :token_endpoint,
-            :user_info_endpoint,
+            :userinfo_endpoint,
             :refresh_session_endpoint,
             :check_session_endpoint,
             :end_session_endpoint,
@@ -22,11 +22,12 @@ module OpenIDConnect
             :registration_endpoint,
             :scopes_supported,
             :response_types_supported,
-            :acrs_supported,
-            :user_id_types_supported,
-            :user_info_signing_alg_values_supported,
-            :user_info_encryption_alg_values_supported,
-            :user_info_encryption_enc_values_supported,
+            :acr_values_supported,
+            :subject_types_supported,
+            :claims_supported,
+            :userinfo_signing_alg_values_supported,
+            :userinfo_encryption_alg_values_supported,
+            :userinfo_encryption_enc_values_supported,
             :id_token_signing_alg_values_supported,
             :id_token_encryption_alg_values_supported,
             :id_token_encryption_enc_values_supported,
@@ -36,16 +37,26 @@ module OpenIDConnect
             :token_endpoint_auth_types_supported,
             :token_endpoint_auth_signing_alg_values_supported
           )
+          [
+            :userinfo_endpoint,
+            :userinfo_signing_alg_values_supported,
+            :userinfo_encryption_alg_values_supported,
+            :userinfo_encryption_enc_values_supported
+          ].each do |userinfo_attribute|
+            user_info_attribute = userinfo_attribute.to_s.sub('userinfo', 'user_info').to_sym
+            alias_method user_info_attribute, userinfo_attribute
+            alias_method :"#{user_info_attribute}=", userinfo_attribute
+          end
 
           def initialize(hash)
             optional_attributes.each do |key|
               self.send "#{key}=", hash[key]
             end
-            @user_info_endpoint ||= hash[:userinfo_endpoint]
-            @user_info_signing_alg_values_supported ||= hash[:userinfo_signing_alg_values_supported]
-            @user_info_encryption_alg_values_supported ||= hash[:userinfo_encryption_alg_values_supported]
-            @user_info_encryption_enc_values_supported ||= hash[:userinfo_encryption_enc_values_supported]
-            @version ||= '3.0'
+            self.userinfo_endpoint ||= hash[:user_info_endpoint]
+            self.userinfo_signing_alg_values_supported ||= hash[:user_info_signing_alg_values_supported]
+            self.userinfo_encryption_alg_values_supported ||= hash[:user_info_encryption_alg_values_supported]
+            self.userinfo_encryption_enc_values_supported ||= hash[:user_info_encryption_enc_values_supported]
+            self.version ||= '3.0'
             @raw = hash
           end
 
@@ -55,10 +66,6 @@ module OpenIDConnect
                 _attr_ => self.send(_attr_)
               )
             end
-            hash[:userinfo_endpoint] = hash.delete(:user_info_endpoint)
-            hash[:userinfo_signing_alg_values_supported] = hash.delete(:user_info_signing_alg_values_supported)
-            hash[:userinfo_encryption_alg_values_supported] = hash.delete(:user_info_encryption_alg_values_supported)
-            hash[:userinfo_encryption_enc_values_supported] = hash.delete(:user_info_encryption_enc_values_supported)
             hash.delete_if do |key, value|
               value.nil?
             end

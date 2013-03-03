@@ -32,7 +32,7 @@ describe OpenIDConnect::AccessToken do
       let :id_token do
         OpenIDConnect::ResponseObject::IdToken.new(
           iss: 'https://server.example.com',
-          user_id: 'user_id',
+          sub: 'user_id',
           aud: 'client_id',
           nonce: 'nonce',
           exp: 1.week.from_now,

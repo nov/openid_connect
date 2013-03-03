@@ -15,12 +15,6 @@ describe OpenIDConnect::RequestObject do
         nonce: 'nonce1234',
         display: 'touch',
         prompt: 'none',
-        userinfo: {
-          claims: {
-            name: :required,
-            email: :optional
-          }
-        },
         id_token: {
           max_age: 10,
           claims: {
@@ -28,11 +22,17 @@ describe OpenIDConnect::RequestObject do
               values: ['2', '3', '4']
             }
           }
+        },
+        userinfo: {
+          claims: {
+            name: :required,
+            email: :optional
+          }
         }
       }
     end
     let(:jwtnized) do
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfaWQiOiJjbGllbnRfaWQiLCJyZXNwb25zZV90eXBlIjoidG9rZW4gaWRfdG9rZW4iLCJyZWRpcmVjdF91cmkiOiJodHRwczovL2NsaWVudC5leGFtcGxlLmNvbSIsInNjb3BlIjoib3BlbmlkIGVtYWlsIiwic3RhdGUiOiJzdGF0ZTEyMzQiLCJub25jZSI6Im5vbmNlMTIzNCIsImRpc3BsYXkiOiJ0b3VjaCIsInByb21wdCI6Im5vbmUiLCJpZF90b2tlbiI6eyJjbGFpbXMiOnsiYWNyIjp7InZhbHVlcyI6WyIyIiwiMyIsIjQiXX19LCJtYXhfYWdlIjoxMH0sInVzZXJpbmZvIjp7ImNsYWltcyI6eyJuYW1lIjp7ImVzc2VudGlhbCI6dHJ1ZX0sImVtYWlsIjp7ImVzc2VudGlhbCI6ZmFsc2V9fX19.MLTDQVPdhAdkJhboM06IRtjHJrvamJ_H2vFGRupXmTA'
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfaWQiOiJjbGllbnRfaWQiLCJyZXNwb25zZV90eXBlIjoidG9rZW4gaWRfdG9rZW4iLCJyZWRpcmVjdF91cmkiOiJodHRwczovL2NsaWVudC5leGFtcGxlLmNvbSIsInNjb3BlIjoib3BlbmlkIGVtYWlsIiwic3RhdGUiOiJzdGF0ZTEyMzQiLCJub25jZSI6Im5vbmNlMTIzNCIsImRpc3BsYXkiOiJ0b3VjaCIsInByb21wdCI6Im5vbmUiLCJ1c2VyaW5mbyI6eyJjbGFpbXMiOnsibmFtZSI6eyJlc3NlbnRpYWwiOnRydWV9LCJlbWFpbCI6eyJlc3NlbnRpYWwiOmZhbHNlfX19LCJpZF90b2tlbiI6eyJjbGFpbXMiOnsiYWNyIjp7InZhbHVlcyI6WyIyIiwiMyIsIjQiXX19LCJtYXhfYWdlIjoxMH19.yOc76jnkDusf5ZUzI5Gq7vnteTeOVUXd2Fr1EBZFNYU'
     end
     let(:jsonized) do
       {

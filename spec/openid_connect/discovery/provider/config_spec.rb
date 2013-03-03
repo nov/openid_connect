@@ -21,8 +21,9 @@ describe OpenIDConnect::Discovery::Provider::Config do
         config.registration_endpoint.should == 'https://connect-op.heroku.com/connect/client'
         config.scopes_supported.should == ["openid", "profile", "email", "address"]
         config.response_types_supported.should == ["code", "token", "id_token", "code token", "code id_token", "id_token token"]
-        config.acrs_supported.should be_nil
-        config.user_id_types_supported.should == ["public", "pairwise"]
+        config.acr_values_supported.should be_nil
+        config.subject_types_supported.should == ["public", "pairwise"]
+        config.claims_supported.should == ["sub", "iss", "name", "email"]
       end
     end
 

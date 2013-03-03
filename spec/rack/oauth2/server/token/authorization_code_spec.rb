@@ -14,7 +14,7 @@ describe Rack::OAuth2::Server::Token::AuthorizationCode do
   let :id_token do
     OpenIDConnect::ResponseObject::IdToken.new(
       iss: 'https://server.example.com',
-      user_id: 'user_id',
+      sub: 'user_id',
       aud: 'client_id',
       exp: 1313424327,
       iat: 1313420327,

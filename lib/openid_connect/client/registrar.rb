@@ -6,12 +6,12 @@ module OpenIDConnect
       class RegistrationFailed < HttpError; end
 
       singular_attributes = [
-        :type,
+        :operation,
         :client_id,
         :client_secret,
         :access_token,
         :application_type,
-        :application_name,
+        :client_name,
         :logo_url,
         :token_endpoint_auth_type,
         :policy_url,
@@ -20,7 +20,7 @@ module OpenIDConnect
         :x509_url,
         :x509_encryption_url,
         :sector_identifier_url,
-        :user_id_type,
+        :subject_type,
         :request_object_signing_alg,
         :userinfo_signed_response_alg,
         :userinfo_encrypted_response_alg,
@@ -52,13 +52,13 @@ module OpenIDConnect
         alias_method_chain _attr_, :split
       end
 
-      validates :type,                  presence: true
-      validates :client_id,             presence: {if: ->(c) { ['client_update', 'rotate_secret'].include?(c.type.to_s) }}
+      validates :operation,             presence: true
+      validates :client_id,             presence: {if: ->(c) { ['client_update', 'rotate_secret'].include?(c.operation.to_s) }}
       validates :sector_identifier_url, presence: {if: :sector_identifier_required?}
 
-      validates :type,             inclusion: {in: ['client_associate', 'rotate_secret', 'client_update']}
+      validates :operation,        inclusion: {in: ['client_register', 'rotate_secret', 'client_update']}
       validates :application_type, inclusion: {in: ['native', 'web']},      allow_nil: true
-      validates :user_id_type,     inclusion: {in: ['pairwise', 'public']}, allow_nil: true
+      validates :subject_type,     inclusion: {in: ['pairwise', 'public']}, allow_nil: true
       validates :token_endpoint_auth_type, inclusion: {
         in: ['client_secret_post', 'client_secret_basic', 'client_secret_jwt', 'private_key_jwt']
       }, allow_nil: true
@@ -128,18 +128,18 @@ module OpenIDConnect
         end
       end
 
-      def associate!
-        self.type = 'client_associate'
+      def register!
+        self.operation = 'client_register'
         post!
       end
 
       def rotate_secret!
-        self.type = 'rotate_secret'
+        self.operation = 'rotate_secret'
         post!
       end
 
       def update!
-        self.type = 'client_update'
+        self.operation = 'client_update'
         post!
       end
 
@@ -150,7 +150,7 @@ module OpenIDConnect
       private
 
       def sector_identifier_required?
-        user_id_type == 'pairwise' &&
+        subject_type == 'pairwise' &&
         sector_identifier.blank?
       end
 

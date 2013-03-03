@@ -3,7 +3,7 @@ module OpenIDConnect
     module UserInfo
       class OpenID < ConnectObject
         attr_optional(
-          :user_id,
+          :sub,
           :name,
           :given_name,
           :family_name,
@@ -23,6 +23,8 @@ module OpenIDConnect
           :address,
           :updated_time
         )
+        alias_method :subject, :sub
+        alias_method :subject=, :sub=
 
         validates :email_verified, inclusion: {in: [true, false]},                             allow_nil: true
         validates :gender,         inclusion: {in: ['male', 'female']},                        allow_nil: true

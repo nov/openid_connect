@@ -9,7 +9,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
   let :required_attributes do
     {
       iss: 'https://server.example.com',
-      user_id: 'user_id',
+      sub: 'user_id',
       aud: 'client_id',
       exp: ext,
       iat: iat
@@ -18,8 +18,8 @@ describe OpenIDConnect::ResponseObject::IdToken do
 
   describe 'attributes' do
     subject { klass }
-    its(:required_attributes) { should == [:iss, :user_id, :aud, :exp, :iat] }
-    its(:optional_attributes) { should == [:acr, :auth_time, :nonce, :user_jwk, :at_hash, :c_hash] }
+    its(:required_attributes) { should == [:iss, :sub, :aud, :exp, :iat] }
+    its(:optional_attributes) { should == [:acr, :auth_time, :nonce, :sub_jwk, :at_hash, :c_hash] }
   end
 
   describe '#verify!' do
@@ -217,7 +217,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
     subject { klass.decode id_token.to_jwt(private_key), public_key }
     let(:attributes) { required_attributes }
     it { should be_a klass }
-    [:iss, :user_id, :aud].each do |key|
+    [:iss, :sub, :aud].each do |key|
       its(key) { should == attributes[key] }
     end
     its(:exp) { should == attributes[:exp].to_i }
@@ -225,7 +225,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
     context 'when self-issued' do
       context 'when valid' do
         let(:self_issued) do
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL3NlbGYtaXNzdWVkLm1lIiwidXNlcl9pZCI6ImY2UW1VLVFEbEtmanlwMHd3UmNnRms3QUhIYVMyZnFud2lIMlRCdDl5WDgiLCJhdWQiOiJiYWZkOGI3ODdhMDQyOWRiZDBiNmY5ZTE4Mzk3OThjNDFkNGQxOTJhYWYzMTFhZGY0MGRhMmM0ZDQxNGU1OGZkIiwiZXhwIjoxMzUwMzI1OTg3LCJpYXQiOjEzNTAzMjIzODcsInVzZXJfandrIjp7ImFsZyI6IlJTQSIsImUiOiJBUUFCIiwibiI6Im9iSGdFR01ITU9JVU1OZmkxMFY1RXhCai10d3ljY0txV0hhb2tvaUs4TGRGazdTNnpLYndjUUUtaGRXc0NvT0xfZVhaU2VZRHp1UjhGbG1NcVYxdzB5LUlkdERaRmFBcHgxLTJhWWVnRGJwQmxRc29UWURvU09xVmpfeFRPNTlQX2s0bHk0WHk4bUp0UUktX1dlR3lLZXV2SXItQzVUV1RnYnBobkZaVjA4a29KOHE1WHZRRjJpdndoZ1cweXRvYi1fdzNtWkFOb1FDUGxhSWV3WUFXSGdMdFZ6OElweVVhTWlDWU5kVkZoQjlzMjdRLU1CVGw3OHMtcm01VjhJZXZWZE1jcFVGTDhNSktGaC0ydklhcHljZjhCVmtGUmUzYW42eV9BY2c3eEQ4RFFSc3N3SHRlMkFiT3FENkZrLTJMM255SUdyOVJUM0tKY3ByaFlwYkJndyJ9fQ.H4lZwnV4nY3eWPTSi3anelcQPvAs7zzwChYuHWnKGUSalLO53vQ9XNV8klrEAq8UQntNMtIly-DeCVBU6Hcg3W_ZBuB2EXn1X4Lc6vRRCPeHBFwt085m6zanQsvuiTllUJssUjTnFJvBO9juopMJvisJX7cxDfHpZQF52bWYXuDp5UEFs-8TXQuDpn02BaOnzW32vaf1Vx871EdlGj-NrOpzwWaqnDM0p0o6j8tQPl76WJIB8LIGWxA7sNMnt8YCykzZXofK17veogrFd4tsLYbzFp80oqz0vsCsw4Q3WgLBRgOfoCGB8wfFt7Wdu6clotDIviPqmfPPx1gls2_JJw'
+          'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL3NlbGYtaXNzdWVkLm1lIiwic3ViIjoiUFdFYXFfVnlUd1hTSFR4QVlSZHdWTjNMN2s0UnNxOVBwaTZ4WHZ6ZGZWTSIsImF1ZCI6InRhcGlkLnRhcGlkZW50aXR5LmNvbSIsImV4cCI6MTM2MjI3OTkwMCwiaWF0IjoxMzYyMjc2MzAwLCJzdWJfandrIjp7ImFsZyI6IlJTQSIsIm4iOiJ5R21SUm5qSkk2VWhXYUtYcUJxa0RodDVQa0FPdDNqV2Y0SUxIdUlKZHJHR3h1ajBhcDIzLXlxaS16N29jZmF3dnlNbkRfakRpY0JjRTFtVHduZ2ZLRURMdmp5ZWw4U3VhZlZJWTR4ZDVDcG42Nlp4U2pocE1yTWZtMF9palZtdkQ0OTZHZzZSYUR4cHA4OEVqcUlaZUtyZEtqd2lOeTRGZ0dkVnZPQURXWG85R0xLenBOdlc2MGU3MkdrRGFkUVJncEhGNjNVaE9zaVltYmwxRVRMaVhLMGpUdldDdEZVdUlfT2lTN3hIUmU0X3FSaWxRc240cGlHTy1lNzJ2azRpaFlPaldoRXNpcnU2X0JtSC03YWs2Qk9lY3pUYTFVOFZyQzY1ZkRabzRxeG9uRWVoeVpVVnItSmxXMFVvbFVTS1dKOE1OMGRBV1VaeTFBZUxtRzliZlEiLCJlIjoiQVFBQiJ9fQ.obpb9tshLoZG6O32w4nB4I3nBtR_2mscVeNuPWZAGIwq9SqpiNF24KrGrhgbJMzRndafXbOdiiTFjq15BDwoSUrRF2H2EQXm1_lZxhw66JK4get7zEihtmsljGxB03LRlej-ec6baAKJxCBZdJ7SIantjgyt_WbAY27ImeryD7Wi9VKtgEzX2cFbU8u5VwxpisDfosp7fpp0_jdAdk948eJnercM-6t0a3UhLoLaW1RWZSbzXzef9aDuMezsnSrwafjYuF6dzUF7uAEdsYAzMeISch2_Gl4Twbrovmmqj50IKIctkLxQBTI1_v0oU63_a4jLami1cux8XTEfgPEPmg'
         end
 
         context 'when key == :self_issued' do
@@ -245,27 +245,27 @@ describe OpenIDConnect::ResponseObject::IdToken do
         end
       end
 
-      context 'when invalid user_id' do
+      context 'when invalid subject' do
         let(:self_issued) do
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL3NlbGYtaXNzdWVkLm1lIiwidXNlcl9pZCI6ImludmFsaWQiLCJhdWQiOiJ0YXBpZC50YXBpZGVudGl0eS5jb20iLCJleHAiOjEzNTAzMjYyNjEsImlhdCI6MTM1MDMyMjY2MSwidXNlcl9qd2siOnsiYWxnIjoiUlNBIiwibW9kIjoidnVLay1YdDR3bXF3Wl9HR2FXMTNVeV9RUExobThJVUM1SGpsZlJTZEpXRGY4bnRWV1p2bVRZcjEyd2tfUU1XN3RkQ25Eb0d2dnd0VVczajhIaTlEOG5aNW84c0FhSUxmbm1MSE9sdHNVT01IWTRlOWZtVzQ5eWJUS25sbFRkTGlJMy13NWJtZC1VTVE4WnBSQ2dhN0Z5WERMR2tpeXNrSTNtdjAxcUVfOURMc0dEVTFjWHBaM19TY05MY1RuN0hYSHRCcnVVOHhhOHZkUGxncEdXQjFTaTIxRWhubnNOQnZmUmkzUW9UcFlkbnFqTGk4NzQtWDd4anJWUDNzRURoRnNvdzdNR0s2WVF3X2JsNzAxdGJIU3F1SG5aWDZ0ZklQaFNMYVNWbXdGVzNTem9GdDBWNGxpbzlPOHhqNWlpQnBNV0cwcDd4MTJpYno1bEktaGYzcTJ3IiwieHBvIjoiQVFBQiJ9fQ.p_Zh-nLBVaDQXTvDe3YCDQsA8QKepMfEtEzmBBQEmnFEmLSDAcsTnAbkTNlRZ-BQ-CuEF_NFJ2KK0B8s4GEfb5IO3afBHi5nxk269d1BLypuLRG1oI5GWoO5kPPjcjdZHUHXv56w_c8KeOtRazCKhcVwvErs8vXi1hlAfln5cGMhJ-jlBztk1ZUHefvdCecGyqxzCVnjowA1MsMDhdchDX3njza6qxL8IkPZ04u57KnLsfYTh84jZ4vv0_5bdCs_-fSWXDMvyhDN69_YRT6QqX312421IJqDsIjUWk6VpCFi6Yti7iRZ8qixd5UVyxLHMkomY8okVG04oMHs9lMzDQ'
+          'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJkZXZpY2VfdG9rZW4iOiI2NjYxNmI2NTJkNjQ2NTc2Njk2MzY1MmQ3NDZmNmI2NTZlIiwiaXNzIjoiaHR0cHM6Ly9zZWxmLWlzc3VlZC5tZSIsInN1YiI6IlBXRWFxX1Z5VHdYU0hUeEFZUmR3Vk4zTDdrNFJzcTlQcGk2eFh2emRmVk1pbnZhbGlkIiwiYXVkIjoidGFwaWQudGFwaWRlbnRpdHkuY29tIiwiZXhwIjoxMzYyMjgwMDQxLCJpYXQiOjEzNjIyNzY0NDEsInN1Yl9qd2siOnsiYWxnIjoiUlNBIiwibiI6InlHbVJSbmpKSTZVaFdhS1hxQnFrRGh0NVBrQU90M2pXZjRJTEh1SUpkckdHeHVqMGFwMjMteXFpLXo3b2NmYXd2eU1uRF9qRGljQmNFMW1Ud25nZktFREx2anllbDhTdWFmVklZNHhkNUNwbjY2WnhTamhwTXJNZm0wX2lqVm12RDQ5NkdnNlJhRHhwcDg4RWpxSVplS3JkS2p3aU55NEZnR2RWdk9BRFdYbzlHTEt6cE52VzYwZTcyR2tEYWRRUmdwSEY2M1VoT3NpWW1ibDFFVExpWEswalR2V0N0RlV1SV9PaVM3eEhSZTRfcVJpbFFzbjRwaUdPLWU3MnZrNGloWU9qV2hFc2lydTZfQm1ILTdhazZCT2VjelRhMVU4VnJDNjVmRFpvNHF4b25FZWh5WlVWci1KbFcwVW9sVVNLV0o4TU4wZEFXVVp5MUFlTG1HOWJmUSIsImUiOiJBUUFCIn19.K8NpQ1r89v9KFcrAU19-qTEtUv94gTJp25xwYwKPttkMOduGMIBn1lCTUsWhUC8NDc0lJrIq-MAa3Eav6wlW9HkX4Gw7vD-fwx6bijm_0LnxLcK2PwMPeeAaeztEOj6WNnUlipZAkOjYhFWG_4gK4sbnoXv80LSV3dHf0mwDEp0vWJ5rba24YfyFb_CoGfeluaHVQiCWTNFa4rh5ohCb1oC4IAZd607KNryLBbjGdyRgIgeIBtph_rx4Jf2tYhBs1_Y32KQMgKHy7QBJHD1hr2HEAu_pCXirwpNFcBCV7K5vUYntYSjdrKfvEzeW0Jxjm1AGgMZr_NsGwNS0bMYoUA'
         end
 
         it do
           expect do
             klass.decode self_issued, :self_issued
-          end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken, 'Invalid user_id'
+          end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken, 'Invalid subject'
         end
       end
 
-      context 'when no user_jwk' do
+      context 'when no sub_jwk' do
         let(:self_issued) do
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL3NlbGYtaXNzdWVkLm1lIiwidXNlcl9pZCI6IkN5amplQ0trLU9xSS1YcW5GYzduX1pSOG4xaXlLNFlIcXNzNkp1SHlnNkUiLCJhdWQiOiJ0YXBpZC50YXBpZGVudGl0eS5jb20iLCJleHAiOjEzNDkyNDg5NjAsImlhdCI6MTM0OTI0NTM2MH0.SyXFCTAAB0l29qxnfUxj5G217cQqVhCiPlQDCq_ZZmtZyGqM4eLI-5D2MPZTc905i10sbwKHTeKqwjhYki2pVOuU5n-N9duTlO64kimg8hAnwEJKsil9jvRPb5hCnc-5vRyXaRV3N1zYFurCEZFmVvXCg4ccKbA_viyuhIYtiMQPHOGY-ELFokfwsbEv11hi9d0kt89pfBMlDyEIZiEDYT0fEl-w7e8tPEk99rCzD_jkitTtdXv18_UsgeM2pDaO9G7_8wQYAX4ldHZjXSihKp2DuTY7edZpP4arYIFHPibtPVcKEnpmK-25mk9Ujo6k7N5kqz9SX6isktbE9-3W4Q'
+          'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJkZXZpY2VfdG9rZW4iOiI2NjYxNmI2NTJkNjQ2NTc2Njk2MzY1MmQ3NDZmNmI2NTZlIiwiaXNzIjoiaHR0cHM6Ly9zZWxmLWlzc3VlZC5tZSIsInN1YiI6IlBXRWFxX1Z5VHdYU0hUeEFZUmR3Vk4zTDdrNFJzcTlQcGk2eFh2emRmVk0iLCJhdWQiOiJ0YXBpZC50YXBpZGVudGl0eS5jb20iLCJleHAiOjEzNjIyODAxNDQsImlhdCI6MTM2MjI3NjU0NH0.HtkguN4xOzJ-yh_kd2JCmG6fgDEiVY5VCgTWUD9l8YOgHjTT7LRZC3b1sNDgkdwBteX3eQIQOVxaYWp4-ftczaIlrznB0jxldqdEdB1Tr591YsiDcyOqmemo1ZYzOKhe_q1l68bdKKeHLc83BzlsJpS659uFDuixvF7G_HIJpCdwckX7x6H3KK73hCLzoYCOVgr_lkFRVVHHAJXzxiUuERLD7JIvg5jCbgmqxArP-jYBdbscHHx8i-UP3WYFBEORBM2rXJuJzGvk4sLhZ4NVGBWyr0DJlE-aWKTyeg-_-4kLPd3d68-k3nLJ82iCwcap-BU_5otSmXufN3_ffq_tTw'
         end
 
         it do
           expect do
             klass.decode self_issued, :self_issued
-          end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken, 'Missing user_jwk'
+          end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken, 'Missing sub_jwk'
         end
       end
     end
@@ -273,7 +273,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
 
   describe '.self_issued' do
     subject { self_issued }
-    let(:user_jwk) { JSON::JWK.new(public_key) }
+    let(:sub_jwk) { JSON::JWK.new(public_key) }
     let(:self_issued) do
       klass.self_issued(
         public_key: public_key,
@@ -283,19 +283,19 @@ describe OpenIDConnect::ResponseObject::IdToken do
       )
     end
 
-    [:iss, :user_id, :aud, :exp, :iat, :user_jwk].each do |attribute|
+    [:iss, :sub, :aud, :exp, :iat, :sub_jwk].each do |attribute|
       its(attribute) { should be_present }
     end
     its(:iss)      { should == 'https://self-issued.me' }
-    its(:user_jwk) { should == user_jwk }
-    its(:user_id)  { should == OpenIDConnect::ResponseObject::IdToken.self_issued_user_id(user_jwk) }
+    its(:sub_jwk) { should == sub_jwk}
+    its(:subject)  { should == OpenIDConnect::ResponseObject::IdToken.self_issued_subject(sub_jwk) }
   end
 
-  describe '.self_issued_user_id' do
+  describe '.self_issued_subject' do
     context 'when RSA key given' do
       let(:jwk) { JSON::JWK.new(public_key) }
       it do
-        user_id = klass.self_issued_user_id jwk
+        user_id = klass.self_issued_subject jwk
         user_id.should == UrlSafeBase64.encode64(
           OpenSSL::Digest::SHA256.digest([jwk[:n], jwk[:e]].join)
         )
@@ -306,7 +306,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
       let(:jwk) { JSON::JWK.new(ec_public_key) }
       it do
         expect do
-          user_id = klass.self_issued_user_id jwk
+          klass.self_issued_subject jwk
         end.to raise_error NotImplementedError
       end
     end
@@ -320,7 +320,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
 
       it do
         expect do
-          user_id = klass.self_issued_user_id jwk
+          klass.self_issued_subject jwk
         end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
       end
     end

@@ -10,7 +10,7 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
     its(:required_attributes) { should == [] }
     its(:optional_attributes) do
       should == [
-        :user_id,
+        :sub,
         :name,
         :given_name,
         :family_name,
@@ -108,13 +108,13 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
   describe '#to_json' do
     let :attributes do
       {
-        user_id: 'nov.matake#12345',
+        sub: 'nov.matake#12345',
         address: {
           formatted: 'Tokyo, Japan'
         }
       }
     end
-    its(:to_json) { should include '"user_id":"nov.matake#12345"'}
+    its(:to_json) { should include '"sub":"nov.matake#12345"'}
     its(:to_json) { should include '"address":{"formatted":"Tokyo, Japan"}'}
   end
 end

@@ -1,10 +1,12 @@
 module OpenIDConnect
   class Client < Rack::OAuth2::Client
-    attr_optional :user_info_endpoint, :expires_in
+    attr_optional :userinfo_endpoint, :expires_in
+    alias_method :user_info_endpoint, :userinfo_endpoint
+    alias_method :user_info_endpoint=, :userinfo_endpoint=
 
     def initialize(attributes = {})
       super
-      @user_info_endpoint ||= '/user_info'
+      self.userinfo_endpoint ||= '/user_info'
     end
 
     def authorization_uri(params = {})
@@ -13,9 +15,10 @@ module OpenIDConnect
       super
     end
 
-    def user_info_uri
-      absolute_uri_for user_info_endpoint
+    def userinfo_uri
+      absolute_uri_for userinfo_endpoint
     end
+    alias_method :user_info_uri, :userinfo_uri
 
     private
 
