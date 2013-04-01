@@ -203,7 +203,7 @@ module OpenIDConnect
 
       def post!
         handle_response do
-          http_client.post endpoint, as_json
+          http_client.post endpoint, to_json, 'Content-Type' => 'application/json'
         end
       end
 

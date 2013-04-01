@@ -36,6 +36,7 @@ GEM
     httpclient (2.3.3)
     i18n (0.6.4)
     json (1.7.7)
+    json (1.7.7-java)
     json-jwt (0.4.3)
       activesupport (>= 2.3)
       i18n
@@ -74,7 +75,7 @@ GEM
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.35)
+    tzinfo (0.3.36)
     url_safe_base64 (0.2.1)
     validate_email (0.1.6)
       activemodel (>= 3.0)
@@ -85,7 +86,7 @@ GEM
       activesupport (>= 3)
       httpclient (>= 2.2.0.2)
       multi_json
-    webmock (1.10.1)
+    webmock (1.11.0)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
     yamler (0.1.0)
