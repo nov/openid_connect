@@ -20,24 +20,25 @@ module OpenIDConnect
           :zoneinfo,
           :locale,
           :phone_number,
+          :phone_number_verified,
           :address,
           :updated_time
         )
         alias_method :subject, :sub
         alias_method :subject=, :sub=
 
-        validates :email_verified, inclusion: {in: [true, false]},                             allow_nil: true
-        validates :gender,         inclusion: {in: ['male', 'female']},                        allow_nil: true
-        validates :zoneinfo,       inclusion: {in: TZInfo::TimezoneProxy.all.collect(&:name)}, allow_nil: true
-        validates :profile, :picture, :website, url: true, allow_nil: true
-        validates :email, email: true, allow_nil: true
+        validates :email_verified, :phone_number_verified, allow_nil: true, inclusion: {in: [true, false]}
+        validates :gender,                                 allow_nil: true, inclusion: {in: ['male', 'female']}
+        validates :zoneinfo,                               allow_nil: true, inclusion: {in: TZInfo::TimezoneProxy.all.collect(&:name)}
+        validates :profile, :picture, :website,            allow_nil: true, url: true
+        validates :email,                                  allow_nil: true, email: true
         validate :validate_address
         validate :require_at_least_one_attributes
         # TODO: validate locale
 
         def initialize(attributes = {})
           super
-          (all_attributes - [:email_verified, :address]).each do |key|
+          (all_attributes - [:email_verified, :phone_number_verified, :address]).each do |key|
             self.send "#{key}=", self.send(key).try(:to_s)
           end
         end

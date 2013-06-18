@@ -27,6 +27,7 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
         :zoneinfo,
         :locale,
         :phone_number,
+        :phone_number_verified,
         :address,
         :updated_time
       ]
