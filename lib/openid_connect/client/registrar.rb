@@ -5,22 +5,19 @@ module OpenIDConnect
 
       class RegistrationFailed < HttpError; end
 
+      singular_uri_attributes = [
+        :logo_uri,
+        :client_uri,
+        :policy_uri,
+        :tos_uri,
+        :jwks_uri,
+        :sector_identifier_uri,
+        :initiate_login_uri
+      ]
       singular_attributes = [
-        :operation,
-        :client_id,
-        :client_secret,
-        :access_token,
         :application_type,
         :client_name,
-        :logo_url,
         :token_endpoint_auth_method,
-        :policy_url,
-        :tos_url,
-        :jwk_url,
-        :jwk_encryption_url,
-        :x509_url,
-        :x509_encryption_url,
-        :sector_identifier_url,
         :subject_type,
         :request_object_signing_alg,
         :userinfo_signed_response_alg,
@@ -30,79 +27,45 @@ module OpenIDConnect
         :id_token_encrypted_response_alg,
         :id_token_encrypted_response_enc,
         :default_max_age,
-        :require_auth_time,
-        :default_acr,
-        :initiate_login_uri,
-        :post_logout_redirect_url
+        :require_auth_time
+      ] + singular_uri_attributes
+      plurar_uri_attributes = [
+        :redirect_uris,
+        :post_logout_redirect_uris,
+        :request_uris
       ]
       plurar_attributes = [
+        :response_types,
+        :grant_types,
         :contacts,
+        :default_acr_values,
+      ] + plurar_uri_attributes
+      metadata_attributes = singular_attributes + plurar_attributes
+      required_metadata_attributes = [
         :redirect_uris
       ]
       attr_required :endpoint
-      attr_optional *(singular_attributes + plurar_attributes)
+      attr_optional :initial_access_token
+      attr_required *required_metadata_attributes
+      attr_optional *(metadata_attributes - required_metadata_attributes)
 
-      plurar_attributes.each do |_attr_|
-        define_method "#{_attr_}_with_split" do
-          value = self.send("#{_attr_}_without_split")
-          case value
-          when String
-            value.split(' ')
-          else
-            value
-          end
-        end
-        alias_method_chain _attr_, :split
-      end
-
-      validates :operation,             presence: true
-      validates :client_id,             presence: {if: ->(c) { ['client_update', 'rotate_secret'].include?(c.operation.to_s) }}
-      validates :sector_identifier_url, presence: {if: :sector_identifier_required?}
-
-      validates :operation,        inclusion: {in: ['client_register', 'rotate_secret', 'client_update']}
-      validates :application_type, inclusion: {in: ['native', 'web']},      allow_nil: true
-      validates :subject_type,     inclusion: {in: ['pairwise', 'public']}, allow_nil: true
-      validates :token_endpoint_auth_method, inclusion: {
-        in: ['client_secret_post', 'client_secret_basic', 'client_secret_jwt', 'private_key_jwt']
-      }, allow_nil: true
-
-      validates(
-        :logo_url,
-        :policy_url,
-        :tos_url,
-        :jwk_url,
-        :jwk_encryption_url,
-        :x509_url,
-        :x509_encryption_url,
-        :sector_identifier_url,
-        :initiate_login_uri,
-        :post_logout_redirect_url,
-        url: true,
-        allow_nil: true
-      )
-
+      validates :sector_identifier_uri, presence: {if: :sector_identifier_required?}
+      validates *singular_uri_attributes, url: true, allow_nil: true
+      validate :validate_plurar_uri_attributes
       validate :validate_contacts
-      validate :validate_redirect_uris
-      validate :validate_key_urls
-      validate :validate_signature_algorithms
-      validate :validate_encription_algorithms
 
       def initialize(endpoint, attributes = {})
         @endpoint = endpoint
-        optional_attributes.each do |_attr_|
-          value = if _attr_ == :access_token
-            attributes[_attr_]
-          else
-            attributes[_attr_].try(:to_s)
-          end
-          self.send "#{_attr_}=", value
+        @initial_access_token = attributes[:initial_access_token]
+        metadata_attributes.each do |_attr_|
+          self.send "#{_attr_}=", attributes[_attr_]
         end
         attr_missing!
       end
 
       def sector_identifier
-        if valid_uri?(sector_identifier_url)
-          URI.parse(sector_identifier_url).host
+        if valid_uri?(sector_identifier_uri)
+          URI.parse(sector_identifier_uri).host
         else
           hosts = Array(redirect_uris).collect do |redirect_uri|
             if valid_uri?(redirect_uri, nil)
@@ -121,32 +84,15 @@ module OpenIDConnect
 
       def as_json(options = {})
         validate!
-        (optional_attributes - [:access_token]).inject({}) do |hash, _attr_|
-          value = self.send(_attr_)
-          hash.merge! _attr_ => case value
-          when Array
-            value.collect(&:to_s).join(' ')
-          else
-            value
-          end
-        end.delete_if do |key, value|
-          value.nil?
+        metadata_attributes.delete_if do |_attr_|
+          self.send(_attr_).nil?
         end
       end
 
       def register!
-        self.operation = 'client_register'
-        post!
-      end
-
-      def rotate_secret!
-        self.operation = 'rotate_secret'
-        post!
-      end
-
-      def update!
-        self.operation = 'client_update'
-        post!
+        handle_response do
+          http_client.post endpoint, to_json, 'Content-Type' => 'application/json'
+        end
       end
 
       def validate!
@@ -156,7 +102,7 @@ module OpenIDConnect
       private
 
       def sector_identifier_required?
-        subject_type == 'pairwise' &&
+        subject_type.to_s == 'pairwise' &&
         sector_identifier.blank?
       end
 
@@ -180,42 +126,26 @@ module OpenIDConnect
         end
       end
 
-      def validate_redirect_uris
-        if redirect_uris
-          include_invalid = redirect_uris.any? do |redirect_uri|
-            !valid_uri?(redirect_uri, nil)
+      def validate_plurar_uri_attributes
+        plurar_uri_attributes.each do |_attr_|
+          if (uris = send(_attr_))
+            include_invalid = uris.any? do |uri|
+              !valid_uri?(uri, nil)
+            end
+            errors.add uri_attributes, 'includes invalid URL' if include_invalid
           end
-          errors.add :redirect_uris, 'includes invalid URL' if include_invalid
-        end
-      end
-
-      def validate_key_urls
-        # TODO
-      end
-
-      def validate_signature_algorithms
-        # TODO
-      end
-
-      def validate_encription_algorithms
-        # TODO
-      end
-
-      def post!
-        handle_response do
-          http_client.post endpoint, to_json, 'Content-Type' => 'application/json'
         end
       end
 
       def http_client
-        case access_token
+        case initial_access_token
         when nil
           OpenIDConnect.http_client
         when Rack::OAuth2::AccessToken::Bearer
-          access_token
+          initial_access_token
         else
           Rack::OAuth2::AccessToken::Bearer.new(
-            access_token: access_token
+            access_token: initial_access_token
           )
         end
       end
