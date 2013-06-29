@@ -50,6 +50,7 @@ module OpenIDConnect
       attr_required *required_metadata_attributes
       attr_optional *(metadata_attributes - required_metadata_attributes)
 
+      validates *required_attributes,   presence: true
       validates :sector_identifier_uri, presence: {if: :sector_identifier_required?}
       validates *singular_uri_attributes, url: true, allow_nil: true
       validate :validate_plurar_uri_attributes
@@ -61,7 +62,6 @@ module OpenIDConnect
         self.class.metadata_attributes.each do |_attr_|
           self.send "#{_attr_}=", attributes[_attr_]
         end
-        attr_missing!
       end
 
       def sector_identifier
@@ -131,7 +131,7 @@ module OpenIDConnect
 
       def validate_plurar_uri_attributes
         self.class.plurar_uri_attributes.each do |_attr_|
-          if (uris = send(_attr_))
+          if (uris = self.send(_attr_))
             include_invalid = uris.any? do |uri|
               !valid_uri?(uri, nil)
             end
@@ -164,7 +164,7 @@ module OpenIDConnect
       end
 
       def handle_success_response(response)
-        credentials = JSON.parse response.body, symbolize_names: true
+        credentials = JSON.parse(response.body).with_indifferent_access
         Client.new(
           identifier: credentials[:client_id],
           secret:     credentials[:client_secret],

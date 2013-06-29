@@ -21,22 +21,13 @@ describe OpenIDConnect::Client::Registrar do
 
     context 'otherwise' do
       let(:instance) { OpenIDConnect::Client::Registrar.new(endpoint) }
-      it do
-        expect do
-          instance
-        end.to raise_error AttrRequired::AttrMissing
-      end
+      it { should_not be_valid }
     end
   end
 
   context 'otherwise' do
     let(:endpoint) { '' }
-
-    it do
-      expect do
-        instance
-      end.to raise_error AttrRequired::AttrMissing
-    end
+    it { should_not be_valid }
   end
 
   describe '#sector_identifier' do

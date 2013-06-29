@@ -2,24 +2,34 @@ module OpenIDConnect
   module Discovery
     module Provider
       class Config
-        class Response < SWD::Resource
-          include AttrOptional
+        class Response
+          include ActiveModel::Validations, AttrRequired, AttrOptional
 
+          cattr_accessor :metadata_attributes
           attr_reader :raw
-          attr_required(
-            :issuer,
-            :jwks_uri,
+          uri_attributes = {
+            required: [
+              :issuer,
+              :jwks_uri
+            ],
+            optional: [
+              :authorization_endpoint,
+              :token_endpoint,
+              :userinfo_endpoint,
+              :check_session_endpoint,
+              :end_session_endpoint,
+              :registration_endpoint,
+              :service_documentation,
+              :op_policy_uri,
+              :op_tos_uri
+            ]
+          }
+          attr_required *(uri_attributes[:required] + [
             :response_types_supported,
             :subject_types_supported,
             :id_token_signing_alg_values_supported
-          )
-          attr_optional(
-            :authorization_endpoint,
-            :token_endpoint,
-            :userinfo_endpoint,
-            :check_session_endpoint,
-            :end_session_endpoint,
-            :registration_endpoint,
+          ])
+          attr_optional *(uri_attributes[:optional] + [
             :scopes_supported,
             :grant_types_supported,
             :acr_values_supported,
@@ -36,16 +46,16 @@ module OpenIDConnect
             :display_values_supported,
             :claim_types_supported,
             :claims_supported,
-            :service_documentation,
             :claims_locales_supported,
             :ui_locales_supported,
             :claims_parameter_supported,
             :request_parameter_supported,
             :request_uri_parameter_supported,
-            :require_request_uri_registration,
-            :op_policy_uri,
-            :op_tos_uri
-          )
+            :require_request_uri_registration
+          ])
+
+          validates *required_attributes, presence: true
+          validates *uri_attributes.values.flatten, url: true, allow_nil: true
 
           def initialize(hash)
             (required_attributes + optional_attributes).each do |key|
@@ -55,19 +65,23 @@ module OpenIDConnect
           end
 
           def as_json(options = {})
-            hash = (required_attributes + optional_attributes).inject({}) do |hash, _attr_|
-              hash.merge(
-                _attr_ => self.send(_attr_)
-              )
+            validate!
+            (required_attributes + optional_attributes).inject({}) do |hash, _attr_|
+              value = self.send _attr_
+              hash.merge! _attr_ => value unless value.nil?
+              hash
             end
-            hash.delete_if do |key, value|
-              value.nil?
-            end
+          end
+
+          def validate!
+            valid? or raise ValidationFailed.new(self)
           end
 
           def jwks
             if jwks_uri
-              jwk_set = JSON.parse OpenIDConnect.http_client.get_content(endpoint), symbolize_names: true
+              jwk_set = JSON.parse(
+                OpenIDConnect.http_client.get_content(endpoint)
+              ).with_indifferenct_access
               JSON::JWK.decode jwk_set[:keys].first
             end
           end
