@@ -6,7 +6,7 @@ describe OpenIDConnect::Discovery::Provider do
   let(:endpoint) { "https://#{host}/.well-known/webfinger" }
   let(:query) do
     {
-      rel: OpenIDConnect::Discovery::REL_VALUE,
+      rel: OpenIDConnect::Discovery::Provider::Issuer::REL_VALUE,
       resource: resource
     }
   end

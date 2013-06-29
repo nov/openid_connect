@@ -2,6 +2,8 @@ module OpenIDConnect
   module Discovery
     module Provider
       module Issuer
+        REL_VALUE = 'http://openid.net/specs/connect/1.0/issuer'
+
         def issuer
           self.link_for(REL_VALUE)[:href]
         end
@@ -16,7 +18,7 @@ module OpenIDConnect
         end
         response = WebFinger.discover!(
           resource,
-          rel: REL_VALUE
+          rel: Issuer::REL_VALUE
         )
         response.extend Issuer
         response
