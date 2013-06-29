@@ -4,10 +4,13 @@ describe OpenIDConnect::Discovery::Provider::Config::Response do
   let :instance do
     OpenIDConnect::Discovery::Provider::Config::Response.new attributes
   end
+  let :jwks_uri do
+    'https://server.example.com/jwks.json'
+  end
   let :minimum_attributes do
     {
       issuer: 'https://server.example.com',
-      jwks_uri: 'https://server.example.com/jwks.json',
+      jwks_uri: jwks_uri,
       response_types_supported: [
         :code, :id_token, 'token id_token'
       ],
@@ -58,6 +61,11 @@ describe OpenIDConnect::Discovery::Provider::Config::Response do
   end
 
   describe '#jwks' do
-    it :TODO
+    it do
+      jwks = mock_json :get, jwks_uri, 'public_keys/jwks' do
+        instance.jwks
+      end
+      jwks.should be_instance_of JSON::JWK::Set
+    end
   end
 end

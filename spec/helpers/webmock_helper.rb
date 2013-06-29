@@ -7,10 +7,11 @@ module WebMockHelper
     ).to_return(
       response_for(response_file, options)
     )
-    yield
+    result = yield
     a_request(method, endpoint).with(
       request_for(method, options)
     ).should have_been_made.once
+    result
   end
 
   private

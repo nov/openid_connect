@@ -93,12 +93,13 @@ describe OpenIDConnect::AccessToken do
   end
 
   describe '#user_info!' do
-    it 'should return OpenIDConnect::ResponseObject::UserInfo::OpenID' do
-      mock_json :get, client.user_info_uri, 'user_info/openid', :HTTP_AUTHORIZATION => 'Bearer access_token', params: {
+    it do
+      user_info = mock_json :get, client.user_info_uri, 'user_info/openid', :HTTP_AUTHORIZATION => 'Bearer access_token', params: {
         schema: 'openid'
       } do
-        access_token.user_info!.should be_a OpenIDConnect::ResponseObject::UserInfo::OpenID
+        access_token.user_info!
       end
+      user_info.should be_instance_of OpenIDConnect::ResponseObject::UserInfo::OpenID
     end
 
     describe 'error handling' do

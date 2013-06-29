@@ -81,7 +81,7 @@ module OpenIDConnect
         end
 
         def self_issued_subject(jwk)
-          subject_base_string = case jwk[:alg].to_s
+          subject_base_string = case jwk[:kty].to_s
           when 'RSA'
             [jwk[:n], jwk[:e]].join
           when 'EC'

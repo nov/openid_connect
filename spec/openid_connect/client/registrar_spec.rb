@@ -50,14 +50,18 @@ describe OpenIDConnect::Client::Registrar do
     end
 
     context 'otherwise' do
+      let(:attributes) do
+        minimum_attributes.merge(
+          redirect_uris: redirect_uris
+        )
+      end
+
       context 'when redirect_uris includes only one host' do
-        let(:attributes) do
-          minimum_attributes.merge(
-            redirect_uris: [
-              'https://client.example.com/callback/op1',
-              'https://client.example.com/callback/op2'
-            ]
-          )
+        let(:redirect_uris) do
+          [
+            'https://client.example.com/callback/op1',
+            'https://client.example.com/callback/op2'
+          ]
         end
         its(:sector_identifier) { should == 'client.example.com' }
       end
@@ -68,11 +72,6 @@ describe OpenIDConnect::Client::Registrar do
             'https://client1.example.com/callback',
             'https://client2.example.com/callback'
           ]
-        end
-        let(:attributes) do
-          minimum_attributes.merge(
-            redirect_uris: redirect_uris
-          )
         end
         its(:sector_identifier) { should be_nil }
 
@@ -85,6 +84,15 @@ describe OpenIDConnect::Client::Registrar do
           end
           it { should_not be_valid }
         end
+      end
+
+      context 'when redirect_uris includes invalid URL' do
+        let(:redirect_uris) do
+          [
+            'invalid'
+          ]
+        end
+        its(:sector_identifier) { should be_nil }
       end
     end
   end
@@ -165,13 +173,13 @@ describe OpenIDConnect::Client::Registrar do
 
   describe '#register!' do
     it 'should return OpenIDConnect::Client' do
-      mock_json :post, endpoint, 'client/registered', params: minimum_attributes do
-        client = instance.register!
-        client.should be_instance_of OpenIDConnect::Client
-        client.identifier.should == 'client.example.com'
-        client.secret.should == 'client_secret'
-        client.expires_in.should == 3600
+      client = mock_json :post, endpoint, 'client/registered', params: minimum_attributes do
+        instance.register!
       end
+      client.should be_instance_of OpenIDConnect::Client
+      client.identifier.should == 'client.example.com'
+      client.secret.should == 'client_secret'
+      client.expires_in.should == 3600
     end
 
     context 'when failed' do
