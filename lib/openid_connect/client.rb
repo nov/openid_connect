@@ -8,7 +8,7 @@ module OpenIDConnect
     end
 
     def authorization_uri(params = {})
-      params[:response_type] ||= :token
+      params[:response_type] ||= :code
       params[:scope] = setup_required_scope params[:scope]
       super
     end
