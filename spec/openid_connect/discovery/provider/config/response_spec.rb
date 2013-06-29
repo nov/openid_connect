@@ -68,4 +68,14 @@ describe OpenIDConnect::Discovery::Provider::Config::Response do
       jwks.should be_instance_of JSON::JWK::Set
     end
   end
+
+  describe '#public_keys' do
+    it do
+      public_keys = mock_json :get, jwks_uri, 'public_keys/jwks' do
+        instance.public_keys
+      end
+      public_keys.should be_instance_of Array
+      public_keys.first.should be_instance_of OpenSSL::PKey::RSA
+    end
+  end
 end
