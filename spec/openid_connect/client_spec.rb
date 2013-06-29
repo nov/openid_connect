@@ -19,11 +19,11 @@ describe OpenIDConnect::Client do
       end
       its(:authorization_uri) { should include 'https://server.example.com/oauth2/authorize' }
       its(:authorization_uri) { should include 'scope=openid' }
-      its(:user_info_uri)     { should == 'https://server.example.com/user_info' }
+      its(:userinfo_uri)     { should == 'https://server.example.com/userinfo' }
     end
 
     context 'otherwise' do
-      [:authorization_uri, :user_info_uri].each do |endpoint|
+      [:authorization_uri, :userinfo_uri].each do |endpoint|
         describe endpoint do
           it do
             expect { client.send endpoint }.to raise_error 'No Host Info'

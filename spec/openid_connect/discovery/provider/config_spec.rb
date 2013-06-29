@@ -12,7 +12,7 @@ describe OpenIDConnect::Discovery::Provider::Config do
         config.issuer.should == 'https://connect-op.heroku.com'
         config.authorization_endpoint.should == 'https://connect-op.heroku.com/authorizations/new'
         config.token_endpoint.should == 'https://connect-op.heroku.com/access_tokens'
-        config.userinfo_endpoint.should == 'https://connect-op.heroku.com/user_info'
+        config.userinfo_endpoint.should == 'https://connect-op.heroku.com/userinfo'
         config.check_session_endpoint.should be_nil
         config.end_session_endpoint.should be_nil
         config.jwks_uri.should == 'https://connect-op.heroku.com/jwks.json'

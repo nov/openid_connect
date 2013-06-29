@@ -3,7 +3,7 @@
     "issuer": "https://connect-op.heroku.com",
     "authorization_endpoint": "https://connect-op.heroku.com/authorizations/new",
     "token_endpoint": "https://connect-op.heroku.com/access_tokens",
-    "userinfo_endpoint": "https://connect-op.heroku.com/user_info",
+    "userinfo_endpoint": "https://connect-op.heroku.com/userinfo",
     "registration_endpoint": "https://connect-op.heroku.com/connect/client",
     "scopes_supported": ["openid", "profile", "email", "address"],
     "response_types_supported": ["code", "token", "id_token", "code token", "code id_token", "id_token token"],

@@ -3,13 +3,7 @@ module OpenIDConnect
     include JWTnizable
 
     attr_optional :client_id, :response_type, :redirect_uri, :scope, :state, :nonce, :display, :prompt, :userinfo, :id_token
-    alias_method :user_info, :userinfo
     validate :require_at_least_one_attributes
-
-    def initialize(attributes = {})
-      attributes[:userinfo] ||= attributes[:user_info]
-      super attributes
-    end
 
     def id_token=(attributes = {})
       @id_token = IdToken.new(attributes) if attributes.present?
@@ -18,7 +12,6 @@ module OpenIDConnect
     def userinfo=(attributes = {})
       @userinfo = UserInfo.new(attributes) if attributes.present?
     end
-    alias_method :user_info=, :userinfo=
 
     def as_json_with_mixed_keys(options = {})
       hash = as_json_without_mixed_keys options
@@ -41,4 +34,4 @@ end
 
 require 'openid_connect/request_object/claimable'
 require 'openid_connect/request_object/id_token'
-require 'openid_connect/request_object/user_info'
+require 'openid_connect/request_object/userinfo'

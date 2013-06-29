@@ -14,7 +14,6 @@ module OpenIDConnect
       end
       ResponseObject::UserInfo::OpenID.new hash
     end
-    alias_method :user_info!, :userinfo!
 
     private
 
