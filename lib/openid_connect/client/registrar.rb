@@ -5,6 +5,7 @@ module OpenIDConnect
 
       class RegistrationFailed < HttpError; end
 
+      cattr_accessor :plurar_uri_attributes, :metadata_attributes
       singular_uri_attributes = [
         :logo_uri,
         :client_uri,
@@ -29,7 +30,7 @@ module OpenIDConnect
         :default_max_age,
         :require_auth_time
       ] + singular_uri_attributes
-      plurar_uri_attributes = [
+      self.plurar_uri_attributes = [
         :redirect_uris,
         :post_logout_redirect_uris,
         :request_uris
@@ -40,7 +41,7 @@ module OpenIDConnect
         :contacts,
         :default_acr_values,
       ] + plurar_uri_attributes
-      metadata_attributes = singular_attributes + plurar_attributes
+      self.metadata_attributes = singular_attributes + plurar_attributes
       required_metadata_attributes = [
         :redirect_uris
       ]
@@ -55,9 +56,9 @@ module OpenIDConnect
       validate :validate_contacts
 
       def initialize(endpoint, attributes = {})
-        @endpoint = endpoint
-        @initial_access_token = attributes[:initial_access_token]
-        metadata_attributes.each do |_attr_|
+        self.endpoint = endpoint
+        self.initial_access_token = attributes[:initial_access_token]
+        self.class.metadata_attributes.each do |_attr_|
           self.send "#{_attr_}=", attributes[_attr_]
         end
         attr_missing!
@@ -67,7 +68,7 @@ module OpenIDConnect
         if valid_uri?(sector_identifier_uri)
           URI.parse(sector_identifier_uri).host
         else
-          hosts = Array(redirect_uris).collect do |redirect_uri|
+          hosts = redirect_uris.collect do |redirect_uri|
             if valid_uri?(redirect_uri, nil)
               URI.parse(redirect_uri).host
             else
@@ -84,8 +85,10 @@ module OpenIDConnect
 
       def as_json(options = {})
         validate!
-        metadata_attributes.delete_if do |_attr_|
-          self.send(_attr_).nil?
+        self.class.metadata_attributes.inject({}) do |hash, _attr_|
+          value = self.send _attr_
+          hash.merge! _attr_ => value unless value.nil?
+          hash
         end
       end
 
@@ -127,12 +130,12 @@ module OpenIDConnect
       end
 
       def validate_plurar_uri_attributes
-        plurar_uri_attributes.each do |_attr_|
+        self.class.plurar_uri_attributes.each do |_attr_|
           if (uris = send(_attr_))
             include_invalid = uris.any? do |uri|
               !valid_uri?(uri, nil)
             end
-            errors.add uri_attributes, 'includes invalid URL' if include_invalid
+            errors.add _attr_, 'includes invalid URL' if include_invalid
           end
         end
       end
