@@ -109,7 +109,7 @@ describe OpenIDConnect::Client::Registrar do
 
     context 'when fragment included' do
       let(:redirect_uri) { [base_url, '#foo=bar'].join }
-      it { should_not be_valid }
+      it { should be_valid }
     end
   end
 

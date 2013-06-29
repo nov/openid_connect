@@ -111,8 +111,7 @@ module OpenIDConnect
 
       def valid_uri?(uri, schemes = ['http', 'https'])
         # NOTE: specify nil for schemes to allow any schemes
-        URI::regexp(schemes).match(uri).present? &&
-        URI.parse(uri).fragment.blank?
+        URI::regexp(schemes).match(uri).present?
       end
 
       def validate_contacts
