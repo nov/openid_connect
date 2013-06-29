@@ -98,6 +98,10 @@ module OpenIDConnect
         end
       end
 
+      def read
+        # TODO: Do we want this feature even if we don't have rotate secret nor update metadata support?
+      end
+
       def validate!
         valid? or raise ValidationFailed.new(self)
       end
