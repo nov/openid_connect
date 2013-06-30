@@ -172,20 +172,14 @@ describe OpenIDConnect::Client::Registrar do
   end
 
   describe '#register!' do
-    it 'should return OpenIDConnect::Client with registered metadata' do
+    it 'should return OpenIDConnect::Client' do
       client = mock_json :post, endpoint, 'client/registered', params: minimum_attributes do
         instance.register!
       end
       client.should be_instance_of OpenIDConnect::Client
       client.identifier.should == 'client.example.com'
       client.secret.should == 'client_secret'
-      client.client_secret_expires_at.should == Time.at(1577858400)
-      client.registration_access_token.should be_instance_of OpenIDConnect::AccessToken
-      client.registration_access_token.client.should == client
-      client.registration_access_token.access_token.should == 'access_token'
-      client.registration_client_uri.should == 'https://server.example.com/clients/client.example.com'
-      client.metadata.should be_instance_of OpenIDConnect::Client::Registrar
-      client.metadata.redirect_uris.should == ['https://client.example.com/callback']
+      client.expires_in.should == 3600
     end
 
     context 'when failed' do

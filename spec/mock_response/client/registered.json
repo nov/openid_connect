@@ -1,10 +1,5 @@
 {
   "client_id": "client.example.com",
   "client_secret": "client_secret",
-  "client_secret_expires_at": 1577858400,
-  "registration_access_token": "access_token",
-  "registration_client_uri": "https://server.example.com/clients/client.example.com",
-  "redirect_uris": [
-    "https://client.example.com/callback"
-  ]
+  "expires_in": 3600
 }

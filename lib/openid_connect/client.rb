@@ -1,28 +1,9 @@
 module OpenIDConnect
   class Client < Rack::OAuth2::Client
-    attr_optional(
-      :userinfo_endpoint,
-      :registration_access_token,
-      :registration_client_uri,
-      :client_id_issued_at,
-      :client_secret_expires_at,
-      :metadata
-    )
+    attr_optional :userinfo_endpoint, :expires_in
 
     def initialize(attributes = {})
       super attributes
-      self.registration_access_token = case (_token_ = attributes[:registration_access_token])
-      when String
-        AccessToken.new(
-          client: self,
-          access_token: _token_
-        )
-      when AccessToken
-        _token_
-      end
-      self.client_secret_expires_at = if attributes[:client_secret_expires_at]
-        Time.at attributes[:client_secret_expires_at]
-      end
       self.userinfo_endpoint ||= '/userinfo'
     end
 
