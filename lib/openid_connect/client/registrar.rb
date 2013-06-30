@@ -167,11 +167,15 @@ module OpenIDConnect
       end
 
       def handle_success_response(response)
-        credentials = JSON.parse(response.body).with_indifferent_access
+        attributes = JSON.parse(response.body).with_indifferent_access
         Client.new(
-          identifier: credentials[:client_id],
-          secret:     credentials[:client_secret],
-          expires_in: credentials[:expires_in]
+          identifier:                attributes[:client_id],
+          secret:                    attributes[:client_secret],
+          registration_access_token: attributes[:registration_access_token],
+          registration_client_uri:   attributes[:registration_client_uri],
+          client_id_issued_at:       attributes[:client_id_issued_at],
+          client_secret_expires_at:  attributes[:client_secret_expires_at],
+          metadata:                  self.class.new(endpoint, attributes)
         )
       end
 
