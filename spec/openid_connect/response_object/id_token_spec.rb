@@ -31,6 +31,17 @@ describe OpenIDConnect::ResponseObject::IdToken do
         ).should be_true
       end
 
+      context 'when aud(ience) is an array of identifiers' do
+        let(:client_id) { 'client_id' }
+        let(:attributes) { required_attributes.merge(aud: ['some_other_identifier', client_id]) }
+        it do
+          id_token.verify!(
+            issuer: attributes[:iss],
+            client_id: client_id
+          ).should be_true
+        end
+      end
+
       context 'when expired' do
         let(:ext) { 10.minutes.ago }
         it do
