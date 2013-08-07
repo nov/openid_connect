@@ -13,7 +13,7 @@ module OpenIDConnect
 
       def initialize(attributes = {})
         super
-        (all_attributes - [:exp, :iat, :auth_time, :sub_jwk]).each do |key|
+        (all_attributes - [:aud, :exp, :iat, :auth_time, :sub_jwk]).each do |key|
           self.send "#{key}=", self.send(key).try(:to_s)
         end
       end
@@ -21,7 +21,7 @@ module OpenIDConnect
       def verify!(expected = {})
         exp.to_i > Time.now.to_i &&
         iss == expected[:issuer] &&
-        aud == expected[:client_id] &&
+        Array(aud).include?(expected[:client_id]) && # aud(ience) can be a string or an array of strings
         nonce == expected[:nonce] or
         raise InvalidToken.new('Invalid ID Token')
       end
