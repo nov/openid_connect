@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "json", ">= 1.4.3"
   s.add_runtime_dependency "tzinfo"
   s.add_runtime_dependency "attr_required", ">= 0.0.5"
-  s.add_runtime_dependency "activemodel", "< 4"
+  s.add_runtime_dependency "activemodel"
   s.add_runtime_dependency "validate_url"
   s.add_runtime_dependency "validate_email"
   s.add_runtime_dependency "json-jwt", ">= 0.5.5"
