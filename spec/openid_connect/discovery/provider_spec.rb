@@ -51,7 +51,7 @@ describe OpenIDConnect::Discovery::Provider do
 
     context 'when Email is given' do
       let(:identifier) { "nov@#{host}" }
-      let(:resource)   { identifier }
+      let(:resource)   { "acct:#{identifier}" }
       it_behaves_like :discover_provider
     end
 

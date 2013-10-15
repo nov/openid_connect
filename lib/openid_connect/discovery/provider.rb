@@ -11,8 +11,10 @@ module OpenIDConnect
 
       def self.discover!(identifier)
         resource = case identifier
-        when /^acct:/, /@/, /^https?:\/\//
+        when /^acct:/, /https?:\/\//
           identifier
+        when /@/
+          "acct:#{identifier}"
         else
           "https://#{identifier}"
         end

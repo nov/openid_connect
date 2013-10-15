@@ -6,6 +6,8 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/nov/openid_connect"
   s.summary     = %q{OpenID Connect Server & Client Library}
   s.description = %q{OpenID Connect Server & Client Library}
+  s.license     = 'MIT'
+
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
