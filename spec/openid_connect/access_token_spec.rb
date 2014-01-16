@@ -53,9 +53,7 @@ describe OpenIDConnect::AccessToken do
   shared_examples_for :access_token_error_handling do
     context 'when bad_request' do
       it 'should raise OpenIDConnect::Forbidden' do
-        mock_json :get, endpoint, 'errors/invalid_request', :HTTP_AUTHORIZATION => 'Bearer access_token', status: 400, params: {
-          schema: 'openid'
-        } do
+        mock_json :get, endpoint, 'errors/invalid_request', :HTTP_AUTHORIZATION => 'Bearer access_token', status: 400 do
           expect { request }.to raise_error OpenIDConnect::BadRequest
         end
       end
@@ -63,9 +61,7 @@ describe OpenIDConnect::AccessToken do
 
     context 'when unauthorized' do
       it 'should raise OpenIDConnect::Unauthorized' do
-        mock_json :get, endpoint, 'errors/invalid_access_token', :HTTP_AUTHORIZATION => 'Bearer access_token', status: 401, params: {
-          schema: 'openid'
-        } do
+        mock_json :get, endpoint, 'errors/invalid_access_token', :HTTP_AUTHORIZATION => 'Bearer access_token', status: 401 do
           expect { request }.to raise_error OpenIDConnect::Unauthorized
         end
       end
@@ -73,9 +69,7 @@ describe OpenIDConnect::AccessToken do
 
     context 'when forbidden' do
       it 'should raise OpenIDConnect::Forbidden' do
-        mock_json :get, endpoint, 'errors/insufficient_scope', :HTTP_AUTHORIZATION => 'Bearer access_token', status: 403, params: {
-          schema: 'openid'
-        } do
+        mock_json :get, endpoint, 'errors/insufficient_scope', :HTTP_AUTHORIZATION => 'Bearer access_token', status: 403 do
           expect { request }.to raise_error OpenIDConnect::Forbidden
         end
       end
@@ -83,9 +77,7 @@ describe OpenIDConnect::AccessToken do
 
     context 'when unknown' do
       it 'should raise OpenIDConnect::HttpError' do
-        mock_json :get, endpoint, 'errors/unknown', :HTTP_AUTHORIZATION => 'Bearer access_token', status: 500, params: {
-          schema: 'openid'
-        } do
+        mock_json :get, endpoint, 'errors/unknown', :HTTP_AUTHORIZATION => 'Bearer access_token', status: 500 do
           expect { request }.to raise_error OpenIDConnect::HttpError
         end
       end
@@ -94,9 +86,7 @@ describe OpenIDConnect::AccessToken do
 
   describe '#userinfo!' do
     it do
-      userinfo = mock_json :get, client.userinfo_uri, 'userinfo/openid', :HTTP_AUTHORIZATION => 'Bearer access_token', params: {
-        schema: 'openid'
-      } do
+      userinfo = mock_json :get, client.userinfo_uri, 'userinfo/openid', :HTTP_AUTHORIZATION => 'Bearer access_token' do
         access_token.userinfo!
       end
       userinfo.should be_instance_of OpenIDConnect::ResponseObject::UserInfo::OpenID
