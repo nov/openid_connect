@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
-  let(:klass) { OpenIDConnect::ResponseObject::UserInfo::OpenID }
+describe OpenIDConnect::ResponseObject::UserInfo do
+  let(:klass) { OpenIDConnect::ResponseObject::UserInfo }
   let(:instance) { klass.new attributes }
   subject { instance }
 
@@ -29,7 +29,7 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
         :phone_number,
         :phone_number_verified,
         :address,
-        :updated_time
+        :updated_at
       ]
     end
   end
@@ -95,14 +95,14 @@ describe OpenIDConnect::ResponseObject::UserInfo::OpenID do
       let :attributes do
         {address: {}}
       end
-      its(:address) { should be_a OpenIDConnect::ResponseObject::UserInfo::OpenID::Address }
+      its(:address) { should be_a OpenIDConnect::ResponseObject::UserInfo::Address }
     end
 
     context 'when Address is given' do
       let :attributes do
-        {address: OpenIDConnect::ResponseObject::UserInfo::OpenID::Address.new}
+        {address: OpenIDConnect::ResponseObject::UserInfo::Address.new}
       end
-      its(:address) { should be_a OpenIDConnect::ResponseObject::UserInfo::OpenID::Address }
+      its(:address) { should be_a OpenIDConnect::ResponseObject::UserInfo::Address }
     end
   end
 

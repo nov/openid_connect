@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe OpenIDConnect::ResponseObject::UserInfo::OpenID::Address do
-  let(:klass) { OpenIDConnect::ResponseObject::UserInfo::OpenID::Address }
+describe OpenIDConnect::ResponseObject::UserInfo::Address do
+  let(:klass) { OpenIDConnect::ResponseObject::UserInfo::Address }
 
   describe 'attributes' do
     subject { klass }

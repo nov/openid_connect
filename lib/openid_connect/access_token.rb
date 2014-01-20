@@ -12,7 +12,7 @@ module OpenIDConnect
       hash = resource_request do
         get client.userinfo_uri
       end
-      ResponseObject::UserInfo::OpenID.new hash
+      ResponseObject::UserInfo.new hash
     end
 
     private
