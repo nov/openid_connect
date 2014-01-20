@@ -1,5 +1,4 @@
 {
-    "version": "3.0",
     "issuer": "https://connect-op.heroku.com",
     "authorization_endpoint": "https://connect-op.heroku.com/authorizations/new",
     "token_endpoint": "https://connect-op.heroku.com/access_tokens",

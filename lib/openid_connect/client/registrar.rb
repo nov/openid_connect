@@ -18,21 +18,24 @@ module OpenIDConnect
       singular_attributes = [
         :application_type,
         :client_name,
-        :token_endpoint_auth_method,
+        :jwks,
         :subject_type,
-        :request_object_signing_alg,
-        :userinfo_signed_response_alg,
-        :userinfo_encrypted_response_alg,
-        :userinfo_encrypted_response_enc,
         :id_token_signed_response_alg,
         :id_token_encrypted_response_alg,
         :id_token_encrypted_response_enc,
+        :userinfo_signed_response_alg,
+        :userinfo_encrypted_response_alg,
+        :userinfo_encrypted_response_enc,
+        :request_object_signing_alg,
+        :request_object_encryption_alg,
+        :request_object_encryption_enc,
+        :token_endpoint_auth_method,
+        :token_endpoint_auth_signing_alg,
         :default_max_age,
         :require_auth_time
       ] + singular_uri_attributes
       self.plurar_uri_attributes = [
         :redirect_uris,
-        :post_logout_redirect_uris,
         :request_uris
       ]
       plurar_attributes = [
