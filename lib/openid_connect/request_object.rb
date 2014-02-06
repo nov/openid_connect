@@ -34,4 +34,4 @@ end
 
 require 'openid_connect/request_object/claimable'
 require 'openid_connect/request_object/id_token'
-require 'openid_connect/request_object/userinfo'
+require 'openid_connect/request_object/user_info'
