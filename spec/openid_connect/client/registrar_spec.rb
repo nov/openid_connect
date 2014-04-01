@@ -30,6 +30,14 @@ describe OpenIDConnect::Client::Registrar do
     it { should_not be_valid }
   end
 
+  describe '#initialize' do
+    it 'creates attribute writers for all attributes' do
+      described_class.metadata_attributes.each do |attr|
+        expect(subject).to respond_to("#{attr}=")
+      end
+    end
+  end
+
   describe '#sector_identifier' do
     context 'when sector_identifier_uri given' do
       let(:attributes) do
