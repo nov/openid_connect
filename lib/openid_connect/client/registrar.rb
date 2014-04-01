@@ -5,7 +5,7 @@ module OpenIDConnect
 
       class RegistrationFailed < HttpError; end
 
-      cattr_accessor :plurar_uri_attributes, :metadata_attributes
+      cattr_accessor :plural_uri_attributes, :metadata_attributes
       singular_uri_attributes = [
         :logo_uri,
         :client_uri,
@@ -34,17 +34,17 @@ module OpenIDConnect
         :default_max_age,
         :require_auth_time
       ] + singular_uri_attributes
-      self.plurar_uri_attributes = [
+      self.plural_uri_attributes = [
         :redirect_uris,
         :request_uris
       ]
-      plurar_attributes = [
+      plural_attributes = [
         :response_types,
         :grant_types,
         :contacts,
         :default_acr_values,
-      ] + plurar_uri_attributes
-      self.metadata_attributes = singular_attributes + plurar_attributes
+      ] + plural_uri_attributes
+      self.metadata_attributes = singular_attributes + plural_attributes
       required_metadata_attributes = [
         :redirect_uris
       ]
@@ -56,7 +56,7 @@ module OpenIDConnect
       validates *required_attributes,   presence: true
       validates :sector_identifier_uri, presence: {if: :sector_identifier_required?}
       validates *singular_uri_attributes, url: true, allow_nil: true
-      validate :validate_plurar_uri_attributes
+      validate :validate_plural_uri_attributes
       validate :validate_contacts
 
       def initialize(endpoint, attributes = {})
@@ -135,8 +135,8 @@ module OpenIDConnect
         end
       end
 
-      def validate_plurar_uri_attributes
-        self.class.plurar_uri_attributes.each do |_attr_|
+      def validate_plural_uri_attributes
+        self.class.plural_uri_attributes.each do |_attr_|
           if (uris = self.send(_attr_))
             include_invalid = uris.any? do |uri|
               !valid_uri?(uri, nil)
