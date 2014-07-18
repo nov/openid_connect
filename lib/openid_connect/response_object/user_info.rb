@@ -27,7 +27,6 @@ module OpenIDConnect
       alias_method :subject=, :sub=
 
       validates :email_verified, :phone_number_verified, allow_nil: true, inclusion: {in: [true, false]}
-      validates :gender,                                 allow_nil: true, inclusion: {in: ['male', 'female']}
       validates :zoneinfo,                               allow_nil: true, inclusion: {in: TZInfo::TimezoneProxy.all.collect(&:name)}
       validates :profile, :picture, :website,            allow_nil: true, url: true
       validates :email,                                  allow_nil: true, email: true
