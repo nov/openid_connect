@@ -206,7 +206,9 @@ describe OpenIDConnect::Client::Registrar do
       it do
         expect do
           instance.validate!
-        end.not_to raise_error OpenIDConnect::ValidationFailed
+        end.not_to raise_error { |e|
+          e.should be_a OpenIDConnect::ValidationFailed
+        }
       end
     end
 

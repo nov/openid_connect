@@ -28,7 +28,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
         id_token.verify!(
           issuer: attributes[:iss],
           client_id: attributes[:aud]
-        ).should be_true
+        ).should == true
       end
 
       context 'when aud(ience) is an array of identifiers' do
@@ -38,7 +38,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
           id_token.verify!(
             issuer: attributes[:iss],
             client_id: client_id
-          ).should be_true
+          ).should == true
         end
       end
 
@@ -106,7 +106,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
             issuer: attributes[:iss],
             client_id: attributes[:aud],
             nonce: attributes[:nonce]
-          ).should be_true
+          ).should == true
         end
       end
 

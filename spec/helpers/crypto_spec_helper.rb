@@ -12,7 +12,7 @@ module CryptoSpecHelper
   end
 
   def ec_key
-    @ec_key ||= OpenSSL::PKey::EC.new('secp256k1').generate_key
+    @ec_key ||= OpenSSL::PKey::EC.new('prime256v1').generate_key
   end
 
   def ec_public_key

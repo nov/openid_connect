@@ -62,7 +62,7 @@ describe Rack::OAuth2::Server::Authorize::Extension::IdToken do
     let(:env)     { Rack::MockRequest.env_for("/authorize?client_id=client_id&scope=openid") }
     let(:request) { Rack::OAuth2::Server::Authorize::Extension::IdToken::Request.new env }
     it do
-      request.openid_connect_request?.should be_true
+      request.openid_connect_request?.should == true
     end
   end
 end

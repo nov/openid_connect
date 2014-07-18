@@ -20,7 +20,7 @@ describe OpenIDConnect::ResponseObject::UserInfo::Address do
       let :attributes do
         {}
       end
-      its(:valid?) { should be_false }
+      its(:valid?) { should == false }
       its(:errors) { should include :base }
     end
   end

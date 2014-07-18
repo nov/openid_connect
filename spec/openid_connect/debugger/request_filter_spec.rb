@@ -12,7 +12,7 @@ describe OpenIDConnect::Debugger::RequestFilter do
         "======= [OpenIDConnect] HTTP REQUEST STARTED =======",
         request.dump
       ].each do |output|
-        OpenIDConnect.logger.should_receive(:info).with output
+        expect(OpenIDConnect.logger).to receive(:info).with output
       end
       request_filter.filter_request(request)
     end
@@ -25,7 +25,7 @@ describe OpenIDConnect::Debugger::RequestFilter do
         response.dump,
         "======= [OpenIDConnect] HTTP REQUEST FINISHED ======="
       ].each do |output|
-        OpenIDConnect.logger.should_receive(:info).with output
+        expect(OpenIDConnect.logger).to receive(:info).with output
       end
       request_filter.filter_response(request, response)
     end

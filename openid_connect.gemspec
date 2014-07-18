@@ -22,8 +22,9 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "swd", ">= 0.1.2"
   s.add_runtime_dependency "webfinger", ">= 0.0.2"
   s.add_runtime_dependency "rack-oauth2", ">= 1.0.0"
-  s.add_development_dependency "rake", ">= 0.8"
-  s.add_development_dependency "rspec", ">= 2"
-  s.add_development_dependency "webmock", ">= 1.6.2"
+  s.add_development_dependency "rake"
+  s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec-its"
+  s.add_development_dependency "webmock"
   s.add_development_dependency "simplecov"
 end

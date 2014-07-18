@@ -71,7 +71,7 @@ describe OpenIDConnect::ConnectObject do
   describe '#validate!' do
     context 'when valid' do
       subject { instance.validate! }
-      it { should be_true }
+      it { should == true }
     end
 
     context 'otherwise' do

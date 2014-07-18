@@ -4,24 +4,24 @@ describe OpenIDConnect do
   after { OpenIDConnect.debugging = false }
 
   its(:logger) { should be_a Logger }
-  its(:debugging?) { should be_false }
+  its(:debugging?) { should == false }
 
   describe '.debug!' do
     before { OpenIDConnect.debug! }
-    its(:debugging?) { should be_true }
+    its(:debugging?) { should == true }
   end
 
   describe '.debug' do
     it 'should enable debugging within given block' do
       OpenIDConnect.debug do
-        SWD.debugging?.should be_true
-        WebFinger.debugging?.should be_true
-        Rack::OAuth2.debugging?.should be_true
-        OpenIDConnect.debugging?.should be_true
+        SWD.debugging?.should == true
+        WebFinger.debugging?.should == true
+        Rack::OAuth2.debugging?.should == true
+        OpenIDConnect.debugging?.should == true
       end
-      SWD.debugging?.should be_false
-      Rack::OAuth2.debugging?.should be_false
-      OpenIDConnect.debugging?.should be_false
+      SWD.debugging?.should == false
+      Rack::OAuth2.debugging?.should == false
+      OpenIDConnect.debugging?.should == false
     end
 
     it 'should not force disable debugging' do
@@ -30,15 +30,15 @@ describe OpenIDConnect do
       Rack::OAuth2.debug!
       OpenIDConnect.debug!
       OpenIDConnect.debug do
-        SWD.debugging?.should be_true
-        WebFinger.debugging?.should be_true
-        Rack::OAuth2.debugging?.should be_true
-        OpenIDConnect.debugging?.should be_true
+        SWD.debugging?.should == true
+        WebFinger.debugging?.should == true
+        Rack::OAuth2.debugging?.should == true
+        OpenIDConnect.debugging?.should == true
       end
-      SWD.debugging?.should be_true
-      WebFinger.debugging?.should be_true
-      Rack::OAuth2.debugging?.should be_true
-      OpenIDConnect.debugging?.should be_true
+      SWD.debugging?.should == true
+      WebFinger.debugging?.should == true
+      Rack::OAuth2.debugging?.should == true
+      OpenIDConnect.debugging?.should == true
     end
   end
 

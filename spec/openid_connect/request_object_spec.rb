@@ -93,15 +93,15 @@ describe OpenIDConnect::RequestObject do
 
     describe '#required?' do
       it do
-        request_object.userinfo.required?(:name).should be_true
-        request_object.userinfo.optional?(:name).should be_false
+        request_object.userinfo.required?(:name).should == true
+        request_object.userinfo.optional?(:name).should == false
       end
     end
 
     describe '#optional' do
       it do
-        request_object.userinfo.required?(:email).should be_false
-        request_object.userinfo.optional?(:email).should be_true
+        request_object.userinfo.required?(:email).should == false
+        request_object.userinfo.optional?(:email).should == true
       end
     end
   end

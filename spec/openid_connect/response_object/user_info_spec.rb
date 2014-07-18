@@ -45,7 +45,7 @@ describe OpenIDConnect::ResponseObject::UserInfo do
       let :attributes do
         {}
       end
-      its(:valid?) { should be_false }
+      its(:valid?) { should == false }
       its(:errors) { should include :base }
     end
 
@@ -53,16 +53,16 @@ describe OpenIDConnect::ResponseObject::UserInfo do
       let :attributes do
         {email: 'nov@localhost'}
       end
-      its(:valid?) { should be_false }
+      its(:valid?) { should == false }
       its(:errors) { should include :email }
     end
 
-    [:email_verified, :gender, :zoneinfo].each do |one_of_list|
+    [:email_verified, :zoneinfo].each do |one_of_list|
       context "when #{one_of_list} is invalid" do
         let :attributes do
           {one_of_list => 'Out of List'}
         end
-        its(:valid?) { should be_false }
+        its(:valid?) { should == false }
         its(:errors) { should include one_of_list }
       end
     end
@@ -76,7 +76,7 @@ describe OpenIDConnect::ResponseObject::UserInfo do
         let :attributes do
           {url => 'Invalid'}
         end
-        its(:valid?) { should be_false }
+        its(:valid?) { should == false }
         its(:errors) { should include url }
       end
     end
@@ -85,7 +85,7 @@ describe OpenIDConnect::ResponseObject::UserInfo do
       let :attributes do
         {address: {}}
       end
-      its(:valid?) { should be_false }
+      its(:valid?) { should == false }
       its(:errors) { should include :address }
     end
   end
