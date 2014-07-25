@@ -15,7 +15,7 @@ require 'rack/oauth2/server/id_token_response'
 module OpenIDConnect
   VERSION = ::File.read(
     ::File.join(::File.dirname(__FILE__), '../VERSION')
-  )
+  ).chomp
 
   def self.logger
     @@logger
