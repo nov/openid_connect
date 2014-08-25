@@ -88,6 +88,15 @@ module OpenIDConnect
               JSON::JWK.decode jwk
             end
           end
+
+          def public_keys_with_kid
+            @public_keys_with_kid ||= lambda {|hash|
+              jwks.each do |jwk|
+                hash.merge!({jwk[:kid] => JSON::JWK.decode(jwk)}) unless jwk[:kid].nil?
+              end
+              hash
+            }.call({})
+          end
         end
       end
     end
