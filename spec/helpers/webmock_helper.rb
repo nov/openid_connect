@@ -18,13 +18,11 @@ module WebMockHelper
 
   def request_for(method, options = {})
     request = {}
-    if options[:params]
-      case method
-      when :post, :put
-        request[:body] = options[:params]
-      else
-        request[:query] = options[:params]
-      end
+    case method
+    when :post, :put
+      request[:body] = options[:params]
+    else
+      request[:query] = options[:params]
     end
     if options[:request_header]
       request[:headers] = options[:request_header]
