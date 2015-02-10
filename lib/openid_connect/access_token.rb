@@ -8,9 +8,9 @@ module OpenIDConnect
       @token_type = :bearer
     end
 
-    def userinfo!
+    def userinfo!(params = {})
       hash = resource_request do
-        get client.userinfo_uri
+        get client.userinfo_uri, params
       end
       ResponseObject::UserInfo.new hash
     end
