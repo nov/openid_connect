@@ -18,6 +18,7 @@ module OpenIDConnect
               :token_endpoint,
               :userinfo_endpoint,
               :registration_endpoint,
+              :end_session_endpoint,
               :service_documentation,
               :op_policy_uri,
               :op_tos_uri
