@@ -224,6 +224,67 @@ describe OpenIDConnect::ResponseObject::IdToken do
     end
   end
 
+  describe '.decode_with_keys' do
+    subject { klass.decode_with_keys jwt_string, public_keys_hash }
+    let(:jwt_string) {
+      id_token.to_jwt jwt_private_key do |t|
+        t.header[:kid] = kid
+      end
+    }
+
+    context 'when self-issued' do
+      let(:self_issued) do
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL3NlbGYtaXNzdWVkLm1lIiwic3ViIjoiOWp1WGpObmFmbUhhdXF5TGNMRXZ2eGkweEZNMlZXZWtEQVhTUTZkMEFfYyIsImF1ZCI6ImNsaWVudC5leGFtcGxlLmNvbSIsImV4cCI6MTM3MzExNTU5OSwiaWF0IjoxMzcyNTEwNzk5LCJzdWJfandrIjp7Imt0eSI6IlJTQSIsImUiOiJBUUFCIiwibiI6InR1V1VKWUlEeTh3SVBnSnhicDNxbkVlaUVyWTk5bTY2N1lqc0JNelYzYUV1WlJobDJhVE81aFpGTXZ0eHljUi1jS3ZiV25Balg2bjgtRlFhb2Z4R1Qyb21NYTZjcTN6S2hjQ2N6dl81UElwVkJEQkpmMDN3YUIzU1h0R2ZtVDdBMklYUHdSSER4Tjllc0s1dWxzT0MtZl9IOXM4N3Z0U0RYVUhLZDVxS0JaNzhfc0I4eG10UFk0OGVmRVRXNnVDZHBnSy11U1hsYVJKbnN3YXRfdlIyRHJCWjZiOUJfQ0dYWHYxS1JRX1dDUmxoR2RNX294dFNMWHZGai00MlNFSnU5RHB3UzhjRUhKRTFHeU8xSmM2V1dfSTJZMXR5ZUs1Zm1RREpHZklpcUJvWkdBRFg1RUpjYm1aMmtWU2gxaXB0c2dZRUk0c2U0MW15LTdaUGZlZkQ4USJ9fQ.Gy31NnvCUSnS-cZuC4kQqR-DHcvZ0b8y7sNnp-2oCpXoHydGkVoVLsGXesUz6KB7RSB2cjoBySz0_k4eI_Trg7pR94zHCPf4U76mnCujGj7x09O3THlwiyYE3-V2ejhfAEhAXkzQNFu57HbWtvHVGP8SHnNs5NUY2YqJvchQ2uCrWYU4OyHdEnMQXbAdZcj2ltNIHREXtZTOxZhJ5fYUIbynBC27lxETI0LTHfHAzSwzKuFpM0zE99Uhrt7v17Us8gAGlUZIC-A3x2Och_8ryBCJaugROagSv3FoS-LvzaciEu5VLbi3EB9sFP4et_12ZSjFWNEAw5VeSBzF1l0kBQ'
+      end
+
+      context 'when key == :self_issued' do
+        it do
+          expect do
+            klass.decode_with_keys self_issued, [{:kid => nil, :key => :self_issued}]
+          end.not_to raise_error
+        end
+      end
+
+      context 'when key == public_key' do
+        it do
+          expect do
+            klass.decode_with_keys self_issued, [{:kid => nil, :key => public_key}]
+          end.to raise_error JSON::JWS::VerificationFailed
+        end
+      end
+    end
+
+    context 'when key 1' do
+      let(:kid) { '1' }
+      let(:jwt_private_key) { private_key }
+      it do
+        expect do
+          should be_instance_of OpenIDConnect::ResponseObject::IdToken
+        end.not_to raise_error
+      end
+    end
+
+    context 'when key 2' do
+      let(:kid) { '2' }
+      let(:jwt_private_key) { private_key2 }
+      it do
+        expect do
+          should be_instance_of OpenIDConnect::ResponseObject::IdToken
+        end.not_to raise_error
+      end
+    end
+
+    context 'when wrong key' do
+      let(:kid) { '1' }
+      let(:jwt_private_key) { private_key2 }
+      it do
+        expect do
+          should raise_error
+        end.to raise_error JSON::JWS::VerificationFailed
+      end
+    end
+  end
+
   describe '.decode' do
     subject { klass.decode id_token.to_jwt(private_key), public_key }
     let(:attributes) { required_attributes }

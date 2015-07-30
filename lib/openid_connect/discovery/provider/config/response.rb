@@ -83,6 +83,12 @@ module OpenIDConnect
             JSON::JWK::Set.new @jwks[:keys]
           end
 
+          def public_keys_hash
+            @public_keys_hash ||= jwks.collect do |jwk|
+              {:kid => jwk[:kid], :key => JSON::JWK.decode(jwk)}
+            end
+          end
+
           def public_keys
             @public_keys ||= jwks.collect do |jwk|
               JSON::JWK.decode jwk
