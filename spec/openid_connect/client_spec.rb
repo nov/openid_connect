@@ -34,16 +34,51 @@ describe OpenIDConnect::Client do
   end
 
   describe '#authorization_uri' do
+    let(:scope) { nil }
+    let(:response_type) { nil }
+    let(:query) do
+      params = {
+        scope: scope,
+        response_type: response_type
+      }.reject do |k,v|
+        v.blank?
+      end
+      query = URI.parse(client.authorization_uri params).query
+      Rack::Utils.parse_query(query).with_indifferent_access
+    end
+    let :attributes do
+      required_attributes.merge(
+        host: 'server.example.com'
+      )
+    end
+
+    describe 'response_type' do
+      subject do
+        query[:response_type]
+      end
+
+      it { should == 'code' }
+
+      context 'when response_type is given' do
+        context 'when array given' do
+          let(:response_type) { [:code, :token] }
+          it { should == 'code token' }
+        end
+
+        context 'when scalar given' do
+          let(:response_type) { :token }
+          it { should == 'token' }
+        end
+      end
+
+      context 'as default' do
+        it { should == 'code' }
+      end
+    end
+
     describe 'scope' do
       subject do
-        query = URI.parse(client.authorization_uri scope: scope).query
-        Rack::Utils.parse_query(query).with_indifferent_access[:scope]
-      end
-      let(:scope) { nil }
-      let :attributes do
-        required_attributes.merge(
-          host: 'server.example.com'
-        )
+        query[:scope]
       end
 
       context 'when scope is given' do
@@ -58,7 +93,7 @@ describe OpenIDConnect::Client do
         end
       end
 
-      context 'otherwise' do
+      context 'as default' do
         it { should == 'openid' }
       end
     end
