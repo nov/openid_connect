@@ -71,6 +71,35 @@ describe OpenIDConnect::Discovery::Provider::Config::Response do
     end
   end
 
+  describe '#public_keys_hash' do
+    context 'when jwks without kids' do
+      it do
+        public_keys_with_kid = mock_json :get, jwks_uri, 'public_keys/jwks' do
+          instance.public_keys_hash
+        end
+        public_keys_with_kid.should be_instance_of Array
+        public_keys_with_kid[0].should be_instance_of Hash
+        public_keys_with_kid[0][:kid].should be_nil
+        public_keys_with_kid[0][:key].should be_instance_of OpenSSL::PKey::RSA
+      end
+    end
+
+    context 'when jwks with kids' do
+      it do
+        public_keys_with_kid = mock_json :get, jwks_uri, 'public_keys/jwks_kids' do
+          instance.public_keys_hash
+        end
+        public_keys_with_kid.should be_instance_of Array
+        public_keys_with_kid[0].should be_instance_of Hash
+        public_keys_with_kid[0][:kid].should eq("a1a985a59256d026e252d5b5faddf9b6b41e32e3")
+        public_keys_with_kid[0][:key].should be_instance_of OpenSSL::PKey::RSA
+        public_keys_with_kid[1].should be_instance_of Hash
+        public_keys_with_kid[1][:kid].should eq("c13a48bfea7287d05629fd6c7c673b23eefafe4f")
+        public_keys_with_kid[1][:key].should be_instance_of OpenSSL::PKey::RSA
+      end
+    end
+  end
+
   describe '#public_keys' do
     it do
       public_keys = mock_json :get, jwks_uri, 'public_keys/jwks' do

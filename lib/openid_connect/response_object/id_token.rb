@@ -53,6 +53,14 @@ module OpenIDConnect
       end
 
       class << self
+        def decode_with_keys(jwt_string, keys)
+          if keys.count == 1 and keys[0][:key] == :self_issued
+            decode_self_issued jwt_string
+          else
+            new JSON::JWT.decode_with_keys jwt_string, keys
+          end
+        end
+
         def decode(jwt_string, key)
           if key == :self_issued
             decode_self_issued jwt_string
