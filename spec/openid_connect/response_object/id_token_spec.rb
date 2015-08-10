@@ -232,6 +232,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
       its(key) { should == attributes[key] }
     end
     its(:exp) { should == attributes[:exp].to_i }
+    its(:raw_attributes) { should be_instance_of JSON::JWT }
 
     context 'when self-issued' do
       context 'when valid' do
