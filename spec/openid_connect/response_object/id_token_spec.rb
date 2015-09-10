@@ -232,12 +232,12 @@ describe OpenIDConnect::ResponseObject::IdToken do
       its(key) { should == attributes[key] }
     end
     its(:exp) { should == attributes[:exp].to_i }
-    its(:raw_attributes) { should be_instance_of JSON::JWT }
+    its(:raw_attributes) { should be_instance_of JSON::JWS }
 
     context 'when self-issued' do
       context 'when valid' do
         let(:self_issued) do
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL3NlbGYtaXNzdWVkLm1lIiwic3ViIjoiOWp1WGpObmFmbUhhdXF5TGNMRXZ2eGkweEZNMlZXZWtEQVhTUTZkMEFfYyIsImF1ZCI6ImNsaWVudC5leGFtcGxlLmNvbSIsImV4cCI6MTM3MzExNTU5OSwiaWF0IjoxMzcyNTEwNzk5LCJzdWJfandrIjp7Imt0eSI6IlJTQSIsImUiOiJBUUFCIiwibiI6InR1V1VKWUlEeTh3SVBnSnhicDNxbkVlaUVyWTk5bTY2N1lqc0JNelYzYUV1WlJobDJhVE81aFpGTXZ0eHljUi1jS3ZiV25Balg2bjgtRlFhb2Z4R1Qyb21NYTZjcTN6S2hjQ2N6dl81UElwVkJEQkpmMDN3YUIzU1h0R2ZtVDdBMklYUHdSSER4Tjllc0s1dWxzT0MtZl9IOXM4N3Z0U0RYVUhLZDVxS0JaNzhfc0I4eG10UFk0OGVmRVRXNnVDZHBnSy11U1hsYVJKbnN3YXRfdlIyRHJCWjZiOUJfQ0dYWHYxS1JRX1dDUmxoR2RNX294dFNMWHZGai00MlNFSnU5RHB3UzhjRUhKRTFHeU8xSmM2V1dfSTJZMXR5ZUs1Zm1RREpHZklpcUJvWkdBRFg1RUpjYm1aMmtWU2gxaXB0c2dZRUk0c2U0MW15LTdaUGZlZkQ4USJ9fQ.Gy31NnvCUSnS-cZuC4kQqR-DHcvZ0b8y7sNnp-2oCpXoHydGkVoVLsGXesUz6KB7RSB2cjoBySz0_k4eI_Trg7pR94zHCPf4U76mnCujGj7x09O3THlwiyYE3-V2ejhfAEhAXkzQNFu57HbWtvHVGP8SHnNs5NUY2YqJvchQ2uCrWYU4OyHdEnMQXbAdZcj2ltNIHREXtZTOxZhJ5fYUIbynBC27lxETI0LTHfHAzSwzKuFpM0zE99Uhrt7v17Us8gAGlUZIC-A3x2Och_8ryBCJaugROagSv3FoS-LvzaciEu5VLbi3EB9sFP4et_12ZSjFWNEAw5VeSBzF1l0kBQ'
+          'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL3NlbGYtaXNzdWVkLm1lIiwic3ViIjoiMmdDUWFLUmJkY0RaeUlDTE92ODJJR2EtdHBSVU52QW1ZN3BnZ3Z5NGdENCIsImF1ZCI6ImNsaWVudC5leGFtcGxlLmNvbSIsImV4cCI6MTQ0MjQ4Mjc4MiwiaWF0IjoxNDQxODc3OTgyLCJzdWJfandrIjp7Imt0eSI6IlJTQSIsImUiOiJBUUFCIiwibiI6IjN1RzNiSTV6MTFhM1hlOXUyZFVJNDBpcWZrVl9vTmFQVmNlalN4V3l0YnMybTZKMGMzNjJESlJQNGtyUl9TZjNtQXJ3Qjd6Qm5UWExkbW1tZW85VzloSDhsSnFGOUthMTY3dHBTQWJCajB1MjhyaTgwZFZ4NUxzblJTX19uUUd6Y3dNa2sxTTBERUx2X0FXbVYwU2JudDhJZEpSeFhwdG5xRE5tWXJ0cmItMkk0a1lwRHlwN2pvTXd0bDNXeGp2cnkwbENLNExqOU9SeXdod05zYUU2MHFsako5aHBGZV8wTmpmaThzaVBlMDRJSkFaUjl3NXo0TnAtQS1HbWdmeTNJTmNZVFYyQ25FekNSY29HSGl5OGduRzA1a015TnRtZTFVdV8xanBhdF9lcF9QUG9PWEJ6Q1NwbzB5QlRNSWhmdEJTQ3p2a2V1ZFdhNks2aW5LMkYxdyJ9fQ.wchF80oFxdjEcOEwPZ9TUlV6R96Vz8XK9MzednMOsZmEMnNSEqKKTyO0Mhp9lijJPZX8J7lTtAGkz4gfsjyoYBIHQOTf0qHRHSx9RTeC31whw1TJ9x5V6UXpKN0EW1EhjAEGIZ0EyFJ-cRTgVs0V7PT7e63JOUYyW6LqqHa4MV9SdK8BdnaN0D4-402Pf7yFqjneSHq3KZbXcgjUPT_hszsGvnn9qEyuIHQqON6YnDt55z5SvP_RfKtBfUe2VY-yglJT41LfhkIgpvjLYdYYRPh9G9ftJr17qht5RtHSNpTp4FPw7BR7rCnptb4xTxyq-sLu7qjSLRtqQ35Xpi_6qQ'
         end
 
         context 'when key == :self_issued' do
@@ -300,41 +300,6 @@ describe OpenIDConnect::ResponseObject::IdToken do
     end
     its(:iss)     { should == 'https://self-issued.me' }
     its(:sub_jwk) { should == sub_jwk}
-    its(:subject) { should == OpenIDConnect::ResponseObject::IdToken.self_issued_subject(sub_jwk) }
-  end
-
-  describe '.self_issued_subject' do
-    context 'when RSA key given' do
-      let(:jwk) { JSON::JWK.new(public_key) }
-      it do
-        user_id = klass.self_issued_subject jwk
-        user_id.should == UrlSafeBase64.encode64(
-          OpenSSL::Digest::SHA256.digest([jwk[:n], jwk[:e]].join)
-        )
-      end
-    end
-
-    context 'when EC key given' do
-      let(:jwk) { JSON::JWK.new(ec_public_key) }
-      it do
-        expect do
-          klass.self_issued_subject jwk
-        end.to raise_error NotImplementedError
-      end
-    end
-
-    context 'when unknown algorithm JWK given' do
-      let(:jwk) do
-        {
-          alg: 'unknown'
-        }
-      end
-
-      it do
-        expect do
-          klass.self_issued_subject jwk
-        end.to raise_error OpenIDConnect::ResponseObject::IdToken::InvalidToken
-      end
-    end
+    its(:subject) { should == sub_jwk.thumbprint }
   end
 end

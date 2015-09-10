@@ -63,9 +63,9 @@ module OpenIDConnect
 
         def decode_self_issued(jwt_string)
           jwt = JSON::JWT.decode jwt_string, :skip_verification
-          jwk = jwt[:sub_jwk]
+          jwk = JSON::JWK.new jwt[:sub_jwk]
           raise InvalidToken.new('Missing sub_jwk') if jwk.blank?
-          raise InvalidToken.new('Invalid subject') unless jwt[:sub] == self_issued_subject(jwk)
+          raise InvalidToken.new('Invalid subject') unless jwt[:sub] == jwk.thumbprint
           public_key = JSON::JWK.decode jwk
           jwt = JSON::JWT.decode jwt_string, public_key
           new jwt
@@ -75,22 +75,9 @@ module OpenIDConnect
           attributes[:sub_jwk] ||= JSON::JWK.new attributes.delete(:public_key)
           _attributes_ = {
             iss: 'https://self-issued.me',
-            sub: self_issued_subject(attributes[:sub_jwk])
+            sub: JSON::JWK.new(attributes[:sub_jwk]).thumbprint
           }.merge(attributes)
           new _attributes_
-        end
-
-        def self_issued_subject(jwk)
-          subject_base_string = case jwk[:kty].to_s
-          when 'RSA'
-            [jwk[:n], jwk[:e]].join
-          when 'EC'
-            raise NotImplementedError.new('Not Implemented Yet')
-          else
-            # Shouldn't reach here. All unknown algorithm error should occurs when decoding JWK
-            raise InvalidToken.new('Unknown Algorithm')
-          end
-          UrlSafeBase64.encode64 OpenSSL::Digest::SHA256.digest(subject_base_string)
         end
       end
     end
