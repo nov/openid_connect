@@ -66,8 +66,7 @@ module OpenIDConnect
           jwk = JSON::JWK.new jwt[:sub_jwk]
           raise InvalidToken.new('Missing sub_jwk') if jwk.blank?
           raise InvalidToken.new('Invalid subject') unless jwt[:sub] == jwk.thumbprint
-          public_key = JSON::JWK.decode jwk
-          jwt = JSON::JWT.decode jwt_string, public_key
+          jwt.verify! jwk
           new jwt
         end
 
