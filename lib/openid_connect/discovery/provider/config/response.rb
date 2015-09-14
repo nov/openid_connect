@@ -84,9 +84,7 @@ module OpenIDConnect
           end
 
           def public_keys
-            @public_keys ||= jwks.collect do |jwk|
-              JSON::JWK.decode jwk
-            end
+            @public_keys ||= jwks.collect(&:to_key)
           end
         end
       end
