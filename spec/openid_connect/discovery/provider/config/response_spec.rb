@@ -10,6 +10,7 @@ describe OpenIDConnect::Discovery::Provider::Config::Response do
   let :minimum_attributes do
     {
       issuer: 'https://server.example.com',
+      authorization_endpoint: 'https://server.example.com/authorize',
       jwks_uri: jwks_uri,
       response_types_supported: [
         :code, :id_token, 'token id_token'

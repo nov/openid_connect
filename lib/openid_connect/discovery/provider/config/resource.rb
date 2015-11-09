@@ -23,7 +23,7 @@ module OpenIDConnect
           private
 
           def to_response_object(hash)
-            Response.new hash
+            Response.new(hash)
           end
 
           def cache_key

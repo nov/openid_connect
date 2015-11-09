@@ -24,6 +24,28 @@ describe OpenIDConnect::Discovery::Provider::Config do
       end
     end
 
+    context 'when OP identifier includes custom port' do
+      let(:provider) { 'https://connect-op.heroku.com:8080' }
+      let(:endpoint) { 'https://connect-op.heroku.com:8080/.well-known/openid-configuration' }
+
+      it 'should construct well-known URI with given port' do
+        mock_json :get, endpoint, 'discovery/config_with_custom_port' do
+          OpenIDConnect::Discovery::Provider::Config.discover! provider
+        end
+      end
+    end
+
+    context 'when OP identifier includes path' do
+      let(:provider) { 'https://connect.openid4.us/abop' }
+      let(:endpoint) { 'https://connect.openid4.us/abop/.well-known/openid-configuration' }
+
+      it 'should construct well-known URI with given port' do
+        mock_json :get, endpoint, 'discovery/config_with_path' do
+          OpenIDConnect::Discovery::Provider::Config.discover! provider
+        end
+      end
+    end
+
     context 'when SWD::Exception raised' do
       it do
         expect do
@@ -33,26 +55,24 @@ describe OpenIDConnect::Discovery::Provider::Config do
         end.to raise_error OpenIDConnect::Discovery::DiscoveryFailed
       end
     end
-  end
 
-  context 'when OP identifier includes custom port' do
-    let(:provider) { 'https://connect-op.heroku.com:8080' }
-    let(:endpoint) { 'https://connect-op.heroku.com:8080/.well-known/openid-configuration' }
-
-    it 'should construct well-known URI with given port' do
-      mock_json :get, endpoint, 'discovery/config' do
-        OpenIDConnect::Discovery::Provider::Config.discover! provider
+    context 'when response include invalid issuer' do
+      it do
+        expect do
+          mock_json :get, endpoint, 'discovery/config_with_invalid_issuer' do
+            OpenIDConnect::Discovery::Provider::Config.discover! provider
+          end
+        end.to raise_error OpenIDConnect::Discovery::DiscoveryFailed
       end
     end
-  end
 
-  context 'when OP identifier includes path' do
-    let(:provider) { 'https://connect.openid4.us/abop' }
-    let(:endpoint) { 'https://connect.openid4.us/abop/.well-known/openid-configuration' }
-
-    it 'should construct well-known URI with given port' do
-      mock_json :get, endpoint, 'discovery/config' do
-        OpenIDConnect::Discovery::Provider::Config.discover! provider
+    context 'when response include no issuer' do
+      it do
+        expect do
+          mock_json :get, endpoint, 'discovery/config_without_issuer' do
+            OpenIDConnect::Discovery::Provider::Config.discover! provider
+          end
+        end.to raise_error OpenIDConnect::Discovery::DiscoveryFailed
       end
     end
   end

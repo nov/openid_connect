@@ -10,10 +10,10 @@ module OpenIDConnect
           uri_attributes = {
             required: [
               :issuer,
+              :authorization_endpoint,
               :jwks_uri
             ],
             optional: [
-              :authorization_endpoint,
               :token_endpoint,
               :userinfo_endpoint,
               :registration_endpoint,
@@ -72,8 +72,10 @@ module OpenIDConnect
             end
           end
 
-          def validate!
-            valid? or raise ValidationFailed.new(self)
+          def validate!(expected_issuer = nil)
+            valid? && (
+              expected_issuer.blank? || issuer == expected_issuer
+            ) or raise ValidationFailed.new(self)
           end
 
           def jwks
