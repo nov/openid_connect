@@ -13,11 +13,9 @@ module OpenIDConnect
       @userinfo = UserInfo.new(attributes) if attributes.present?
     end
 
-    def as_json_with_mixed_keys(options = {})
-      hash = as_json_without_mixed_keys options
-      hash.with_indifferent_access
+    def as_json(options = {})
+      super.with_indifferent_access
     end
-    alias_method_chain :as_json, :mixed_keys
 
     class << self
       def decode(jwt_string, key = nil)

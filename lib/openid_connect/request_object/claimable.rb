@@ -3,12 +3,10 @@ module OpenIDConnect
     module Claimable
       def self.included(klass)
         klass.send :attr_optional, :claims
-        klass.send :alias_method_chain, :initialize, :claims
-        klass.send :alias_method_chain, :as_json, :keep_blank
       end
 
-      def initialize_with_claims(attributes = {})
-        initialize_without_claims attributes
+      def initialize(attributes = {})
+        super
         if claims.present?
           _claims_ = {}
           claims.each do |key, value|
@@ -29,9 +27,9 @@ module OpenIDConnect
         end
       end
 
-      def as_json_with_keep_blank(options = {})
+      def as_json(options = {})
         keys = claims.try(:keys)
-        hash = as_json_without_keep_blank options
+        hash = super
         Array(keys).each do |key|
           hash[:claims][key] ||= nil
         end

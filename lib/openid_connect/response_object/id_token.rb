@@ -27,7 +27,7 @@ module OpenIDConnect
       end
 
       include JWTnizable
-      def to_jwt_with_at_hash_and_c_hash(key, algorithm = :RS256, &block)
+      def to_jwt(key, algorithm = :RS256, &block)
         hash_length = algorithm.to_s[2, 3].to_i
         if access_token
           token = case access_token
@@ -41,9 +41,8 @@ module OpenIDConnect
         if code
           self.c_hash = left_half_hash_of code, hash_length
         end
-        to_jwt_without_at_hash_and_c_hash key, algorithm, &block
+        super
       end
-      alias_method_chain :to_jwt, :at_hash_and_c_hash
 
       private
 
