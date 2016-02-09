@@ -21,6 +21,8 @@ OpenID Connect Server & Client Library
 * Running on Heroku (https://connect-op.herokuapp.com)
 * Source on GitHub (https://github.com/nov/openid_connect_sample)
 
+* Simpler Version (https://github.com/nov/openid_connect_sample2)
+
 === Relying Party
 
 * Running on Heroku (https://connect-rp.herokuapp.com)
