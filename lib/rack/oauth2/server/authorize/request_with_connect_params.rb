@@ -1,6 +1,9 @@
 class Rack::OAuth2::Server::Authorize
   module RequestWithConnectParams
-    CONNECT_EXT_PARAMS = [:nonce, :display, :prompt, :request, :request_uri, :id_token]
+    CONNECT_EXT_PARAMS = [
+      :nonce, :display, :prompt, :max_age, :ui_locales, :claims_locales,
+      :id_token_hint, :login_hint, :acr_values, :claims, :request, :request_uri
+    ]
 
     def self.prepended(klass)
       klass.send :attr_optional, *CONNECT_EXT_PARAMS
