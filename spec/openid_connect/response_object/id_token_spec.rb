@@ -29,7 +29,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
           required_attributes.merge(auth_time: Time.now)
         end
         it do
-          should be_instance_of Integer
+          should be_a Numeric
         end
       end
     end
