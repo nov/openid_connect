@@ -35,10 +35,12 @@ describe OpenIDConnect::Client do
 
   describe '#authorization_uri' do
     let(:scope) { nil }
+    let(:prompt) { nil }
     let(:response_type) { nil }
     let(:query) do
       params = {
         scope: scope,
+        prompt: prompt,
         response_type: response_type
       }.reject do |k,v|
         v.blank?
@@ -95,6 +97,27 @@ describe OpenIDConnect::Client do
 
       context 'as default' do
         it { should == 'openid' }
+      end
+    end
+
+    describe 'prompt' do
+      subject do
+        query[:prompt]
+      end
+
+      context 'when prompt is a scalar value' do
+        let(:prompt) { :login }
+        it { should == 'login' }
+      end
+
+      context 'when prompt is a space-delimited string' do
+        let(:prompt) { 'login consent' }
+        it { should == 'login consent' }
+      end
+
+      context 'when prompt is an array' do
+        let(:prompt) { [:login, :consent] }
+        it { should == 'login consent' }
       end
     end
   end
