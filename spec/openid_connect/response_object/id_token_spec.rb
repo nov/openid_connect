@@ -20,6 +20,19 @@ describe OpenIDConnect::ResponseObject::IdToken do
     subject { klass }
     its(:required_attributes) { should == [:iss, :sub, :aud, :exp, :iat] }
     its(:optional_attributes) { should == [:acr, :auth_time, :nonce, :sub_jwk, :at_hash, :c_hash] }
+
+    describe 'auth_time' do
+      subject { id_token.auth_time }
+
+      context 'when Time object given' do
+        let(:attributes) do
+          required_attributes.merge(auth_time: Time.now)
+        end
+        it do
+          should be_a Numeric
+        end
+      end
+    end
   end
 
   describe '#verify!' do

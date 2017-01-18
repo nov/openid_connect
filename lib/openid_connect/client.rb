@@ -9,6 +9,7 @@ module OpenIDConnect
 
     def authorization_uri(params = {})
       params[:scope] = setup_required_scope params[:scope]
+      params[:prompt] = Array(params[:prompt]).join(' ')
       super
     end
 
@@ -19,7 +20,7 @@ module OpenIDConnect
     private
 
     def setup_required_scope(scopes)
-      _scopes_ = Array(scopes).collect(&:to_s).join(' ').split(' ')
+      _scopes_ = Array(scopes).join(' ').split(' ')
       _scopes_ << 'openid' unless _scopes_.include?('openid')
       _scopes_
     end

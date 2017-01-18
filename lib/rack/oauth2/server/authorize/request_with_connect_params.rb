@@ -14,6 +14,7 @@ class Rack::OAuth2::Server::Authorize
       CONNECT_EXT_PARAMS.each do |attribute|
         self.send :"#{attribute}=", params[attribute.to_s]
       end
+      self.prompt = Array(prompt.to_s.split(' '))
       self.max_age = max_age.try(:to_i)
     end
 

@@ -16,6 +16,7 @@ module OpenIDConnect
         (all_attributes - [:aud, :exp, :iat, :auth_time, :sub_jwk]).each do |key|
           self.send "#{key}=", self.send(key).try(:to_s)
         end
+        self.auth_time = auth_time.to_i unless auth_time.nil?
       end
 
       def verify!(expected = {})

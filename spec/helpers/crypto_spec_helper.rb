@@ -8,7 +8,7 @@ module CryptoSpecHelper
   end
 
   def private_key
-    @private_key ||= OpenSSL::PKey::RSA.new rsa_key.export(OpenSSL::Cipher::Cipher.new('DES-EDE3-CBC'), 'pass-phrase'), 'pass-phrase'
+    @private_key ||= OpenSSL::PKey::RSA.new rsa_key.export(OpenSSL::Cipher.new('DES-EDE3-CBC'), 'pass-phrase'), 'pass-phrase'
   end
 
   def ec_key
