@@ -21,7 +21,7 @@ module OpenIDConnect
       def verify!(expected = {})
         exp.to_i > Time.now.to_i &&
         iss == expected[:issuer] &&
-        Array(aud).include?(expected[:client_id]) && # aud(ience) can be a string or an array of strings
+        Array(aud).include?(expected[:audience] || expected[:client_id]) && # aud(ience) can be a string or an array of strings
         nonce == expected[:nonce] or
         raise InvalidToken.new('Invalid ID Token')
       end
