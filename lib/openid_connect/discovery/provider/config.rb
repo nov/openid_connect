@@ -5,7 +5,8 @@ module OpenIDConnect
         def self.discover!(identifier, cache_options = {})
           uri = URI.parse(identifier)
           Resource.new(uri).discover!(cache_options).tap do |response|
-            response.validate! identifier
+            response.expected_issuer = identifier
+            response.validate!
           end
         rescue SWD::Exception, ValidationFailed => e
           raise DiscoveryFailed.new(e.message)

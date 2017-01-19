@@ -7,6 +7,7 @@ module OpenIDConnect
 
           cattr_accessor :metadata_attributes
           attr_reader :raw
+          attr_accessor :expected_issuer
           uri_attributes = {
             required: [
               :issuer,
@@ -55,6 +56,7 @@ module OpenIDConnect
 
           validates *required_attributes, presence: true
           validates *uri_attributes.values.flatten, url: true, allow_nil: true
+          validates :issuer, with: :validate_issuer_matching
 
           def initialize(hash)
             (required_attributes + optional_attributes).each do |key|
@@ -73,9 +75,7 @@ module OpenIDConnect
           end
 
           def validate!(expected_issuer = nil)
-            valid? && (
-              expected_issuer.blank? || issuer == expected_issuer
-            ) or raise ValidationFailed.new(self)
+            valid? or raise ValidationFailed.new(self)
           end
 
           def jwks
@@ -87,6 +87,14 @@ module OpenIDConnect
 
           def public_keys
             @public_keys ||= jwks.collect(&:to_key)
+          end
+
+          private
+
+          def validate_issuer_matching
+            if expected_issuer.present? && issuer != expected_issuer
+              errors.add :issuer, 'mismatch'
+            end
           end
         end
       end
