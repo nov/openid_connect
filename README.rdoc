@@ -28,6 +28,11 @@ OpenID Connect Server & Client Library
 * Running on Heroku (https://connect-rp.herokuapp.com)
 * Source on GitHub (https://github.com/nov/openid_connect_sample_rp)
 
+There is also OpenID Foudation Certified RP implementation using this gem below.
+
+* Running on Heroku (https://connect-rp-certified.herokuapp.com)
+* Source on GitHub (https://github.com/nov/connect-rp-certified)
+
 == Note on Patches/Pull Requests
 
 * Fork the project.
