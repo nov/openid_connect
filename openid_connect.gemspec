@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "json-jwt", ">= 1.5.0"
   s.add_runtime_dependency "swd", ">= 1.0.0"
   s.add_runtime_dependency "webfinger", ">= 1.0.1"
-  s.add_runtime_dependency "rack-oauth2", ">= 1.3.1"
+  s.add_runtime_dependency "rack-oauth2", ">= 1.6.0"
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
   s.add_development_dependency "rspec-its"
