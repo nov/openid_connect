@@ -20,11 +20,16 @@ module OpenIDConnect
       end
 
       def verify!(expected = {})
-        exp.to_i > Time.now.to_i &&
-        iss == expected[:issuer] &&
-        Array(aud).include?(expected[:audience] || expected[:client_id]) && # aud(ience) can be a string or an array of strings
-        nonce == expected[:nonce] or
-        raise InvalidToken.new('Invalid ID Token')
+        raise InvalidToken.new('Invalid ID token: Expired token') unless exp.to_i > Time.now.to_i
+        raise InvalidToken.new('Invalid ID token: Issuer does not match') unless iss == expected[:issuer]
+        raise InvalidToken.new('Invalid ID Token: Nonce does not match') unless nonce == expected[:nonce]
+
+        # aud(ience) can be a string or an array of strings
+        unless Array(aud).include?(expected[:audience] || expected[:client_id])
+          raise InvalidToken.new('Invalid ID token: Audience does not match')
+        end
+
+        true
       end
 
       include JWTnizable
