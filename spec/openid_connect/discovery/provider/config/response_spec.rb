@@ -35,6 +35,17 @@ describe OpenIDConnect::Discovery::Provider::Config::Response do
     it { should_not be_valid }
   end
 
+  context 'when end_session_endpoint given' do
+    let(:end_session_endpoint) { 'https://server.example.com/end_session' }
+    let :attributes do
+      minimum_attributes.merge(
+        end_session_endpoint: end_session_endpoint
+      )
+    end
+    it { should be_valid }
+    its(:end_session_endpoint) { should == end_session_endpoint }
+  end
+
   describe '#as_json' do
     subject { instance.as_json }
     it { should == minimum_attributes }
