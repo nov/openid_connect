@@ -1,6 +1,6 @@
 module OpenIDConnect
   class Client < Rack::OAuth2::Client
-    attr_optional :userinfo_endpoint, :expires_in
+    attr_optional :userinfo_endpoint, :end_session_endpoint, :expires_in
 
     def initialize(attributes = {})
       super attributes
@@ -15,6 +15,10 @@ module OpenIDConnect
 
     def userinfo_uri
       absolute_uri_for userinfo_endpoint
+    end
+
+    def end_session_uri(after_sign_out_path = nil)
+      Rack::OAuth2::Util.redirect_uri absolute_uri_for(end_session_endpoint), :query, {post_logout_redirect_uri: after_sign_out_path}
     end
 
     private
