@@ -92,4 +92,16 @@ describe OpenIDConnect::Discovery::Provider::Config::Response do
       public_keys.first.should be_instance_of OpenSSL::PKey::RSA
     end
   end
+
+  describe '#public_keys_with_kid' do
+    it do
+      public_keys_with_kid = mock_json :get, jwks_uri, 'public_keys/jwks' do
+        instance.public_keys_with_kid
+      end
+      public_keys_with_kid.should be_instance_of Hash
+      public_keys_with_kid.keys.each do |key|
+        public_keys_with_kid[key].should be_instance_of OpenSSL::PKey::RSA
+      end
+    end
+  end
 end
