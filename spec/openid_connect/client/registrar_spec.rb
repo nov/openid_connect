@@ -188,6 +188,7 @@ describe OpenIDConnect::Client::Registrar do
       client.identifier.should == 'client.example.com'
       client.secret.should == 'client_secret'
       client.expires_in.should == 3600
+      client.client_secret_expires_at.should == 1577836800
     end
 
     context 'when failed' do
