@@ -20,6 +20,7 @@ module OpenIDConnect
               :registration_endpoint,
               :end_session_endpoint,
               :service_documentation,
+              :check_session_iframe,
               :op_policy_uri,
               :op_tos_uri
             ]
