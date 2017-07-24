@@ -46,6 +46,17 @@ describe OpenIDConnect::Discovery::Provider::Config::Response do
     its(:end_session_endpoint) { should == end_session_endpoint }
   end
 
+  context 'when check_session_iframe given' do
+    let(:check_session_iframe) { 'https://server.example.com/check_session_iframe.html' }
+    let :attributes do
+      minimum_attributes.merge(
+        check_session_iframe: check_session_iframe
+      )
+    end
+    it { should be_valid }
+    its(:check_session_iframe) { should == check_session_iframe }
+  end
+
   describe '#as_json' do
     subject { instance.as_json }
     it { should == minimum_attributes }
