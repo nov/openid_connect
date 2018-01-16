@@ -198,6 +198,22 @@ describe OpenIDConnect::Client do
       end
     end
 
+    context 'when token type is present' do
+      context 'default token type is set' do
+        after :each do
+          OpenIDConnect.default_token_type = nil
+        end
+
+        it 'should override default token type' do
+          OpenIDConnect.default_token_type = :lorem_ipsum
+
+          mock_json :post, client.token_endpoint, 'access_token/bearer', request_header: header_params, params: protocol_params do
+            access_token.should be_a OpenIDConnect::AccessToken
+          end
+        end
+      end
+    end
+
     context 'otherwise' do
       it 'should raise Unexpected Token Type exception' do
         mock_json :post, client.token_endpoint, 'access_token/mac', request_header: header_params, params: protocol_params do
