@@ -40,7 +40,7 @@ module OpenIDConnect
       else
         raise Exception.new(
           "Unexpected Token Type: #{token_type}. " \
-          'Use OpenIDConnect.default_token_type for non-conforming implementations'
+          'Use OpenIDConnect.default_token_type for non-conforming implementations.'
         )
       end
     rescue JSON::ParserError
