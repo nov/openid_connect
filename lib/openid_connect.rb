@@ -76,6 +76,16 @@ module OpenIDConnect
     end
     @@http_config ||= block
   end
+
+  def self.default_token_type=(default_token_type)
+    @@default_token_type = default_token_type
+  end
+
+  def self.default_token_type
+    @@default_token_type
+  end
+
+  self.default_token_type = nil
 end
 
 require 'openid_connect/exception'
