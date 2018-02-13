@@ -81,7 +81,7 @@ describe OpenIDConnect::Discovery::Provider::Config do
             mock_json :get, endpoint, 'discovery/config_with_invalid_issuer' do
               OpenIDConnect::Discovery::Provider::Config.discover! provider
             end
-          end.not_to raise_error OpenIDConnect::Discovery::DiscoveryFailed
+          end.not_to raise_error
         end
       end
     end
