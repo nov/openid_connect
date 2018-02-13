@@ -76,6 +76,16 @@ module OpenIDConnect
     end
     @@http_config ||= block
   end
+
+  def self.validate_discovery_issuer=(boolean)
+    @@validate_discovery_issuer = boolean
+  end
+
+  def self.validate_discovery_issuer
+    @@validate_discovery_issuer
+  end
+
+  self.validate_discovery_issuer = true
 end
 
 require 'openid_connect/exception'
