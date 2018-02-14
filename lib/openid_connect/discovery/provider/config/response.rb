@@ -76,7 +76,7 @@ module OpenIDConnect
             end
           end
 
-          def validate!(expected_issuer = nil)
+          def validate!
             valid? or raise ValidationFailed.new(self)
           end
 
@@ -94,10 +94,12 @@ module OpenIDConnect
           private
 
           def validate_issuer_matching
-            return unless OpenIDConnect.validate_discovery_issuer
-
             if expected_issuer.present? && issuer != expected_issuer
-              errors.add :issuer, 'mismatch'
+              if OpenIDConnect.validate_discovery_issuer
+                errors.add :issuer, 'mismatch'
+              else
+                OpenIDConnect.logger.warn 'ignoring issuer mismach.'
+              end
             end
           end
         end
