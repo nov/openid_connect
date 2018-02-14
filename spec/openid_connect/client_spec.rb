@@ -178,6 +178,15 @@ describe OpenIDConnect::Client do
           expect { access_token }.to raise_error OpenIDConnect::Exception, 'Unexpected Token Type: mac'
         end
       end
+
+      context 'when token_type is forced' do
+        before { client.force_token_type! :bearer }
+        it 'should use forced token_type' do
+          mock_json :post, client.token_endpoint, 'access_token/without_token_type', request_header: header_params, params: protocol_params do
+            access_token.should be_a OpenIDConnect::AccessToken
+          end
+        end
+      end
     end
   end
 end
