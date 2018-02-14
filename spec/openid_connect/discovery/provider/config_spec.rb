@@ -56,13 +56,33 @@ describe OpenIDConnect::Discovery::Provider::Config do
       end
     end
 
-    context 'when response include invalid issuer' do
-      it do
-        expect do
-          mock_json :get, endpoint, 'discovery/config_with_invalid_issuer' do
-            OpenIDConnect::Discovery::Provider::Config.discover! provider
-          end
-        end.to raise_error OpenIDConnect::Discovery::DiscoveryFailed
+    describe 'when response include invalid issuer' do
+      context 'with normal configuration' do
+        it do
+          expect do
+            mock_json :get, endpoint, 'discovery/config_with_invalid_issuer' do
+              OpenIDConnect::Discovery::Provider::Config.discover! provider
+            end
+          end.to raise_error OpenIDConnect::Discovery::DiscoveryFailed
+        end
+      end
+
+      context 'when issuer validation is disabled.' do
+        before :each do
+          OpenIDConnect.validate_discovery_issuer = false
+        end
+
+        after :each do
+          OpenIDConnect.validate_discovery_issuer = true
+        end
+
+        it do
+          expect do
+            mock_json :get, endpoint, 'discovery/config_with_invalid_issuer' do
+              OpenIDConnect::Discovery::Provider::Config.discover! provider
+            end
+          end.not_to raise_error
+        end
       end
     end
 
