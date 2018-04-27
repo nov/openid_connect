@@ -1,5 +1,3 @@
-require 'json/jwt'
-
 module OpenIDConnect
   class ResponseObject
     class IdToken < ConnectObject
