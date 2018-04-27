@@ -58,7 +58,7 @@ module OpenIDConnect
 
       def left_half_hash_of(string, hash_length)
         digest = OpenSSL::Digest.new("SHA#{hash_length}").digest string
-        UrlSafeBase64.encode64 digest[0, hash_length / (2 * 8)]
+        Base64.urlsafe_encode64 digest[0, hash_length / (2 * 8)], padding: false
       end
 
       class << self

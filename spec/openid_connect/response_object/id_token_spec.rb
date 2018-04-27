@@ -157,7 +157,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
         t = id_token.to_jwt private_key do |t|
           t.header[:x5u] = "http://server.example.com/x5u"
         end
-        h = UrlSafeBase64.decode64 t.split('.').first
+        h = Base64.urlsafe_decode64 t.split('.').first
         h.should include 'x5u'
       end
     end
@@ -169,8 +169,9 @@ describe OpenIDConnect::ResponseObject::IdToken do
           jwt = JSON::JWT.decode t, public_key
           jwt.should include :at_hash
           jwt.should_not include :c_hash
-          jwt[:at_hash].should == UrlSafeBase64.encode64(
-            OpenSSL::Digest::SHA256.digest('access_token')[0, 128 / 8]
+          jwt[:at_hash].should == Base64.urlsafe_encode64(
+            OpenSSL::Digest::SHA256.digest('access_token')[0, 128 / 8],
+            padding: false
           )
         end
       end
@@ -193,8 +194,9 @@ describe OpenIDConnect::ResponseObject::IdToken do
         jwt = JSON::JWT.decode t, public_key
         jwt.should_not include :at_hash
         jwt.should include :c_hash
-        jwt[:c_hash].should == UrlSafeBase64.encode64(
-          OpenSSL::Digest::SHA256.digest('authorization_code')[0, 128 / 8]
+        jwt[:c_hash].should == Base64.urlsafe_encode64(
+          OpenSSL::Digest::SHA256.digest('authorization_code')[0, 128 / 8],
+          padding: false
         )
       end
     end
@@ -209,11 +211,13 @@ describe OpenIDConnect::ResponseObject::IdToken do
         jwt = JSON::JWT.decode t, public_key
         jwt.should include :at_hash
         jwt.should include :c_hash
-        jwt[:at_hash].should == UrlSafeBase64.encode64(
-          OpenSSL::Digest::SHA256.digest('access_token')[0, 128 / 8]
+        jwt[:at_hash].should == Base64.urlsafe_encode64(
+          OpenSSL::Digest::SHA256.digest('access_token')[0, 128 / 8],
+          padding: false
         )
-        jwt[:c_hash].should == UrlSafeBase64.encode64(
-          OpenSSL::Digest::SHA256.digest('authorization_code')[0, 128 / 8]
+        jwt[:c_hash].should == Base64.urlsafe_encode64(
+          OpenSSL::Digest::SHA256.digest('authorization_code')[0, 128 / 8],
+          padding: false
         )
       end
     end
