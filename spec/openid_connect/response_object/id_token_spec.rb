@@ -19,7 +19,7 @@ describe OpenIDConnect::ResponseObject::IdToken do
   describe 'attributes' do
     subject { klass }
     its(:required_attributes) { should == [:iss, :sub, :aud, :exp, :iat] }
-    its(:optional_attributes) { should == [:acr, :amr, :azp, :jti, :sid, :auth_time, :nonce, :sub_jwk, :at_hash, :c_hash, :events] }
+    its(:optional_attributes) { should == [:acr, :amr, :azp, :jti, :sid, :auth_time, :nonce, :sub_jwk, :at_hash, :c_hash, :s_hash, :events] }
 
     describe 'auth_time' do
       subject { id_token.auth_time }
