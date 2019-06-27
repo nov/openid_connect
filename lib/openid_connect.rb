@@ -73,7 +73,7 @@ module OpenIDConnect
   end
   def self.http_config(&block)
     @sub_protocols.each do |klass|
-      klass.http_config &block unless klass.http_config
+      klass.http_config(&block) unless klass.http_config
     end
     @@http_config ||= block
   end
