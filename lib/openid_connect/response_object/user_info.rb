@@ -47,6 +47,7 @@ module OpenIDConnect
         errors.add :address, address.errors.full_messages.join(', ') if address.present? && !address.valid?
       end
 
+      undef :address=
       def address=(hash_or_address)
         @address = case hash_or_address
         when Hash

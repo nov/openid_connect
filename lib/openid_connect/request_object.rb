@@ -5,10 +5,12 @@ module OpenIDConnect
     attr_optional :client_id, :response_type, :redirect_uri, :scope, :state, :nonce, :display, :prompt, :userinfo, :id_token
     validate :require_at_least_one_attributes
 
+    undef :id_token=
     def id_token=(attributes = {})
       @id_token = IdToken.new(attributes) if attributes.present?
     end
 
+    undef :userinfo=
     def userinfo=(attributes = {})
       @userinfo = UserInfo.new(attributes) if attributes.present?
     end
