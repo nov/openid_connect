@@ -21,7 +21,11 @@ module OpenIDConnect
       res = yield
       case res.status
       when 200
-        JSON.parse(res.body).with_indifferent_access
+        json = if res.headers["Content-Type"] =~ /application\/jwt/
+          JWT.decode(res.body, nil, false).first.with_indifferent_access
+        else
+          JSON.parse(res.body).with_indifferent_access
+        end
       when 400
         raise BadRequest.new('API Access Faild', res)
       when 401
