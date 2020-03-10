@@ -179,11 +179,20 @@ describe OpenIDConnect::Client do
         end
       end
 
-      context 'when token_type is forced' do
+      context 'when token_type is forced to bearer' do
         before { client.force_token_type! :bearer }
         it 'should use forced token_type' do
           mock_json :post, client.token_endpoint, 'access_token/without_token_type', request_header: header_params, params: protocol_params do
             access_token.should be_a OpenIDConnect::AccessToken
+          end
+        end
+      end
+
+      context 'when token_type is forced to facebook_workplace_id_token' do
+        before { client.force_token_type! :facebook_workplace_id_token }
+        it 'should use forced token_type' do
+          mock_json :post, client.token_endpoint, 'access_token/without_token_type', request_header: header_params, params: protocol_params do
+            access_token.should be_a OpenIDConnect::WorkplaceIdAccessToken
           end
         end
       end

@@ -92,6 +92,7 @@ end
 require 'openid_connect/exception'
 require 'openid_connect/client'
 require 'openid_connect/access_token'
+require 'openid_connect/workplace_id_access_token'
 require 'openid_connect/jwtnizable'
 require 'openid_connect/connect_object'
 require 'openid_connect/discovery'
