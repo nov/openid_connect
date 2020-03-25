@@ -8,7 +8,7 @@ module OpenIDConnect
       class InvalidAudience < InvalidToken; end
 
       attr_required :iss, :sub, :aud, :exp, :iat
-      attr_optional :acr, :amr, :azp, :jti, :sid, :auth_time, :nonce, :sub_jwk, :at_hash, :c_hash, :s_hash, :events
+      attr_optional :acr, :amr, :azp, :jti, :sid, :auth_time, :nonce, :sub_jwk, :at_hash, :c_hash, :s_hash
       attr_accessor :access_token, :code, :state
       alias_method :subject, :sub
       alias_method :subject=, :sub=
