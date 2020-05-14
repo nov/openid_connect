@@ -1,3 +1,5 @@
+require "openssl"
+
 module OpenIDConnect
   module Discovery
     module Provider
@@ -27,8 +29,8 @@ module OpenIDConnect
           end
 
           def cache_key
-            md5 = Digest::MD5.hexdigest host
-            "swd:resource:opneid-conf:#{md5}"
+            sha256 = OpenSSL::Digest::SHA256.hexdigest host
+            "swd:resource:opneid-conf:#{sha256}"
           end
         end
       end
