@@ -36,6 +36,9 @@ module WebMockHelper
     if options[:status]
       response[:status] = options[:status]
     end
+    if options[:response_header]
+      response[:headers] = options[:response_header]
+    end
     response
   end
 end
