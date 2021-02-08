@@ -85,8 +85,25 @@ describe OpenIDConnect::AccessToken do
   end
 
   describe '#userinfo!' do
-    it do
-      userinfo = mock_json :get, client.userinfo_uri, 'userinfo/openid', :HTTP_AUTHORIZATION => 'Bearer access_token' do
+    let :json_headers do
+      {
+        'Content-Type' => 'application/json'
+      }
+    end
+    let :jwt_headers do
+      {
+        'Content-Type' => 'application/jwt'
+      }
+    end
+    it 'must accept json userinfo' do
+      userinfo = mock_json :get, client.userinfo_uri, 'userinfo/openid', :HTTP_AUTHORIZATION => 'Bearer access_token', :response_header => json_headers do
+        access_token.userinfo!
+      end
+      userinfo.should be_instance_of OpenIDConnect::ResponseObject::UserInfo
+    end
+
+    it 'must accept jwt userinfo' do
+      userinfo = mock_json :get, client.userinfo_uri, 'userinfo/openid', :HTTP_AUTHORIZATION => 'Bearer access_token', :response_header => jwt_headers, format: :jwt do
         access_token.userinfo!
       end
       userinfo.should be_instance_of OpenIDConnect::ResponseObject::UserInfo
