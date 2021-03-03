@@ -85,9 +85,16 @@ describe OpenIDConnect::AccessToken do
   end
 
   describe '#userinfo!' do
-    it do
+    it 'should call userinfo with standard client' do
       userinfo = mock_json :get, client.userinfo_uri, 'userinfo/openid', :HTTP_AUTHORIZATION => 'Bearer access_token' do
         access_token.userinfo!
+      end
+      userinfo.should be_instance_of OpenIDConnect::ResponseObject::UserInfo
+    end
+
+    it 'should call userinfo with headers if auth_type is :mtls' do
+      userinfo = mock_json :get, client.userinfo_uri, 'userinfo/openid', :HTTP_AUTHORIZATION => 'Bearer access_token' do
+        access_token.userinfo!(client_auth_method: :mtls)
       end
       userinfo.should be_instance_of OpenIDConnect::ResponseObject::UserInfo
     end
