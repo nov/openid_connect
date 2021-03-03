@@ -8,14 +8,28 @@ module OpenIDConnect
       @token_type = :bearer
     end
 
-    def userinfo!(params = {})
+    def userinfo!(params = {}, client_auth_method: nil)
       hash = resource_request do
-        get client.userinfo_uri, params
+        if client_auth_method == :mtls
+          get_info_with_headers(params)
+        else
+          get client.userinfo_uri, params
+        end
       end
+
       ResponseObject::UserInfo.new hash
     end
 
     private
+
+    def get_info_with_headers(params)
+      headers = { 'Authorization' => "Bearer #{access_token}" }
+      http_client = Rack::OAuth2.http_client
+      http_client.ssl_config.client_key = client.private_key
+      http_client.ssl_config.client_cert = client.certificate
+
+      http_client.get(client.userinfo_uri, params, headers)
+    end
 
     def resource_request
       res = yield
