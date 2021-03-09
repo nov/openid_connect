@@ -1,6 +1,8 @@
 before_install:
   - gem install bundler
 
+cache: bundler
+
 rvm:
   - 2.5.8
   - 2.6.6
