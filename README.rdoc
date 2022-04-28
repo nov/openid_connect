@@ -33,6 +33,54 @@ There is also OpenID Foudation Certified RP implementation using this gem below.
 * Running on Heroku (https://connect-rp-certified.herokuapp.com)
 * Source on GitHub (https://github.com/nov/connect-rp-certified)
 
+=== Configuring HTTP Settings
+
+In a Rails initializer or environment config:
+    
+    # All values shown here are defaults
+    OpenIDConnect.http_config do |c|
+      # User-Agent header
+      c.agent_name = nil
+
+      # From header
+      c.from = nil
+
+      # dump HTTP debug output to this device.  `nil` to disable,
+      # or any object that responds to `<<`.  (Array, StringIO, File)
+      c.debug_dev = nil
+
+      # if your ruby is older than 2005-09-06, do not set socket_sync = false to
+      # avoid an SSL socket blocking bug in openssl/buffering.rb.
+      c.socket_sync = true
+
+      # Enables TCP keepalive
+      c.tcp_keepalive = false
+
+      # Connect timeout in seconds
+      c.connect_timeout = 60
+
+      # Request sending timeout in seconds
+      c.send_timeout = 120
+
+      # For each read_block_size bytes, receiving timeout in seconds
+      c.receive_timeout = 10
+
+      # Reuse the same connection within this timeout in seconds from last used
+      c.keep_alive_timeout = 15
+
+      # Size of reading block for non-chunked response.
+      c.read_block_size = 1024
+
+      # Negotiation retry count for authentication.
+      c.protocol_retry_count = 5
+
+      # Decompress a compressed (with gzip or deflate) content body transparently.
+      c.transparent_gzip_decompression = false
+
+      # Raise BadResponseError if response size does not match with Content-Length header in response.
+      c.strict_response_size_check = false
+    end
+
 == Note on Patches/Pull Requests
 
 * Fork the project.
