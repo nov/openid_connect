@@ -81,6 +81,8 @@ In a Rails initializer or environment config:
       c.strict_response_size_check = false
     end
 
+**NOTE:** These changes will also affect the dependent gems using the same httpclient, which are +rack-oauth2+, +swd+, and +webfinger+
+
 == Note on Patches/Pull Requests
 
 * Fork the project.
