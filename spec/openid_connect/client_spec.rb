@@ -33,6 +33,14 @@ describe OpenIDConnect::Client do
     end
   end
 
+  describe '#new' do
+    context 'when tzinfo-data is included' do
+      it 'does not raise an error' do
+        expect { client }.not_to raise_error TZInfo::DataSourceNotFound
+      end
+    end
+  end
+
   describe '#authorization_uri' do
     let(:scope) { nil }
     let(:prompt) { nil }
