@@ -2,8 +2,6 @@
 
 OpenID Connect Server & Client Library
 
-{<img src="https://secure.travis-ci.org/nov/openid_connect.png" />}[https://travis-ci.org/nov/openid_connect]
-
 == Installation
 
   gem install openid_connect
