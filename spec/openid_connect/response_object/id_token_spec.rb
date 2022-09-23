@@ -257,11 +257,6 @@ describe OpenIDConnect::ResponseObject::IdToken do
         jwk_str = File.read(File.join(__dir__, '../../mock_response/public_keys/jwks_with_private_key.json'))
         jwk = JSON::JWK::Set.new JSON.parse(jwk_str)
       end
-      let(:private_key) do
-        OpenSSL::PKey::RSA.new(
-          File.read(File.join(__dir__, '../../mock_response/public_keys/private_key.pem'))
-        ).to_jwk
-      end
       let(:idp_config) do
         OpenIDConnect::Discovery::Provider::Config::Response.new(
           issuer: attributes[:issuer],
@@ -273,9 +268,33 @@ describe OpenIDConnect::ResponseObject::IdToken do
         )
       end
 
-      it do
-        mock_json :get, idp_config.jwks_uri, 'public_keys/jwks_with_private_key' do
-          should
+      context 'when id_token has kid' do
+        let(:private_key) do
+          OpenSSL::PKey::RSA.new(
+            File.read(File.join(__dir__, '../../mock_response/public_keys/private_key.pem'))
+          ).to_jwk
+        end
+
+        it do
+          mock_json :get, idp_config.jwks_uri, 'public_keys/jwks_with_private_key' do
+            should be_a klass
+          end
+        end
+      end
+
+      context 'otherwise' do
+        let(:private_key) do
+          OpenSSL::PKey::RSA.new(
+            File.read(File.join(__dir__, '../../mock_response/public_keys/private_key.pem'))
+          )
+        end
+
+        it do
+          mock_json :get, idp_config.jwks_uri, 'public_keys/jwks_with_private_key' do
+            expect do
+              should
+            end.to raise_error JSON::JWK::Set::KidNotFound
+          end
         end
       end
     end
