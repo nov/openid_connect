@@ -251,6 +251,35 @@ describe OpenIDConnect::ResponseObject::IdToken do
     its(:exp) { should == attributes[:exp].to_i }
     its(:raw_attributes) { should be_instance_of JSON::JWS }
 
+    context 'when IdP config is given' do
+      subject { klass.decode id_token.to_jwt(private_key), idp_config }
+      let(:jwks) do
+        jwk_str = File.read(File.join(__dir__, '../../mock_response/public_keys/jwks_with_private_key.json'))
+        jwk = JSON::JWK::Set.new JSON.parse(jwk_str)
+      end
+      let(:private_key) do
+        OpenSSL::PKey::RSA.new(
+          File.read(File.join(__dir__, '../../mock_response/public_keys/private_key.pem'))
+        ).to_jwk
+      end
+      let(:idp_config) do
+        OpenIDConnect::Discovery::Provider::Config::Response.new(
+          issuer: attributes[:issuer],
+          authorization_endpoint: File.join(attributes[:iss], 'authorize'),
+          jwks_uri: File.join(attributes[:iss], 'jwks'),
+          response_types_supported: ['code'],
+          subject_types_supported: ['public'],
+          id_token_signing_alg_values_supported: ['RS256']
+        )
+      end
+
+      it do
+        mock_json :get, idp_config.jwks_uri, 'public_keys/jwks_with_private_key' do
+          should
+        end
+      end
+    end
+
     context 'when self-issued' do
       context 'when valid' do
         let(:self_issued) do

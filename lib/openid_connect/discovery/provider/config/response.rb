@@ -87,6 +87,11 @@ module OpenIDConnect
             JSON::JWK::Set.new @jwks[:keys]
           end
 
+          def jwk(kid)
+            @jwks ||= {}
+            @jwks[kid] ||= JSON::JWK::Set::Fetcher.fetch(jwks_uri, kid: kid)
+          end
+
           def public_keys
             @public_keys ||= jwks.collect(&:to_key)
           end

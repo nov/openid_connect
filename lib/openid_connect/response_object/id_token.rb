@@ -63,11 +63,16 @@ module OpenIDConnect
       end
 
       class << self
-        def decode(jwt_string, key)
-          if key == :self_issued
+        def decode(jwt_string, key_or_config)
+          case key_or_config
+          when :self_issued
             decode_self_issued jwt_string
+          when OpenIDConnect::Discovery::Provider::Config::Response
+            jwt = JSON::JWT.decode jwt_string, :skip_verification
+            jwt.verify! key_or_config.jwk(jwt.kid)
+            new jwt
           else
-            new JSON::JWT.decode jwt_string, key
+            new JSON::JWT.decode jwt_string, key_or_config
           end
         end
 
