@@ -18,8 +18,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "validate_url"
   s.add_runtime_dependency "validate_email"
   s.add_runtime_dependency "json-jwt", ">= 1.15.0"
-  s.add_runtime_dependency "swd", ">= 1.0.0"
-  s.add_runtime_dependency "webfinger", ">= 1.0.1"
+  s.add_runtime_dependency "swd", "~> 1.3"
+  s.add_runtime_dependency "webfinger", "~> 1.2"
   s.add_runtime_dependency "rack-oauth2", ">= 1.6.1"
   if Gem.ruby_version >= Gem::Version.create(3.1)
     # TODO:
