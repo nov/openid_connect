@@ -1,5 +1,7 @@
 require 'json'
 require 'logger'
+require 'faraday'
+require 'faraday/follow_redirects'
 require 'swd'
 require 'webfinger'
 require 'active_model'
@@ -64,17 +66,13 @@ module OpenIDConnect
   self.debugging = false
 
   def self.http_client
-    _http_client_ = HTTPClient.new(
-      agent_name: "OpenIDConnect (#{VERSION})"
-    )
-
-    # NOTE: httpclient gem seems stopped maintaining root certtificate set, use OS default.
-    _http_client_.ssl_config.clear_cert_store
-    _http_client_.ssl_config.cert_store.set_default_paths
-
-    _http_client_.request_filter << Debugger::RequestFilter.new if debugging?
-    http_config.try(:call, _http_client_)
-    _http_client_
+    Faraday.new(headers: {user_agent: "OpenIDConnect (#{VERSION})"}) do |faraday|
+      faraday.request :url_encoded
+      faraday.request :json
+      faraday.response :logger, OpenIDConnect.logger, {bodies: true} if debugging?
+      faraday.adapter Faraday.default_adapter
+      http_config&.call(faraday)
+    end
   end
   def self.http_config(&block)
     @sub_protocols.each do |klass|
@@ -100,4 +98,3 @@ require 'openid_connect/access_token'
 require 'openid_connect/jwtnizable'
 require 'openid_connect/connect_object'
 require 'openid_connect/discovery'
-require 'openid_connect/debugger'

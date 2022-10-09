@@ -253,7 +253,7 @@ describe OpenIDConnect::Client::Registrar do
     end
 
     context 'otherwise' do
-      it { should be_instance_of HTTPClient }
+      it { should be_instance_of Faraday::Connection }
     end
   end
 end
