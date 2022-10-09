@@ -15,6 +15,13 @@ module OpenIDConnect
       ResponseObject::UserInfo.new hash
     end
 
+    def to_mtls(attributes = {})
+      (required_attributes + optional_attributes).each do |key|
+        attributes[key] = self.send(key)
+      end
+      MTLS.new attributes
+    end
+
     private
 
     def resource_request
@@ -34,3 +41,5 @@ module OpenIDConnect
     end
   end
 end
+
+require 'openid_connect/access_token/mtls'
