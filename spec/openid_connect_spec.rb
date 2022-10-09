@@ -46,12 +46,12 @@ describe OpenIDConnect do
     context 'with http_config' do
       before do
         OpenIDConnect.http_config do |config|
-          config.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          config.ssl.verify = false
         end
       end
       it 'should configure OpenIDConnect, SWD and Rack::OAuth2\'s http_client' do
         [OpenIDConnect, SWD, WebFinger, Rack::OAuth2].each do |klass|
-          klass.http_client.ssl_config.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
+          klass.http_client.ssl.verify.should be_falsy
         end
       end
     end

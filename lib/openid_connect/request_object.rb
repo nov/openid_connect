@@ -25,7 +25,7 @@ module OpenIDConnect
       end
 
       def fetch(request_uri, key = nil)
-        jwt_string = OpenIDConnect.http_client.get_content(request_uri)
+        jwt_string = OpenIDConnect.http_client.get(request_uri).body
         decode jwt_string, key
       end
     end

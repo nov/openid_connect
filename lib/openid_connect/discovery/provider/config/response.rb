@@ -82,7 +82,7 @@ module OpenIDConnect
 
           def jwks
             @jwks ||= JSON.parse(
-              OpenIDConnect.http_client.get_content(jwks_uri)
+              OpenIDConnect.http_client.get(jwks_uri).body
             ).with_indifferent_access
             JSON::JWK::Set.new @jwks[:keys]
           end
