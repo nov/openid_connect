@@ -26,7 +26,7 @@ module OpenIDConnect
     end
 
     def handle_success_response(response)
-      token_hash = JSON.parse(response.body).with_indifferent_access
+      token_hash = response.body.with_indifferent_access
       token_type = (@forced_token_type || token_hash[:token_type]).try(:downcase)
       case token_type
       when 'bearer'
@@ -34,8 +34,6 @@ module OpenIDConnect
       else
         raise Exception.new("Unexpected Token Type: #{token_type}")
       end
-    rescue JSON::ParserError
-      raise Exception.new("Unknown Token Type")
     end
   end
 end

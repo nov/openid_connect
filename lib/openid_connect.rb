@@ -69,6 +69,7 @@ module OpenIDConnect
     Faraday.new(headers: {user_agent: "OpenIDConnect (#{VERSION})"}) do |faraday|
       faraday.request :url_encoded
       faraday.request :json
+      faraday.response :json
       faraday.response :logger, OpenIDConnect.logger, {bodies: true} if debugging?
       faraday.adapter Faraday.default_adapter
       http_config&.call(faraday)

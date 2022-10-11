@@ -170,7 +170,7 @@ module OpenIDConnect
       end
 
       def handle_success_response(response)
-        credentials = JSON.parse(response.body).with_indifferent_access
+        credentials = response.body.with_indifferent_access
         Client.new(
           identifier: credentials[:client_id],
           secret:     credentials[:client_secret],
