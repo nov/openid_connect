@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [2.2.0] - 2022-10-11
+
+### Changed
+
+- automatic json response decoding by @nov in https://github.com/nov/openid_connect/pull/77
+
 ## [2.1.0] - 2022-10-10
 
 ### Changed
