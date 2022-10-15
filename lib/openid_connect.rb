@@ -70,9 +70,9 @@ module OpenIDConnect
       faraday.request :url_encoded
       faraday.request :json
       faraday.response :json
-      faraday.response :logger, OpenIDConnect.logger, {bodies: true} if debugging?
       faraday.adapter Faraday.default_adapter
       http_config&.call(faraday)
+      faraday.response :logger, OpenIDConnect.logger, {bodies: true} if debugging?
     end
   end
   def self.http_config(&block)
