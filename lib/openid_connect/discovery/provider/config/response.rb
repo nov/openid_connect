@@ -16,6 +16,7 @@ module OpenIDConnect
             ],
             optional: [
               :token_endpoint,
+              :revocation_endpoint,
               :userinfo_endpoint,
               :registration_endpoint,
               :end_session_endpoint,

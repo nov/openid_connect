@@ -35,6 +35,17 @@ describe OpenIDConnect::Discovery::Provider::Config::Response do
     it { should_not be_valid }
   end
 
+  context 'when revocation_endpoint given' do
+    let(:revocation_endpoint) { 'https://server.example.com/revoke' }
+    let :attributes do
+      minimum_attributes.merge(
+        revocation_endpoint: revocation_endpoint
+      )
+    end
+    it { should be_valid }
+    its(:revocation_endpoint) { should == revocation_endpoint}
+  end
+
   context 'when end_session_endpoint given' do
     let(:end_session_endpoint) { 'https://server.example.com/end_session' }
     let :attributes do
