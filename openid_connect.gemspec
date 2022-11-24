@@ -16,7 +16,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "attr_required", ">= 1.0.0"
   s.add_runtime_dependency "activemodel"
   s.add_runtime_dependency "validate_url"
-  s.add_runtime_dependency "validate_email"
+  s.add_runtime_dependency "email_validator", '~> 2.2.3'
+  s.add_runtime_dependency "mail", '~> 2.7.1'
   s.add_runtime_dependency 'faraday', '~> 2.0'
   s.add_runtime_dependency 'faraday-follow_redirects'
   s.add_runtime_dependency "json-jwt", ">= 1.16"
