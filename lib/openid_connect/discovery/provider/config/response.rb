@@ -97,7 +97,7 @@ module OpenIDConnect
           private
 
           def validate_issuer_matching
-            if expected_issuer.present? && issuer != expected_issuer
+            if expected_issuer.present? && issuer&.chomp("/") != expected_issuer
               if OpenIDConnect.validate_discovery_issuer
                 errors.add :issuer, 'mismatch'
               else

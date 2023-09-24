@@ -46,6 +46,17 @@ describe OpenIDConnect::Discovery::Provider::Config do
       end
     end
 
+    context 'when OP identifier contains a trailing slash' do
+      let(:provider) { 'https://connect.openid4.us/abop' }
+      let(:endpoint) { 'https://connect.openid4.us/abop/.well-known/openid-configuration' }
+
+      it 'should construct well-known URI with given port' do
+        mock_json :get, endpoint, 'discovery/config_with_trailing_slash' do
+          OpenIDConnect::Discovery::Provider::Config.discover! provider
+        end
+      end
+    end
+
     context 'when SWD::Exception raised' do
       it do
         expect do
