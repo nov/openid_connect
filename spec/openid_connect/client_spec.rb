@@ -37,11 +37,13 @@ describe OpenIDConnect::Client do
     let(:scope) { nil }
     let(:prompt) { nil }
     let(:response_type) { nil }
+    let(:override_scope) { nil }
     let(:query) do
       params = {
         scope: scope,
         prompt: prompt,
-        response_type: response_type
+        response_type: response_type,
+        override_scope: override_scope
       }.reject do |k,v|
         v.blank?
       end
@@ -97,6 +99,12 @@ describe OpenIDConnect::Client do
 
       context 'as default' do
         it { should == 'openid' }
+      end
+
+      context 'when override_scope is true' do
+        let(:scope) { :email }
+        let(:override_scope) { true }
+        it { should == 'email' }
       end
     end
 
