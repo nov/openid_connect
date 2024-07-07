@@ -21,9 +21,9 @@ module OpenIDConnect
         self.auth_time = auth_time.to_i unless auth_time.nil?
       end
 
-      def verify!(expected = {})
+      def verify!(expected = {}, skip_issuer = false)
         raise ExpiredToken.new('Invalid ID token: Expired token') unless exp.to_i > Time.now.to_i
-        raise InvalidIssuer.new('Invalid ID token: Issuer does not match') unless iss == expected[:issuer]
+        raise InvalidIssuer.new('Invalid ID token: Issuer does not match') unless (iss == expected[:issuer] || skip_issuer == true)
         raise InvalidNonce.new('Invalid ID Token: Nonce does not match') unless nonce == expected[:nonce]
 
         # aud(ience) can be a string or an array of strings
