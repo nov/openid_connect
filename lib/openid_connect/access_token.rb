@@ -30,7 +30,7 @@ module OpenIDConnect
       when 200
         res.body.with_indifferent_access
       when 400
-        raise BadRequest.new('API Access Faild', res)
+        raise BadRequest.new('API Access Failed', res)
       when 401
         raise Unauthorized.new('Access Token Invalid or Expired', res)
       when 403
