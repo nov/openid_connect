@@ -43,7 +43,7 @@ There is also OpenID Foudation Certified RP implementation using this gem below.
 
 == Documentation
 
-* see (https://github.com/nov/openid_connect/wiki)
+see GitHub Wiki (https://github.com/nov/openid_connect/wiki)
 
 == Copyright
 
