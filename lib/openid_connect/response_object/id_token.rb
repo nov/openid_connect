@@ -23,8 +23,15 @@ module OpenIDConnect
 
       def verify!(expected = {})
         raise ExpiredToken.new('Invalid ID token: Expired token') unless exp.to_i > Time.now.to_i
-        raise InvalidIssuer.new('Invalid ID token: Issuer does not match') unless iss == expected[:issuer]
         raise InvalidNonce.new('Invalid ID Token: Nonce does not match') unless nonce == expected[:nonce]
+
+        # Some providers expect the issuer to have a trailing slash, some expect it not to
+        expected_issuer = if iss.end_with?('/')
+          expected[:issuer].end_with?('/') ? expected[:issuer] : expected[:issuer] + '/'
+        else
+          expected[:issuer].end_with?('/') ? expected[:issuer][0...-1] : expected[:issuer]
+        end
+        raise InvalidIssuer.new('Invalid ID token: Issuer does not match') unless iss == expected_issuer
 
         # aud(ience) can be a string or an array of strings
         unless Array(aud).include?(expected[:audience] || expected[:client_id])
