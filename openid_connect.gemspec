@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "mail"
   s.add_runtime_dependency 'faraday', '~> 2.0'
   s.add_runtime_dependency 'faraday-follow_redirects'
-  s.add_runtime_dependency "json-jwt", ">= 1.16"
+  s.add_runtime_dependency "json-jwt", ">= 1.16.6"
   s.add_runtime_dependency "swd", "~> 2.0"
   s.add_runtime_dependency "webfinger", "~> 2.0"
   s.add_runtime_dependency "rack-oauth2", "~> 2.2"
