@@ -79,6 +79,18 @@ describe OpenIDConnect::ResponseObject::IdToken do
       end
     end
 
+    context 'when issuer is invalid and skip_issuer is set' do
+      it do
+        id_token.verify!(
+          {
+            issuer: 'some-issuer',
+            client_id: attributes[:aud],
+          },
+          true
+        ).should == true
+      end
+    end
+
     context 'when issuer is missing' do
       it do
         expect do
