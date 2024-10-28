@@ -10,6 +10,7 @@ module OpenIDConnect
           class Expired < SWD::Resource::Expired; end
 
           def initialize(uri)
+            @scheme = uri.scheme
             @host = uri.host
             @port = uri.port unless [80, 443].include?(uri.port)
             @path = File.join uri.path, '.well-known/openid-configuration'
@@ -17,7 +18,12 @@ module OpenIDConnect
           end
 
           def endpoint
-            SWD.url_builder.build [nil, host, port, path, nil, nil]
+            URI::Generic.build(
+              scheme: @scheme,
+              host: host,
+              port: port,
+              path: path
+            ).to_s
           rescue URI::Error => e
             raise SWD::Exception.new(e.message)
           end
