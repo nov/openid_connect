@@ -9,7 +9,7 @@ describe OpenIDConnect::Discovery::Provider::Config::Resource do
   describe '#endpoint' do
     context 'when invalid host' do
       before do
-        resource.host = 'hoge*hoge'
+        resource.host = 'invalid:host'
       end
 
       it do
