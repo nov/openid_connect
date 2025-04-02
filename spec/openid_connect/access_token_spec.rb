@@ -85,17 +85,33 @@ describe OpenIDConnect::AccessToken do
   end
 
   describe '#userinfo!' do
+   context 'when json response' do
     it do
       userinfo = mock_json :get, client.userinfo_uri, 'userinfo/openid', :HTTP_AUTHORIZATION => 'Bearer access_token' do
         access_token.userinfo!
       end
       userinfo.should be_instance_of OpenIDConnect::ResponseObject::UserInfo
     end
-
+   
     describe 'error handling' do
       let(:endpoint) { client.userinfo_uri }
       let(:request) { access_token.userinfo! }
       it_behaves_like :access_token_error_handling
     end
+   end
+    context 'when jwt response' do
+    it do
+      userinfo = mock_json :get, client.userinfo_uri, 'userinfo/signed', {:format => :jwt , :HTTP_AUTHORIZATION => 'Bearer access_token'} do
+        access_token.userinfo!
+      end
+      userinfo.should be_instance_of OpenIDConnect::ResponseObject::UserInfo
+    end
+   
+    describe 'error handling' do
+      let(:endpoint) { client.userinfo_uri }
+      let(:request) { access_token.userinfo! }
+      it_behaves_like :access_token_error_handling
+    end
+   end
   end
 end

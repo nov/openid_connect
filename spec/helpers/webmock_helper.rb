@@ -37,6 +37,10 @@ module WebMockHelper
       response[:headers] = {
         'Content-Type': 'application/json'
       }
+    elsif format == :jwt
+      response[:headers] = {
+        'Content-Type': 'application/jwt'
+      }
     end
     response[:body] = File.new(File.join(File.dirname(__FILE__), '../mock_response', "#{response_file}.#{format}"))
     if options[:status]
