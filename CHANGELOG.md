@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- allow handling of /userinfo when returned as a JWT token.
+
 ## [2.2.0] - 2022-10-11
 
 ### Changed

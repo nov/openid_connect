@@ -97,5 +97,20 @@ describe OpenIDConnect::AccessToken do
       let(:request) { access_token.userinfo! }
       it_behaves_like :access_token_error_handling
     end
+
+    describe 'when the answer is a JWT' do
+      before do
+        allow(JSON::JWT).to receive(:decode).and_return({ foo: 'bar' })
+
+        stub_request(:get, client.userinfo_uri)
+          .to_return(body: "some token", headers: { "Content-Type" => "application/jwt" })
+      end
+
+      it 'decodes it seamlessly' do
+        userinfo = access_token.userinfo!
+
+        expect(userinfo.raw_attributes).to eq({ foo: 'bar' })
+      end
+    end
   end
 end
