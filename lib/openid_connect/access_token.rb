@@ -28,7 +28,12 @@ module OpenIDConnect
       res = yield
       case res.status
       when 200
-        res.body.with_indifferent_access
+        if res.headers.has_key?('content-type') and res.headers['content-type'].start_with?('application/jwt')
+          decoded = JSON::JWT.decode(res.body, :skip_verification)
+          decoded.with_indifferent_access
+        else
+          res.body.with_indifferent_access
+        end
       when 400
         raise BadRequest.new('API Access Failed', res)
       when 401
