@@ -29,7 +29,7 @@ module OpenIDConnect
       validates :email_verified, :phone_number_verified, allow_nil: true, inclusion: {in: [true, false]}
       validates :zoneinfo,                               allow_nil: true, inclusion: {in: TZInfo::TimezoneProxy.all.collect(&:name)}
       validates :profile, :picture, :website,            allow_nil: true, url: true
-      validates :email,                                  allow_nil: true, email: true
+      validates :email,                                  allow_nil: true, format: { with: /\A[^@\s]+@[^@\s]+\.[^@\s]+\z/ }
       validates :updated_at,                             allow_nil: true, numericality: {only_integer: true}
       validate :validate_address
       validate :require_at_least_one_attributes
