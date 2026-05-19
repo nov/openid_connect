@@ -8,9 +8,17 @@ module OpenIDConnect
       @token_type = :bearer
     end
 
-    def userinfo!(params = {})
+    def userinfo!(params = {}, http_method: :get, headers: {})
+      raise ArgumentError, 'http_method must be :get or :post' unless [:get, :post].include?(http_method)
+
       hash = resource_request do
-        get client.userinfo_uri, params
+        case http_method
+        when :get
+          get client.userinfo_uri, params, headers
+        when :post
+          # Per OIDC Core §5.3.1
+          post client.userinfo_uri, params, { 'Content-Type' => 'application/x-www-form-urlencoded' }.merge(headers)
+        end
       end
       ResponseObject::UserInfo.new hash
     end

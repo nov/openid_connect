@@ -92,6 +92,28 @@ describe OpenIDConnect::AccessToken do
       userinfo.should be_instance_of OpenIDConnect::ResponseObject::UserInfo
     end
 
+    context 'when http_method is :post' do
+      it 'should make a POST request and return UserInfo' do
+        userinfo = mock_json :post, client.userinfo_uri, 'userinfo/openid', params: {}, request_header: { 'Content-Type' => 'application/x-www-form-urlencoded' } do
+          access_token.userinfo!(http_method: :post)
+        end
+        userinfo.should be_instance_of OpenIDConnect::ResponseObject::UserInfo
+      end
+
+      it 'should allow overriding Content-Type via headers' do
+        userinfo = mock_json :post, client.userinfo_uri, 'userinfo/openid', params: {}, request_header: { 'Content-Type' => 'application/json' } do
+          access_token.userinfo!(http_method: :post, headers: { 'Content-Type' => 'application/json' })
+        end
+        userinfo.should be_instance_of OpenIDConnect::ResponseObject::UserInfo
+      end
+    end
+
+    context 'when http_method is invalid' do
+      it 'should raise ArgumentError' do
+        expect { access_token.userinfo!(http_method: :delete) }.to raise_error ArgumentError, 'http_method must be :get or :post'
+      end
+    end
+
     describe 'error handling' do
       let(:endpoint) { client.userinfo_uri }
       let(:request) { access_token.userinfo! }
