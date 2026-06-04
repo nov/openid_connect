@@ -1,7 +1,6 @@
 require 'json'
 require 'logger'
 require 'faraday'
-require 'faraday/follow_redirects'
 require 'swd'
 require 'webfinger'
 require 'active_model'
