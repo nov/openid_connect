@@ -57,7 +57,7 @@ module OpenIDConnect
           ]))
 
           validates(*required_attributes, presence: true)
-          validates(*uri_attributes.values.flatten, url: true, allow_nil: true)
+          validates(*uri_attributes.values.flatten, format: { with: OpenIDConnect::HTTP_URI_REGEXP }, allow_nil: true)
           validates :issuer, with: :validate_issuer_matching
 
           def initialize(hash)

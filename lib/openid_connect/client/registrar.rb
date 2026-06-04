@@ -55,7 +55,7 @@ module OpenIDConnect
 
       validates(*required_attributes,   presence: true)
       validates :sector_identifier_uri, presence: {if: :sector_identifier_required?}
-      validates(*singular_uri_attributes, url: true, allow_nil: true)
+      validates(*singular_uri_attributes, format: { with: OpenIDConnect::HTTP_URI_REGEXP }, allow_nil: true)
       validate :validate_plural_uri_attributes
       validate :validate_contacts
 

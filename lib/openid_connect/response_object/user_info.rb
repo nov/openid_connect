@@ -28,7 +28,7 @@ module OpenIDConnect
 
       validates :email_verified, :phone_number_verified, allow_nil: true, inclusion: {in: [true, false]}
       validates :zoneinfo,                               allow_nil: true, inclusion: {in: TZInfo::TimezoneProxy.all.collect(&:name)}
-      validates :profile, :picture, :website,            allow_nil: true, url: true
+      validates :profile, :picture, :website,            allow_nil: true, format: { with: OpenIDConnect::HTTP_URI_REGEXP }
       validates :email,                                  allow_nil: true, format: { with: OpenIDConnect::EMAIL_REGEXP }
       validates :updated_at,                             allow_nil: true, numericality: {only_integer: true}
       validate :validate_address

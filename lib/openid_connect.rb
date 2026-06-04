@@ -1,11 +1,11 @@
 require 'json'
 require 'logger'
+require 'uri'
 require 'faraday'
 require 'swd'
 require 'webfinger'
 require 'active_model'
 require 'tzinfo'
-require 'validate_url'
 require 'attr_required'
 require 'attr_optional'
 require 'json/jwt'
@@ -20,6 +20,7 @@ module OpenIDConnect
   ).chomp
 
   EMAIL_REGEXP = /\A[^@\s]+@[^@\s]+\.[^@\s]+\z/
+  HTTP_URI_REGEXP = /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https])}\z/
 
   def self.logger
     @@logger
