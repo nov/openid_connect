@@ -124,12 +124,7 @@ module OpenIDConnect
       def validate_contacts
         if contacts
           include_invalid = contacts.any? do |contact|
-            begin
-              mail = Mail::Address.new(contact)
-              mail.address != contact || mail.domain.split(".").length <= 1
-            rescue
-              :invalid
-            end
+            OpenIDConnect::EMAIL_REGEXP !~ contact
           end
           errors.add :contacts, 'includes invalid email' if include_invalid
         end
