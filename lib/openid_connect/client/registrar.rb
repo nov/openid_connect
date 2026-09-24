@@ -55,7 +55,7 @@ module OpenIDConnect
 
       validates(*required_attributes,   presence: true)
       validates :sector_identifier_uri, presence: {if: :sector_identifier_required?}
-      validates(*singular_uri_attributes, url: true, allow_nil: true)
+      validates(*singular_uri_attributes, format: { with: OpenIDConnect::HTTP_URI_REGEXP }, allow_nil: true)
       validate :validate_plural_uri_attributes
       validate :validate_contacts
 
@@ -124,12 +124,7 @@ module OpenIDConnect
       def validate_contacts
         if contacts
           include_invalid = contacts.any? do |contact|
-            begin
-              mail = Mail::Address.new(contact)
-              mail.address != contact || mail.domain.split(".").length <= 1
-            rescue
-              :invalid
-            end
+            OpenIDConnect::EMAIL_REGEXP !~ contact
           end
           errors.add :contacts, 'includes invalid email' if include_invalid
         end

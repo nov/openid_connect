@@ -1,13 +1,11 @@
 require 'json'
 require 'logger'
+require 'uri'
 require 'faraday'
-require 'faraday/follow_redirects'
 require 'swd'
 require 'webfinger'
 require 'active_model'
 require 'tzinfo'
-require 'validate_url'
-require 'mail'
 require 'attr_required'
 require 'attr_optional'
 require 'json/jwt'
@@ -20,6 +18,9 @@ module OpenIDConnect
   VERSION = ::File.read(
     ::File.join(::File.dirname(__FILE__), '../VERSION')
   ).chomp
+
+  EMAIL_REGEXP = /\A[^@\s]+@[^@\s]+\.[^@\s]+\z/
+  HTTP_URI_REGEXP = /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https])}\z/
 
   def self.logger
     @@logger
