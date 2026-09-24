@@ -95,5 +95,21 @@ describe OpenIDConnect::Discovery::Provider::Config do
         end.to raise_error OpenIDConnect::Discovery::DiscoveryFailed
       end
     end
+
+    context 'when custom discovery_path is specified' do
+      let(:endpoint) { 'https://connect-op.heroku.com/.well-known/wallet-openid-configuration' }
+
+      it 'should fetch from the custom discovery path' do
+        mock_json :get, endpoint, 'discovery/config' do
+          config = OpenIDConnect::Discovery::Provider::Config.discover!(
+            provider,
+            {},
+            discovery_path: '.well-known/wallet-openid-configuration'
+          )
+          config.should be_instance_of OpenIDConnect::Discovery::Provider::Config::Response
+          config.authorization_endpoint.should == 'https://connect-op.heroku.com/authorizations/new'
+        end
+      end
+    end
   end
 end

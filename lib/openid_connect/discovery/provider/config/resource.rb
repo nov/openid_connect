@@ -9,10 +9,10 @@ module OpenIDConnect
 
           class Expired < SWD::Resource::Expired; end
 
-          def initialize(uri)
+          def initialize(uri, discovery_path: '.well-known/openid-configuration')
             @host = uri.host
             @port = uri.port unless [80, 443].include?(uri.port)
-            @path = File.join uri.path, '.well-known/openid-configuration'
+            @path = File.join uri.path, discovery_path
             attr_missing!
           end
 
